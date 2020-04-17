@@ -1,5 +1,8 @@
 /* tslint:disable */
+import './bug'
+import './chart'
 import './dashboard'
+import './education'
 import './example'
 import './eye-off'
 import './eye-on'
