@@ -108,6 +108,11 @@ export default {
     imageUploadTips: 'Since I was using only the vue@1 version, and it is not compatible with mockjs at the moment, I modified it myself, and if you are going to use it, it is better to use official version.'
   },
   table: {
+    from: 'From',
+    to: 'To',
+    sortType: 'Sort',
+    atomicId: 'Atomic ID',
+    searchType: 'Condition',
     dynamicTips1: 'Fixed header, sorted by header order',
     dynamicTips2: 'Not fixed header, sorted by click order',
     dragTips1: 'The default order',

@@ -2,44 +2,31 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input
-        v-model="listQuery.title"
-        :placeholder="$t('table.title')"
+        v-model="searchQuery"
+        :placeholder="$t('table.search')"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <el-select
-        v-model="listQuery.importance"
-        :placeholder="$t('table.importance')"
-        clearable
-        style="width: 120px"
-        class="filter-item"
-      >
-        <el-option
-          v-for="item in importanceOptions"
-          :key="item"
-          :label="item"
-          :value="item"
-        />
-      </el-select>
-      <el-select
-        v-model="listQuery.type"
-        :placeholder="$t('table.type')"
+        v-model="searchType"
+        :placeholder="$t('table.searchType')"
         clearable
         class="filter-item"
         style="width: 130px"
       >
         <el-option
-          v-for="item in calendarTypeOptions"
+          v-for="item in searchTypeOptions"
           :key="item.key"
           :label="item.displayName+'('+item.key+')'"
           :value="item.key"
         />
       </el-select>
       <el-select
-        v-model="listQuery.sort"
+        v-model="sort"
         style="width: 140px"
         class="filter-item"
+        :placeholder="$t('table.sortType')"
         @change="handleFilter"
       >
         <el-option
@@ -58,14 +45,6 @@
       >
         {{ $t('table.search') }}
       </el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="primary"
-        icon="el-icon-edit"
-      >
-        {{ $t('table.add') }}
-      </el-button>
     </div>
 
     <el-table
@@ -80,127 +59,62 @@
     >
       <el-table-column
         :label="$t('table.status')"
-        prop="id"
+        prop="status"
         sortable="custom"
         align="center"
-        width="80"
+        width="120"
         :class-name="getSortClass('id')"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.status }}</span>
         </template>
       </el-table-column>
       <el-table-column
         :label="$t('table.date')"
-        width="180px"
+        width="250px"
         align="center"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.timestamp | parseTime }}</span>
+          <span>{{ scope.row.createdAt | parseApolloTime}}</span>
         </template>
       </el-table-column>
+
       <el-table-column
-        :label="$t('table.title')"
+        :label="$t('table.from')"
         min-width="150px"
       >
-        <template slot-scope="{row}">
+        <template slot-scope="scope">
           <span
             class="link-type"
-          >{{ row.title }}</span>
-          <el-tag>{{ row.type | typeFilter }}</el-tag>
+          >{{ scope.row.amountSend }} {{ scope.row.fromCurrency }}</span>
         </template>
       </el-table-column>
+
       <el-table-column
-        :label="$t('table.author')"
+        :label="$t('table.to')"
         width="180px"
         align="center"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <span>{{ scope.row.amountReceive }} {{ scope.row.toCurrency }}</span>
         </template>
       </el-table-column>
+
       <el-table-column
-        :label="$t('table.importance')"
-        width="105px"
+        :label="$t('table.atomicId')"
+        width="125px"
       >
         <template slot-scope="scope">
-          <svg-icon
-            v-for="n in +scope.row.importance"
-            :key="n"
-            name="star"
-            class="meta-item__icon"
-          />
+          <span>{{ scope.row.atomicId | formatAtomicId }}</span>
         </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.readings')"
-        align="center"
-        width="95"
-      >
-        <template slot-scope="{row}">
-          <span
-            v-if="row.pageviews"
-            class="link-type"
-          >{{ row.pageviews }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.status')"
-        class-name="status-col"
-        width="100"
-      >
-        <template slot-scope="{row}">
-          <el-tag :type="row.status | articleStatusFilter">
-            {{ row.status }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.actions')"
-        align="center"
-        width="230"
-        class-name="fixed-width"
-      >
-        <template slot-scope="{row}">
-          <el-button
-            type="primary"
-            size="mini"
-            @click="handleUpdate(row)"
-          >
-            {{ $t('table.edit') }}
-          </el-button>
-          <el-button
-            v-if="row.status!=='published'"
-            size="mini"
-            type="success"
-            @click="handleModifyStatus(row,'published')"
-          >
-            {{ $t('table.publish') }}
-          </el-button>
-          <el-button
-            v-if="row.status!=='draft'"
-            size="mini"
-            @click="handleModifyStatus(row,'draft')"
-          >
-            {{ $t('table.draft') }}
-          </el-button>
-          <el-button
-            v-if="row.status!=='deleted'"
-            size="mini"
-            type="danger"
-            @click="handleModifyStatus(row,'deleted')"
-          >
-            {{ $t('table.delete') }}
-          </el-button>
-        </template>
+
       </el-table-column>
     </el-table>
 
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="listQuery.page"
+      :page.sync="listQuery.offset"
       :limit.sync="listQuery.limit"
       @pagination="getList"
     />
@@ -220,6 +134,13 @@ const calendarTypeOptions = [
   { key: 'US', displayName: 'USA' },
   { key: 'JP', displayName: 'Japan' },
   { key: 'EU', displayName: 'Eurozone' }
+]
+const searchTypeOptions = [
+  { key: 'atomicId', displayName: 'AtomicId' },
+  { key: 'orderId', displayName: 'Order ID' },
+  { key: 'sendAddress', displayName: 'Send Address' },
+  { key: 'receiveAddress', displayName: 'Receive Address' },
+  { key: 'currency', displayName: 'Currency' }
 ]
 
 // arr to obj, such as { CN : "China", US : "USA" }
@@ -243,19 +164,19 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc: { [key: string]: s
 export default class extends Vue {
     private tableKey = 0
     private list: IExchangeData[] = []
-    private total = 0
+    private total = 2000
     private listLoading = true
+    private searchQuery = ''
+    private searchType = ''
     private listQuery = {
-      page: 1,
-      limit: 20,
-      importance: undefined,
-      title: undefined,
-      type: undefined,
-      sort: '+id'
+      offset: 1,
+      limit: 200
     }
+    private sort = ''
 
     private importanceOptions = [1, 2, 3]
-    private calendarTypeOptions = calendarTypeOptions
+    private calendarTypeOptions = calendarTypeOptions;
+    private searchTypeOptions = searchTypeOptions;
     private sortOptions = [
       { label: 'ID Ascending', key: '+id' },
       { label: 'ID Descending', key: '-id' }
@@ -267,16 +188,16 @@ export default class extends Vue {
 
     private async getList() {
       this.listLoading = true
-      const { data } = await getExchanges(this.listQuery)
-      console.log(data)
-      this.list = data.items
-      this.total = data.total
+      const data = await getExchanges(this.listQuery)
+      this.list = data.data
+      console.log(this.list)
+      // this.total = data.total
       // Just to simulate the time of the request
       this.listLoading = false
     }
 
     private handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.offset = 1
       this.getList()
     }
 
@@ -289,15 +210,15 @@ export default class extends Vue {
 
     private sortByID(order: string) {
       if (order === 'ascending') {
-        this.listQuery.sort = '+id'
+        this.sort = '+id'
       } else {
-        this.listQuery.sort = '-id'
+        this.sort = '-id'
       }
       this.handleFilter()
     }
 
     private getSortClass(key: string) {
-      const sort = this.listQuery.sort
+      const sort = this.sort
       return sort === `+${key}` ? 'ascending' : sort === `-${key}` ? 'descending' : ''
     }
 }
