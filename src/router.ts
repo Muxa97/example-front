@@ -50,25 +50,25 @@ export default new Router({
         }
       ]
     },
-    {
-      path: '/example',
-      component: Layout,
-      redirect: '/example/tree',
-      meta: {
-        title: 'Errors',
-        icon: 'bug'
-      },
-      children: [
-        {
-          path: 'table',
-          component: () => import(/* webpackChunkName: "table" */ '@/views/table/index.vue'),
-          meta: {
-            title: 'Errors table',
-            icon: 'table'
-          }
-        }
-      ]
-    },
+    // {
+    //   path: '/example',
+    //   component: Layout,
+    //   redirect: '/example/tree',
+    //   meta: {
+    //     title: 'Errors',
+    //     icon: 'bug'
+    //   },
+    //   children: [
+    //     {
+    //       path: 'table',
+    //       component: () => import(/* webpackChunkName: "table" */ '@/views/table/index.vue'),
+    //       meta: {
+    //         title: 'Errors table',
+    //         icon: 'table'
+    //       }
+    //     }
+    //   ]
+    // },
     {
       path: '/exchange',
       component: Layout,
@@ -88,25 +88,25 @@ export default new Router({
         }
       ]
     },
-    {
-      path: '/exchange-stats',
-      component: Layout,
-      redirect: '/dashboard',
-      meta: {
-        title: 'Exchange stats',
-        icon: 'chart'
-      },
-      children: [
-        {
-          path: 'table',
-          component: () => import(/* webpackChunkName: "table" */ '@/views/table/index.vue'),
-          meta: {
-            title: 'Exchange stats',
-            icon: 'chart'
-          }
-        }
-      ]
-    },
+    // {
+    //   path: '/exchange-stats',
+    //   component: Layout,
+    //   redirect: '/dashboard',
+    //   meta: {
+    //     title: 'Exchange stats',
+    //     icon: 'chart'
+    //   },
+    //   children: [
+    //     {
+    //       path: 'table',
+    //       component: () => import(/* webpackChunkName: "table" */ '@/views/table/index.vue'),
+    //       meta: {
+    //         title: 'Exchange stats',
+    //         icon: 'chart'
+    //       }
+    //     }
+    //   ]
+    // },
     // {
     //   path: '/nested',
     //   component: Layout,
