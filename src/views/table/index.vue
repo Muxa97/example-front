@@ -1,41 +1,25 @@
 <template>
   <div class="app-container">
+    <DraggableDialog
+                     ref="dialogVisible"
+                     @search="refreshTableSearch"
+    ></DraggableDialog>
+
     <div class="filter-container">
       <el-input
-        v-model="searchQuery"
-        :placeholder="$t('table.search')"
+        v-model="searchString"
+        :placeholder="$t('table.filter')"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
-      <el-select
-        v-model="searchType"
-        :placeholder="$t('table.searchType')"
-        clearable
-        class="filter-item"
-        style="width: 130px"
+
+      <el-button
+        type="primary"
+        @click="showDialog"
       >
-        <el-option
-          v-for="item in searchTypeOptions"
-          :key="item.key"
-          :label="item.displayName+'('+item.key+')'"
-          :value="item.key"
-        />
-      </el-select>
-      <el-select
-        v-model="sort"
-        style="width: 140px"
-        class="filter-item"
-        :placeholder="$t('table.sortType')"
-        @change="handleFilter"
-      >
-        <el-option
-          v-for="item in sortOptions"
-          :key="item.key"
-          :label="item.label"
-          :value="item.key"
-        />
-      </el-select>
+        Search config
+      </el-button>
       <el-button
         v-waves
         class="filter-item"
@@ -45,6 +29,20 @@
       >
         {{ $t('table.search') }}
       </el-button>
+      <el-select
+        v-model="pagination"
+        :placeholder="$t('table.items')"
+        clearable
+        class="filter-item"
+        style="width: 100px"
+      >
+        <el-option
+          v-for="item in paginationTypeOptions"
+          :key="item.key"
+          :label="item.key"
+          :value="item.key"
+        />
+      </el-select>
     </div>
 
     <el-table
@@ -125,22 +123,16 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { cloneDeep } from 'lodash'
-import { getExchanges } from '@/api/exchanges'
+import { getExchanges, getExchangesByTerms, getExchangesCount } from '@/api/exchanges'
 import { IExchangeData } from '@/api/types'
 import Pagination from '@/components/Pagination/index.vue'
+import DraggableDialog from '@/components/Dialog/index.vue'
 
 const calendarTypeOptions = [
   { key: 'CN', displayName: 'China' },
   { key: 'US', displayName: 'USA' },
   { key: 'JP', displayName: 'Japan' },
   { key: 'EU', displayName: 'Eurozone' }
-]
-const searchTypeOptions = [
-  { key: 'atomicId', displayName: 'AtomicId' },
-  { key: 'orderId', displayName: 'Order ID' },
-  { key: 'sendAddress', displayName: 'Send Address' },
-  { key: 'receiveAddress', displayName: 'Receive Address' },
-  { key: 'currency', displayName: 'Currency' }
 ]
 
 // arr to obj, such as { CN : "China", US : "USA" }
@@ -152,6 +144,7 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc: { [key: string]: s
   @Component({
     name: 'ComplexTable',
     components: {
+      DraggableDialog,
       Pagination
     },
     filters: {
@@ -164,35 +157,45 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc: { [key: string]: s
 export default class extends Vue {
     private tableKey = 0
     private list: IExchangeData[] = []
-    private total = 2000
+    private searchString = '';
+    private total = 0
     private listLoading = true
-    private searchQuery = ''
+    private displayBy = 200
+
+    private dialogTableVisible = false
     private searchType = ''
-    private listQuery = {
-      offset: 1,
-      limit: 200
-    }
     private sort = ''
 
     private importanceOptions = [1, 2, 3]
     private calendarTypeOptions = calendarTypeOptions;
-    private searchTypeOptions = searchTypeOptions;
-    private sortOptions = [
-      { label: 'ID Ascending', key: '+id' },
-      { label: 'ID Descending', key: '-id' }
-    ]
-
-    created() {
-      this.getList()
+    private paginationTypeOptions = [
+      { key: 30 },
+      { key: 100 },
+      { key: 300 }
+    ];
+    private pagination = this.paginationTypeOptions[0].key
+    private listQuery = {
+      offset: 1,
+      limit: this.pagination
     }
 
+    created() {
+      this.getCount()
+      this.getList()
+    }
+    private showDialog() {
+      (this.$refs.dialogVisible as any).showDialog()
+    }
+    private async getCount() {
+      const data:any = await getExchangesCount()
+
+      this.total = data.count
+    }
     private async getList() {
       this.listLoading = true
       const data = await getExchanges(this.listQuery)
       this.list = data.data
-      console.log(this.list)
       // this.total = data.total
-      // Just to simulate the time of the request
       this.listLoading = false
     }
 
@@ -215,6 +218,12 @@ export default class extends Vue {
         this.sort = '-id'
       }
       this.handleFilter()
+    }
+    private async refreshTableSearch(searchString:string) {
+      this.listLoading = true
+      const { data } = await getExchangesByTerms(searchString)
+      this.list = data
+      this.listLoading = false
     }
 
     private getSortClass(key: string) {

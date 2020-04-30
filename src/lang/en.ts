@@ -107,9 +107,19 @@ export default {
     backToTopTips2: 'You can customize the style of the button, show / hide, height of appearance, height of the return. If you need a text prompt, you can use element-ui el-tooltip elements externally',
     imageUploadTips: 'Since I was using only the vue@1 version, and it is not compatible with mockjs at the moment, I modified it myself, and if you are going to use it, it is better to use official version.'
   },
+  searchDialog: {
+    atomicId: 'Atomic ID',
+    orderId: 'Order ID',
+    payinAddress: 'Address From',
+    payoutAddress: 'Address To',
+    fromCurrency: 'Currency From',
+    toCurrency: 'Currency To'
+  },
   table: {
+    items: 'items',
     from: 'From',
     to: 'To',
+    filter: 'Type Filter',
     sortType: 'Sort',
     atomicId: 'Atomic ID',
     searchType: 'Condition',
