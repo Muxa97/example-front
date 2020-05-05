@@ -64,21 +64,21 @@
         :label="$t('table.status')"
         prop="status"
         sortable="custom"
-        align="center"
+        align="left"
         width="120"
         :class-name="getSortClass('id')"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.status }}</span>
+          <span>{{ scope.row.status | uppercaseFirstChar }}</span>
         </template>
       </el-table-column>
       <el-table-column
         :label="$t('table.date')"
         width="250px"
-        align="center"
+        align="left"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.createdAt | parseApolloTime}}</span>
+          <span>{{ scope.row.createdAt | parseApolloTime }}</span>
         </template>
       </el-table-column>
 
@@ -96,7 +96,7 @@
       <el-table-column
         :label="$t('table.to')"
         width="180px"
-        align="center"
+        align="left"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.amountReceive }} {{ scope.row.toCurrency }}</span>

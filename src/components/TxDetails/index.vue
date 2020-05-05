@@ -17,7 +17,7 @@
             <span>Date</span>
           </div>
           <div class="details-card-body">
-            {{ tx.updatedAt }}
+            {{ tx.updatedAt | parseApolloTime }}
           </div>
         </el-card>
       </div></el-col>
