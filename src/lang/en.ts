@@ -116,6 +116,7 @@ export default {
     toCurrency: 'Currency To'
   },
   table: {
+    number: '№',
     items: 'items',
     from: 'From',
     to: 'To',
