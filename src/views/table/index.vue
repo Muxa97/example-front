@@ -124,7 +124,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { getExchanges, getExchangesByTerms, getExchangesCount } from '@/api/exchanges'
+import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
 import { IExchangeData } from '@/api/types'
 import Pagination from '@/components/Pagination/index.vue'
 import TxDetails from '@/components/TxDetails/index.vue'
@@ -159,6 +159,7 @@ export default class extends Vue {
     }
     private page = 1
     private detailsTx:any = false
+    private tableByTerms = ''
 
     created() {
       this.getCount()
@@ -184,23 +185,6 @@ export default class extends Vue {
 
       this.total = data.data.count
     }
-    private async getList(params:any) {
-      this.listLoading = true
-      this.listQuery.offset = params ? params.page * params.limit : 0
-      try {
-        const data = await getExchanges(this.listQuery)
-        this.list = data.data
-        this.page = params.page
-      } catch (e) {
-        this.$notify({
-          title: 'error',
-          message: e.toString(),
-          type: 'error',
-          duration: 2000
-        })
-      }
-      this.listLoading = false
-    }
 
     private handleFilter() {
       this.getList(false)
@@ -223,9 +207,43 @@ export default class extends Vue {
     }
     private async refreshTableSearch(searchString:string) {
       this.listLoading = true
-      const { data } = await getExchangesByTerms(searchString)
-      this.list = data
-      this.total = data.length
+      try {
+        const response = await getExchangesByTermsCount(searchString)
+        this.total = response.data.count
+        const { data } = await getExchangesByTerms(searchString, `offset=${this.listQuery.offset}&limit=${this.listQuery.limit}`)
+        this.tableByTerms = searchString
+        this.list = data
+      } catch (e) {
+        this.$notify({
+          title: 'error',
+          message: e.toString(),
+          type: 'error',
+          duration: 2000
+        })
+      }
+      this.listLoading = false
+    }
+
+    private async getList(params:any) {
+      let data
+      this.listLoading = true
+      this.listQuery.offset = params ? (params.page - 1) * params.limit : 0
+      try {
+        if (this.tableByTerms) {
+          data = await getExchangesByTerms(this.tableByTerms, `offset=${this.listQuery.offset}&limit=${this.listQuery.limit}`)
+        } else {
+          data = await getExchanges(this.listQuery)
+        }
+        this.list = data.data
+        this.page = params.page
+      } catch (e) {
+        this.$notify({
+          title: 'error',
+          message: e.toString(),
+          type: 'error',
+          duration: 2000
+        })
+      }
       this.listLoading = false
     }
 
