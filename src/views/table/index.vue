@@ -6,18 +6,11 @@
     ></DraggableDialog>
 
     <div class="filter-container">
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="page"
-        :limit.sync="listQuery.limit"
-        @pagination="getList"
-      />
       <div class="search-container">
         <el-input
           v-model="searchString"
           :placeholder="$t('table.filter')"
-          style="width: 200px;"
+          style="width: 250px;"
           class="filter-item"
           @keyup.enter.native="handleLocalFilter"
         />
@@ -47,18 +40,11 @@
       border
       fit
       highlight-current-row
+      stripe
       style="width: 100%;"
       @sort-change="sortChange"
       @row-click="showDetails"
     >
-      <el-table-column
-        :label="$t('table.number')"
-        width="80"
-      >
-        <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
-        </template>
-      </el-table-column>
 
       <el-table-column
         :label="$t('table.status')"
@@ -69,7 +55,7 @@
         :class-name="getSortClass('id')"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.status | uppercaseFirstChar }}</span>
+          <el-badge :value="scope.row.status | uppercaseFirstChar" :class="getStatusBadgeClass(scope.row.status)"></el-badge>
         </template>
       </el-table-column>
       <el-table-column
@@ -113,6 +99,13 @@
 
       </el-table-column>
     </el-table>
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="page"
+      :limit.sync="listQuery.limit"
+      @pagination="getList"
+    />
     <el-dialog
       :title="detailsTx.title"
       :visible.sync="detailsTx"
@@ -205,6 +198,17 @@ export default class extends Vue {
       }
       this.handleFilter()
     }
+
+    private getStatusBadgeClass(status: string) {
+      return {
+        'md-square': true,
+        'md-green': ['finished', 'refunded'].includes(status),
+        'md-gray': ['waiting', 'expired', 'failed'].includes(status),
+        'md-lightblue': ['confirming', 'sending', 'exchanging'].includes(status),
+        'md-red': ['verifying'].includes(status)
+      }
+    }
+
     private async refreshTableSearch(searchString:string) {
       this.listLoading = true
       try {
@@ -258,8 +262,12 @@ export default class extends Vue {
 <style lang="scss" scoped>
   .search-container{
     display: block;
-    position: absolute;
-    top: 99px;
-    right: 22px;
+    float: right;
+    /*position: absolute;*/
+    /*top: 99px;*/
+    /*right: 22px;*/
+  }
+  .filter-item {
+    margin: 5px 5px;
   }
 </style>
