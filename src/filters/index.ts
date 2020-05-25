@@ -13,6 +13,9 @@ export const articleStatusFilter = (status: string) => {
 export const parseApolloTime = (date: string) => {
   return new Date(date).toLocaleString()
 }
+export const parseDateTime = (date: string) => {
+  return new Date(date).toDateString()
+}
 
 // Filter to uppercase the first character
 export const uppercaseFirstChar = (str: string) => {

@@ -116,6 +116,9 @@ export default {
     toCurrency: 'Currency To'
   },
   table: {
+    created: 'Created',
+    waiting: 'Waiting',
+    finished: 'Finished',
     number: '№',
     items: 'items',
     from: 'From',
@@ -133,6 +136,7 @@ export default {
     type: 'Type',
     remark: 'Remark',
     search: 'Search',
+    searchFor: 'Click To Search For',
     add: 'Add',
     export: 'Export',
     reviewer: 'Reviewer',

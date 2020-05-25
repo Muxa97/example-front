@@ -85,6 +85,14 @@ export default new Router({
             title: 'Exchange',
             icon: 'education'
           }
+        },
+        {
+          path: 'stats',
+          component: () => import(/* webpackChunkName: "table" */ '@/views/table/stats.vue'),
+          meta: {
+            title: 'Exchange Stats',
+            icon: 'chart'
+          }
         }
       ]
     },

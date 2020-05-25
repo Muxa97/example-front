@@ -49,51 +49,6 @@
     </el-row>
 
     <el-row>
-      <el-col :span="12"><div class="grid-content bg-purple">
-        <el-card shadow="never" style="border: none">
-          <div slot="header" class="clearfix" style="border: none">
-            <span>Send Hash</span>
-          </div>
-          <div class="details-card-body">
-            {{ tx.payinHash }}
-          </div>
-        </el-card>
-      </div></el-col>
-      <el-col :span="12"><div class="grid-content bg-purple-light">
-        <el-card shadow="never" style="border: none">
-          <div slot="header" class="clearfix" style="border: none">
-            <span>Receive Hash</span>
-          </div>
-          <div class="details-card-body">
-            {{ tx.payoutHash || '-' }}
-          </div>
-        </el-card>
-      </div></el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="12"><div class="grid-content bg-purple-light">
-        <el-card shadow="never" style="border: none">
-          <div slot="header" class="clearfix" style="border: none">
-            <span>Cashbacback</span>
-          </div>
-          <div class="details-card-body">
-            {{ tx.Cashbacks[0].expectedCashbackAmount }}
-          </div>
-        </el-card>
-      </div></el-col>
-      <el-col :span="12"><div class="grid-content bg-purple-light">
-        <el-card shadow="never" style="border: none">
-          <div slot="header" class="clearfix" style="border: none">
-            <span>Atomic ID</span>
-          </div>
-          <div class="details-card-body">
-            {{ tx.atomicId }}
-          </div>
-        </el-card>
-      </div></el-col>
-    </el-row>
-
-    <el-row>
       <el-col :span="12"><div class="grid-content bg-purple-light">
         <el-card shadow="never" style="border: none">
           <div slot="header" class="clearfix" style="border: none">
@@ -117,14 +72,59 @@
     </el-row>
 
     <el-row>
-
+      <el-col :span="12"><div class="grid-content bg-purple">
+        <el-card shadow="never" style="border: none">
+          <div slot="header" class="clearfix" style="border: none">
+            <span>Send Hash</span>
+          </div>
+          <div class="details-card-body">
+            {{ tx.payinHash }}
+          </div>
+        </el-card>
+      </div></el-col>
       <el-col :span="12"><div class="grid-content bg-purple-light">
         <el-card shadow="never" style="border: none">
           <div slot="header" class="clearfix" style="border: none">
-            <span>Errors</span>
+            <span>Receive Hash</span>
           </div>
           <div class="details-card-body">
-            -
+            {{ tx.payoutHash || '-' }}
+          </div>
+        </el-card>
+      </div></el-col>
+    </el-row>
+<!--    <el-row>-->
+
+<!--      <el-col :span="12"><div class="grid-content bg-purple-light">-->
+<!--        <el-card shadow="never" style="border: none">-->
+<!--          <div slot="header" class="clearfix" style="border: none">-->
+<!--            <span>Errors</span>-->
+<!--          </div>-->
+<!--          <div class="details-card-body">-->
+<!--            - -->
+<!--          </div>-->
+<!--        </el-card>-->
+<!--      </div></el-col>-->
+<!--    </el-row>-->
+
+    <el-row>
+      <el-col :span="12"><div class="grid-content bg-purple-light">
+        <el-card shadow="never" style="border: none">
+          <div slot="header" class="clearfix" style="border: none">
+            <span>Cashback</span>
+          </div>
+          <div class="details-card-body">
+            {{ tx.Cashbacks[0].expectedCashbackAmount }}
+          </div>
+        </el-card>
+      </div></el-col>
+      <el-col :span="12"><div class="grid-content bg-purple-light">
+        <el-card shadow="never" style="border: none">
+          <div slot="header" class="clearfix" style="border: none">
+            <span>Atomic ID</span>
+          </div>
+          <div class="details-card-body">
+            {{ tx.atomicId }}
           </div>
         </el-card>
       </div></el-col>
@@ -157,7 +157,6 @@ export default class extends Vue {
       'md-red': ['verifying'].includes(status)
     }
   }
-
 }
 </script>
 
