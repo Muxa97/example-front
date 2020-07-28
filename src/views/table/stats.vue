@@ -1,71 +1,92 @@
 <template>
   <div class="app-container">
-
     <div class="filter-container">
       <div class="search-container">
         <el-row>
-          <el-col :span="6"><div class="grid-content bg-purple">
-            <el-card shadow="never">
-              <div slot="header" class="clearfix">
-                <span>Select From Tx Created Date</span>
-              </div>
-              <div class="details-card-body">
-                <el-date-picker
-                  v-model="searchTimestampFrom"
-                  type="datetime"
-                  format="yyyy-MM-dd HH:mm:ss"
-                  placeholder="Select From"
-                  :picker-options="pickerOpts"
-                  @change="onIntervalChange"
-                />
-              </div>
-            </el-card>
-          </div></el-col>
-          <el-col :span="6"><div class="grid-content bg-purple-light">
-            <el-card shadow="never">
-              <div slot="header" class="clearfix">
-                <span>Select To Tx Created Date</span>
-              </div>
-              <div class="details-card-body">
-                <el-date-picker
-                  v-model="searchTimestampTo"
-                  type="datetime"
-                  format="yyyy-MM-dd HH:mm:ss"
-                  placeholder="Select To"
-                  :picker-options="pickerOpts"
-                  @change="onIntervalChange"
-                />
-              </div>
-            </el-card>
-          </div></el-col>
-          <el-col :span="6"><div class="grid-content bg-purple-light statistics">
-            <el-row>
-              <el-col :span="12">
-                <div class="grid-content bg-purple">
-                  <el-card shadow="never">
-                    <div slot="header" class="clearfix">
-                      <span class="header">Analyzed Until</span>
-                    </div>
-                    <div class="details-card-body">
-                      <el-tag type="info">{{ lastAnalyzedTime }}</el-tag>
-                    </div>
-                  </el-card>
+          <el-col :span="6">
+            <div class="grid-content bg-purple">
+              <el-card shadow="never">
+                <div
+                  slot="header"
+                  class="clearfix"
+                >
+                  <span>Select From Tx Created Date</span>
                 </div>
-              </el-col>
-              <el-col :span="12">
-                <div class="grid-content bg-purple">
-                  <el-card shadow="never">
-                    <div slot="header" class="clearfix">
-                      <span class="header">{{ totalOrAnalyzed }}</span>
-                    </div>
-                    <div class="details-card-body">
-                      <el-tag type="info">{{ analyzedExchangesCount }}</el-tag>
-                    </div>
-                  </el-card>
+                <div class="details-card-body">
+                  <el-date-picker
+                    v-model="searchTimestampFrom"
+                    type="datetime"
+                    format="yyyy-MM-dd HH:mm:ss"
+                    placeholder="Select From"
+                    :picker-options="pickerOpts"
+                    @change="onIntervalChange"
+                  />
                 </div>
-              </el-col>
-            </el-row>
-          </div></el-col>
+              </el-card>
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="grid-content bg-purple-light">
+              <el-card shadow="never">
+                <div
+                  slot="header"
+                  class="clearfix"
+                >
+                  <span>Select To Tx Created Date</span>
+                </div>
+                <div class="details-card-body">
+                  <el-date-picker
+                    v-model="searchTimestampTo"
+                    type="datetime"
+                    format="yyyy-MM-dd HH:mm:ss"
+                    placeholder="Select To"
+                    :picker-options="pickerOpts"
+                    @change="onIntervalChange"
+                  />
+                </div>
+              </el-card>
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="grid-content bg-purple-light statistics">
+              <el-row>
+                <el-col :span="12">
+                  <div class="grid-content bg-purple">
+                    <el-card shadow="never">
+                      <div
+                        slot="header"
+                        class="clearfix"
+                      >
+                        <span class="header">Analyzed Until</span>
+                      </div>
+                      <div class="details-card-body">
+                        <el-tag type="info">
+                          {{ lastAnalyzedTime }}
+                        </el-tag>
+                      </div>
+                    </el-card>
+                  </div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="grid-content bg-purple">
+                    <el-card shadow="never">
+                      <div
+                        slot="header"
+                        class="clearfix"
+                      >
+                        <span class="header">{{ totalOrAnalyzed }}</span>
+                      </div>
+                      <div class="details-card-body">
+                        <el-tag type="info">
+                          {{ analyzedExchangesCount }}
+                        </el-tag>
+                      </div>
+                    </el-card>
+                  </div>
+                </el-col>
+              </el-row>
+            </div>
+          </el-col>
           <el-col :span="6">
             <div class="grid-content bg-purple-light">
               <el-card>
@@ -134,7 +155,6 @@
         <template slot-scope="scope">
           <span>{{ scope.row.finished }}</span>
         </template>
-
       </el-table-column>
     </el-table>
   </div>

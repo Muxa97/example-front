@@ -62,6 +62,12 @@
       <div style="position:relative">
         <div class="tips">
           <span> username: admin </span>
+          <span> role: admin </span>
+          <span> password: any </span>
+        </div>
+        <div class="tips">
+          <span> username: editor </span>
+          <span> role: editor </span>
           <span> password: any </span>
         </div>
       </div>

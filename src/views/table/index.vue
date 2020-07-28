@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <DraggableDialog
-                     ref="dialogVisible"
-                     @search="refreshTableSearch"
-    ></DraggableDialog>
+      ref="dialogVisible"
+      @search="refreshTableSearch"
+    />
 
     <div class="filter-container">
       <div class="search-container">
@@ -45,7 +45,6 @@
       @sort-change="sortChange"
       @row-click="showDetails"
     >
-
       <el-table-column
         :label="$t('table.status')"
         prop="status"
@@ -55,7 +54,10 @@
         :class-name="getSortClass('id')"
       >
         <template slot-scope="scope">
-          <el-badge :value="scope.row.status | uppercaseFirstChar" :class="getStatusBadgeClass(scope.row.status)"></el-badge>
+          <el-badge
+            :value="scope.row.status | uppercaseFirstChar"
+            :class="getStatusBadgeClass(scope.row.status)"
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -96,7 +98,6 @@
         <template slot-scope="scope">
           <span>{{ scope.row.atomicId | formatAtomicId }}</span>
         </template>
-
       </el-table-column>
     </el-table>
     <pagination
@@ -110,7 +111,10 @@
       :title="detailsTx.title"
       :visible.sync="detailsTx"
     >
-      <TxDetails v-if="detailsTx" :tx="detailsTx"></TxDetails>
+      <TxDetails
+        v-if="detailsTx"
+        :tx="detailsTx"
+      />
     </el-dialog>
   </div>
 </template>
