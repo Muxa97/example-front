@@ -54,7 +54,7 @@ export const asyncRoutes: RouteConfig[] = [
     children: [
       {
         path: '',
-        component: () => import(/* webpackChunkName: "table" */ '@/views/exchanges/index.vue'),
+        component: () => import(/* webpackChunkName: "table" */ '@/views/table/index.vue'),
         meta: {
           title: 'Exchange',
           icon: 'education',
