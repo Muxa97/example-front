@@ -26,20 +26,6 @@ export const constantRoutes: RouteConfig[] = [
     meta: { hidden: true }
   },
   {
-    path: '/errors',
-    component: Layout,
-    children: [
-      {
-        path: '',
-        component: () => import(/* webpackCunkName: "errors" */ '@/views/errors/index.vue'),
-        meta: {
-          title: 'Errors',
-          icon: 'error'
-        }
-      }
-    ]
-  },
-  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
@@ -86,7 +72,22 @@ export const asyncRoutes: RouteConfig[] = [
         }
       }
     ]
-  }
+  },
+  {
+    path: '/errors',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: () => import(/* webpackCunkName: "errors" */ '@/views/errors/index.vue'),
+        meta: {
+          title: 'Errors',
+          icon: 'error',
+          roles: ['admin', 'user', 'editor']
+        }
+      }
+    ]
+  },
 ]
 
 const createRouter = () => new Router({
