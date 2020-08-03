@@ -54,3 +54,13 @@ export interface ICashbackData {
   order_id: string
   payment_id: string
 }
+
+export interface IErrorData {
+  data: string
+  currency: string
+  errorType: string
+  appVersion: string
+  platform: string
+  errorMessage: string
+  userId: string
+}

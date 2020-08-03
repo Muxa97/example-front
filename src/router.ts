@@ -26,6 +26,20 @@ export const constantRoutes: RouteConfig[] = [
     meta: { hidden: true }
   },
   {
+    path: '/errors',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: () => import(/* webpackCunkName: "errors" */ '@/views/errors/index.vue'),
+        meta: {
+          title: 'Errors',
+          icon: 'error'
+        }
+      }
+    ]
+  },
+  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
