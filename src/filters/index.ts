@@ -11,7 +11,10 @@ export const articleStatusFilter = (status: string) => {
   return statusMap[status]
 }
 export const parseApolloTime = (date: string) => {
-  return new Date(date).toUTCString()
+  return new Date(date).toLocaleString()
+}
+export const parseDateTime = (date: string) => {
+  return new Date(date).toDateString()
 }
 
 // Filter to uppercase the first character

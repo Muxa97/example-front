@@ -45,3 +45,36 @@ div:focus {
 .app-container {
   padding: 20px;
 }
+.filter-container .el-card {
+  height: 75px;
+}
+.filter-container .el-tag.el-tag--info {
+  margin: 4px;
+}
+.el-date-editor.el-input, .el-date-editor.el-input__inner{
+  width: 100%;
+}
+.filter-container .el-card__header {
+  font-weight: lighter;
+  padding: 0px 10px 0px 10px;
+  margin: 4px 7px -6px 5px;
+  font-size: 11px;
+}
+.spinner {
+  margin: 2px 40px;
+}
+
+.navbar .right-menu .right-menu-item.hover-effect[data-v-4ace4340]{
+  margin-right: 0;
+}
+.statistics .header {
+  font-weight: lighter;
+  //margin: 0px 5px 0px 10px;
+  font-size: 11px;
+  margin: 0px 5px 0px 0px;
+}
+.filter-container .el-button--medium {
+  font-size: 14px;
+  border-radius: 4px;
+  font-weight: lighter;
+}

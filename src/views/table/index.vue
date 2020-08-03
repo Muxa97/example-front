@@ -1,50 +1,36 @@
 <template>
   <div class="app-container">
+    <DraggableDialog
+      ref="dialogVisible"
+      @search="refreshTableSearch"
+    />
+
     <div class="filter-container">
-      <el-input
-        v-model="searchQuery"
-        :placeholder="$t('table.search')"
-        style="width: 200px;"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-      <el-select
-        v-model="searchType"
-        :placeholder="$t('table.searchType')"
-        clearable
-        class="filter-item"
-        style="width: 130px"
-      >
-        <el-option
-          v-for="item in searchTypeOptions"
-          :key="item.key"
-          :label="item.displayName+'('+item.key+')'"
-          :value="item.key"
+      <div class="search-container">
+        <el-input
+          v-model="searchString"
+          :placeholder="$t('table.filter')"
+          style="width: 250px;"
+          class="filter-item"
+          @keyup.enter.native="handleLocalFilter"
         />
-      </el-select>
-      <el-select
-        v-model="sort"
-        style="width: 140px"
-        class="filter-item"
-        :placeholder="$t('table.sortType')"
-        @change="handleFilter"
-      >
-        <el-option
-          v-for="item in sortOptions"
-          :key="item.key"
-          :label="item.label"
-          :value="item.key"
-        />
-      </el-select>
-      <el-button
-        v-waves
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >
-        {{ $t('table.search') }}
-      </el-button>
+
+        <el-button
+          type="primary"
+          @click="showDialog"
+        >
+          Search config
+        </el-button>
+        <el-button
+          v-waves
+          class="filter-item"
+          type="primary"
+          icon="el-icon-search"
+          @click="handleFilter"
+        >
+          {{ $t('table.search') }}
+        </el-button>
+      </div>
     </div>
 
     <el-table
@@ -54,28 +40,33 @@
       border
       fit
       highlight-current-row
+      stripe
       style="width: 100%;"
       @sort-change="sortChange"
+      @row-click="showDetails"
     >
       <el-table-column
         :label="$t('table.status')"
         prop="status"
         sortable="custom"
-        align="center"
+        align="left"
         width="120"
         :class-name="getSortClass('id')"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.status }}</span>
+          <el-badge
+            :value="scope.row.status | uppercaseFirstChar"
+            :class="getStatusBadgeClass(scope.row.status)"
+          />
         </template>
       </el-table-column>
       <el-table-column
         :label="$t('table.date')"
         width="250px"
-        align="center"
+        align="left"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.createdAt | parseApolloTime}}</span>
+          <span>{{ scope.row.createdAt | parseApolloTime }}</span>
         </template>
       </el-table-column>
 
@@ -93,7 +84,7 @@
       <el-table-column
         :label="$t('table.to')"
         width="180px"
-        align="center"
+        align="left"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.amountReceive }} {{ scope.row.toCurrency }}</span>
@@ -107,98 +98,93 @@
         <template slot-scope="scope">
           <span>{{ scope.row.atomicId | formatAtomicId }}</span>
         </template>
-
       </el-table-column>
     </el-table>
-
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="listQuery.offset"
+      :page.sync="page"
       :limit.sync="listQuery.limit"
       @pagination="getList"
     />
-
+    <el-dialog
+      :title="detailsTx.title"
+      :visible.sync="detailsTx"
+    >
+      <TxDetails
+        v-if="detailsTx"
+        :tx="detailsTx"
+      />
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import { cloneDeep } from 'lodash'
-import { getExchanges } from '@/api/exchanges'
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
 import { IExchangeData } from '@/api/types'
 import Pagination from '@/components/Pagination/index.vue'
-
-const calendarTypeOptions = [
-  { key: 'CN', displayName: 'China' },
-  { key: 'US', displayName: 'USA' },
-  { key: 'JP', displayName: 'Japan' },
-  { key: 'EU', displayName: 'Eurozone' }
-]
-const searchTypeOptions = [
-  { key: 'atomicId', displayName: 'AtomicId' },
-  { key: 'orderId', displayName: 'Order ID' },
-  { key: 'sendAddress', displayName: 'Send Address' },
-  { key: 'receiveAddress', displayName: 'Receive Address' },
-  { key: 'currency', displayName: 'Currency' }
-]
-
-// arr to obj, such as { CN : "China", US : "USA" }
-const calendarTypeKeyValue = calendarTypeOptions.reduce((acc: { [key: string]: string }, cur) => {
-  acc[cur.key] = cur.displayName
-  return acc
-}, {}) as { [key: string]: string }
+import TxDetails from '@/components/TxDetails/index.vue'
+import DraggableDialog from '@/components/Dialog/index.vue'
 
   @Component({
     name: 'ComplexTable',
     components: {
-      Pagination
+      DraggableDialog,
+      Pagination,
+      TxDetails
     },
     filters: {
-      typeFilter: (type: string) => {
-        return calendarTypeKeyValue[type]
-      }
     }
   })
 
 export default class extends Vue {
     private tableKey = 0
     private list: IExchangeData[] = []
-    private total = 2000
+    private searchString = '';
+    private total = 0
     private listLoading = true
-    private searchQuery = ''
-    private searchType = ''
-    private listQuery = {
-      offset: 1,
-      limit: 200
-    }
+
+    private dialogTableVisible = false
+
     private sort = ''
 
-    private importanceOptions = [1, 2, 3]
-    private calendarTypeOptions = calendarTypeOptions;
-    private searchTypeOptions = searchTypeOptions;
-    private sortOptions = [
-      { label: 'ID Ascending', key: '+id' },
-      { label: 'ID Descending', key: '-id' }
-    ]
+    private pagination = 100
+    private listQuery = {
+      offset: 0,
+      limit: this.pagination
+    }
+    private page = 1
+    private detailsTx:any = false
+    private tableByTerms = ''
 
     created() {
-      this.getList()
+      this.getCount()
+      this.getList(false)
     }
+    private showDialog() {
+      (this.$refs.dialogVisible as any).showDialog()
+    }
+    private showDetails(row:any) {
+      this.detailsTx = { ...row }
+    }
+    private handleLocalFilter() {
+      this.list = this.list.filter((item:any) => {
+        return item.fromCurrency.includes(this.searchString) || item.toCurrency.includes(this.searchString) ||
+          item.status.includes(this.searchString) || item.atomicId.includes(this.searchString) ||
+          item.payinAddress.includes(this.searchString) || item.payoutAddress.includes(this.searchString) ||
+          item.refundAddress.includes(this.searchString)
+      })
+      this.total = this.list.length
+    }
+    private async getCount() {
+      const data:any = await getExchangesCount()
 
-    private async getList() {
-      this.listLoading = true
-      const data = await getExchanges(this.listQuery)
-      this.list = data.data
-      console.log(this.list)
-      // this.total = data.total
-      // Just to simulate the time of the request
-      this.listLoading = false
+      this.total = data.data.count
     }
 
     private handleFilter() {
-      this.listQuery.offset = 1
-      this.getList()
+      this.getList(false)
     }
 
     private sortChange(data: any) {
@@ -217,6 +203,58 @@ export default class extends Vue {
       this.handleFilter()
     }
 
+    private getStatusBadgeClass(status: string) {
+      return {
+        'md-square': true,
+        'md-green': ['finished', 'refunded'].includes(status),
+        'md-gray': ['waiting', 'expired', 'failed'].includes(status),
+        'md-lightblue': ['confirming', 'sending', 'exchanging'].includes(status),
+        'md-red': ['verifying'].includes(status)
+      }
+    }
+
+    private async refreshTableSearch(searchString:string) {
+      this.listLoading = true
+      try {
+        const response = await getExchangesByTermsCount(searchString)
+        this.total = response.data.count
+        const { data } = await getExchangesByTerms(searchString, `offset=${this.listQuery.offset}&limit=${this.listQuery.limit}`)
+        this.tableByTerms = searchString
+        this.list = data
+      } catch (e) {
+        this.$notify({
+          title: 'error',
+          message: e.toString(),
+          type: 'error',
+          duration: 2000
+        })
+      }
+      this.listLoading = false
+    }
+
+    private async getList(params:any) {
+      let data
+      this.listLoading = true
+      this.listQuery.offset = params ? (params.page - 1) * params.limit : 0
+      try {
+        if (this.tableByTerms) {
+          data = await getExchangesByTerms(this.tableByTerms, `offset=${this.listQuery.offset}&limit=${this.listQuery.limit}`)
+        } else {
+          data = await getExchanges(this.listQuery)
+        }
+        this.list = data.data
+        this.page = params.page
+      } catch (e) {
+        this.$notify({
+          title: 'error',
+          message: e.toString(),
+          type: 'error',
+          duration: 2000
+        })
+      }
+      this.listLoading = false
+    }
+
     private getSortClass(key: string) {
       const sort = this.sort
       return sort === `+${key}` ? 'ascending' : sort === `-${key}` ? 'descending' : ''
@@ -224,3 +262,16 @@ export default class extends Vue {
 }
 
 </script>
+
+<style lang="scss" scoped>
+  .search-container{
+    display: block;
+    float: right;
+    /*position: absolute;*/
+    /*top: 99px;*/
+    /*right: 22px;*/
+  }
+  .filter-item {
+    margin: 5px 5px;
+  }
+</style>

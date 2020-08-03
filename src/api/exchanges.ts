@@ -1,13 +1,42 @@
-import request from '@/utils/request'
 import axios from 'axios'
 
 export const getExchanges = (params: any) => {
   return axios({
     headers: {
-      'Authorization': 'Nx6\\0v%N++\\Oq&mNRwJ7iomOlzoYn'
+      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
     },
-    url: 'https://apollo.atomicwallet.io/transactions/all',
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/transactions/all`,
     method: 'get',
     params
+  })
+}
+
+export const getExchangesByTerms = (params: string, query: string) => {
+  return axios({
+    headers: {
+      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+    },
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/transactions/searchByTerm?${params}&${query}`,
+    method: 'get'
+  })
+}
+
+export const getExchangesByTermsCount = (params: string) => {
+  return axios({
+    headers: {
+      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+    },
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/transactions/countByTerm?${params}`,
+    method: 'get'
+  })
+}
+
+export const getExchangesCount = () => {
+  return axios({
+    headers: {
+      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+    },
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/transactions/countAll`,
+    method: 'get'
   })
 }

@@ -11,9 +11,64 @@ $--color-text-regular: #1f2d3d;
 $--border-color-light: #dfe4ed;
 $--border-color-lighter: #e6ebf5;
 $--table-border:1px solid#dfe6ec;
-
+.el-table--border th, .el-table--border td {
+  border-right: 0!important;
+}
+table thead tr th {
+  padding: 5px 0!important;
+}
 // Icon font path, required
 $--font-path: '~element-ui/lib/theme-chalk/fonts';
 
 // Apply overrided variables in Element UI
 @import '~element-ui/packages/theme-chalk/src/index';
+
+//бэйджи
+.md-square .el-badge__content, .md-square.el-badge__content{
+  border-radius: 2px;
+  height: auto;
+  font-weight: bold;
+}
+.md-green .el-badge__content, .md-green.el-badge__content{
+  background-color: #82c310;
+  border-radius: 2px;
+  height: auto;
+  font-weight: bold;
+}
+.md-gray .el-badge__content, .md-gray.el-badge__content{
+  background-color: #5a5e66a6;
+  border-radius: 2px;
+  height: auto;
+  font-weight: bold;
+}
+.md-lightblue .el-badge__content, .md-lightblue.el-badge__content{
+  background-color: #42b5da;
+  border-radius: 2px;
+  height: auto;
+  font-weight: bold;
+}
+.md-red .el-badge__content, .md-red.el-badge__content{
+  background-color: red;
+  border-radius: 2px;
+  height: auto;
+  font-weight: bold;
+}
+
+
+tbody .el-table__row:hover {
+  cursor: pointer;
+}
+
+// card header border
+.el-card__header{
+  border: none;
+  font-weight: bold;
+  padding: 0 10px;
+}
+.el-card__body {
+  padding: 10px 10px 30px 10px;
+}
+
+.el-dialog__body {
+  padding: 0 20px;
+}
