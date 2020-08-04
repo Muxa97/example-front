@@ -82,7 +82,7 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackCunkName: "errors" */ '@/views/errors/index.vue'),
         meta: {
           title: 'Errors',
-          icon: 'error',
+          icon: 'bug',
           roles: ['admin', 'user', 'editor']
         }
       }

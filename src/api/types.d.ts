@@ -56,7 +56,7 @@ export interface ICashbackData {
 }
 
 export interface IErrorData {
-  data: string
+  date: string
   currency: string
   errorType: string
   appVersion: string
