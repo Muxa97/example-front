@@ -207,7 +207,7 @@ const pickerOptions = {
     private total = 0
     private listLoading = true
     private searchTimestampFrom: Date = moment().subtract(1, 'week').toDate();
-    private searchTimestampTo: Date = new Date();
+    private searchTimestampTo: Date = moment().toDate();
     private pickerOpts = pickerOptions
 
     private pagination = 100
@@ -237,14 +237,17 @@ const pickerOptions = {
         userId = this.searchString
       }
 
+      const dateFrom: string = moment(this.searchTimestampFrom).format()
+      const dateTo: string = moment(this.searchTimestampTo).format()
+
       const data = {
         "query": {
           "bool": {
             "must": [{
               "range": {
                 "date": {
-                  "gte": new Date(this.searchTimestampFrom).toISOString(),
-                  "lte": new Date(this.searchTimestampTo).toISOString(),
+                  "gte": dateFrom,
+                  "lte": dateTo,
                   "boost": 2
                 }
               },
@@ -289,7 +292,7 @@ const pickerOptions = {
           const responseData = JSON.parse(response.data.result)
           this.list = responseData.hits.hits.map((hit:any) => {
             const error = hit._source
-            error.date = (new Date(error.date)).toLocaleString()
+            error.date = new Date(error.date).toLocaleString()
             return error
           })
           this.total = responseData.hits.total.value
