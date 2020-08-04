@@ -72,6 +72,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { getArticles } from '@/api/articles'
 import { getExchanges } from '@/api/exchanges'
 import { IArticleData, IExchangeData } from '@/api/types'
+import {Message} from 'element-ui'
 
 @Component({
   name: 'Table',
@@ -91,7 +92,7 @@ import { IArticleData, IExchangeData } from '@/api/types'
 })
 export default class extends Vue {
   private list: IExchangeData[] = [];
-  private listLoading = true;
+  private listLoading = false;
   private listQuery = {
     offset: 0,
     limit: 300
@@ -103,8 +104,12 @@ export default class extends Vue {
 
   private async getList() {
     this.listLoading = true
-    const { data } = await getExchanges(this.listQuery)
-    this.list = data.items
+    try {
+      const {data} = await getExchanges(this.listQuery)
+      this.list = data.items
+    } catch (err) {
+      Message.error(err || 'Has Error')
+    }
     // Just to simulate the time of the request
     setTimeout(() => {
       this.listLoading = false

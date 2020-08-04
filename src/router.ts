@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import Router, { RouteConfig } from 'vue-router'
 import Layout from '@/layout/index.vue'
 
 Vue.use(Router)
@@ -14,8 +14,84 @@ Vue.use(Router)
   }
 */
 
-export default new Router({
-  // mode: 'history',  // Enable this if you need.
+export const constantRoutes: RouteConfig[] = [
+  {
+    path: '/login',
+    component: () => import(/* webpackChunkName: "login" */ '@/views/login/index.vue'),
+    meta: { hidden: true }
+  },
+  {
+    path: '/404',
+    component: () => import(/* webpackChunkName: "404" */ '@/views/404.vue'),
+    meta: { hidden: true }
+  },
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/index.vue'),
+        meta: {
+          title: 'Dashboard',
+          icon: 'dashboard'
+        }
+      }
+    ]
+  }
+]
+
+export const asyncRoutes: RouteConfig[] = [
+  {
+    path: '/exchange',
+    component: Layout,
+    meta: {
+      title: 'Exchange',
+      icon: 'education',
+      breadcrumb: false
+    },
+    children: [
+      {
+        path: '',
+        component: () => import(/* webpackChunkName: "table" */ '@/views/table/index.vue'),
+        meta: {
+          title: 'Exchange',
+          icon: 'education',
+          // TODO: remove editor role after changing mocking backend to real backend
+          roles: ['user', 'admin', 'editor']
+        }
+      },
+      {
+        path: 'stats',
+        component: () => import(/* webpackChunkName: "table" */ '@/views/table/stats.vue'),
+        meta: {
+          title: 'Exchange Stats',
+          icon: 'chart',
+          roles: ['admin']
+        }
+      }
+    ]
+  },
+  {
+    path: '/errors',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: () => import(/* webpackCunkName: "errors" */ '@/views/errors/index.vue'),
+        meta: {
+          title: 'Errors',
+          icon: 'bug',
+          roles: ['admin', 'user', 'editor']
+        }
+      }
+    ]
+  },
+]
+
+const createRouter = () => new Router({
+  mode: 'history',
   scrollBehavior: (to, from, savedPosition) => {
     if (savedPosition) {
       return savedPosition
@@ -24,166 +100,15 @@ export default new Router({
     }
   },
   base: process.env.BASE_URL,
-  routes: [
-    {
-      path: '/login',
-      component: () => import(/* webpackChunkName: "login" */ '@/views/login/index.vue'),
-      meta: { hidden: true }
-    },
-    {
-      path: '/404',
-      component: () => import(/* webpackChunkName: "404" */ '@/views/404.vue'),
-      meta: { hidden: true }
-    },
-    {
-      path: '/',
-      component: Layout,
-      redirect: '/dashboard',
-      children: [
-        {
-          path: 'dashboard',
-          component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/index.vue'),
-          meta: {
-            title: 'Dashboard',
-            icon: 'dashboard'
-          }
-        }
-      ]
-    },
-    // {
-    //   path: '/example',
-    //   component: Layout,
-    //   redirect: '/example/tree',
-    //   meta: {
-    //     title: 'Errors',
-    //     icon: 'bug'
-    //   },
-    //   children: [
-    //     {
-    //       path: 'table',
-    //       component: () => import(/* webpackChunkName: "table" */ '@/views/table/index.vue'),
-    //       meta: {
-    //         title: 'Errors table',
-    //         icon: 'table'
-    //       }
-    //     }
-    //   ]
-    // },
-    {
-      path: '/exchange',
-      component: Layout,
-      redirect: '/dashboard',
-      meta: {
-        title: 'Dashboard',
-        icon: 'education'
-      },
-      children: [
-        {
-          path: 'table',
-          component: () => import(/* webpackChunkName: "table" */ '@/views/table/index.vue'),
-          meta: {
-            title: 'Exchange',
-            icon: 'education'
-          }
-        },
-        {
-          path: 'stats',
-          component: () => import(/* webpackChunkName: "table" */ '@/views/table/stats.vue'),
-          meta: {
-            title: 'Exchange Stats',
-            icon: 'chart'
-          }
-        }
-      ]
-    },
-    // {
-    //   path: '/exchange-stats',
-    //   component: Layout,
-    //   redirect: '/dashboard',
-    //   meta: {
-    //     title: 'Exchange stats',
-    //     icon: 'chart'
-    //   },
-    //   children: [
-    //     {
-    //       path: 'table',
-    //       component: () => import(/* webpackChunkName: "table" */ '@/views/table/index.vue'),
-    //       meta: {
-    //         title: 'Exchange stats',
-    //         icon: 'chart'
-    //       }
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: '/nested',
-    //   component: Layout,
-    //   redirect: '/nested/menu1',
-    //   meta: {
-    //     title: 'Nested',
-    //     icon: 'nested'
-    //   },
-    //   children: [
-    //     {
-    //       path: 'menu1',
-    //       component: () => import(/* webpackChunkName: "menu1" */ '@/views/nested/menu1/index.vue'),
-    //       redirect: '/nested/menu1/menu1-1',
-    //       meta: { title: 'Menu1' },
-    //       children: [
-    //         {
-    //           path: 'menu1-1',
-    //           component: () => import(/* webpackChunkName: "menu1-1" */ '@/views/nested/menu1/menu1-1/index.vue'),
-    //           meta: { title: 'Menu1-1' }
-    //         },
-    //         {
-    //           path: 'menu1-2',
-    //           component: () => import(/* webpackChunkName: "menu1-2" */ '@/views/nested/menu1/menu1-2/index.vue'),
-    //           redirect: '/nested/menu1/menu1-2/menu1-2-1',
-    //           meta: { title: 'Menu1-2' },
-    //           children: [
-    //             {
-    //               path: 'menu1-2-1',
-    //               component: () => import(/* webpackChunkName: "menu1-2-1" */ '@/views/nested/menu1/menu1-2/menu1-2-1/index.vue'),
-    //               meta: { title: 'Menu1-2-1' }
-    //             },
-    //             {
-    //               path: 'menu1-2-2',
-    //               component: () => import(/* webpackChunkName: "menu1-2-2" */ '@/views/nested/menu1/menu1-2/menu1-2-2/index.vue'),
-    //               meta: { title: 'Menu1-2-2' }
-    //             }
-    //           ]
-    //         },
-    //         {
-    //           path: 'menu1-3',
-    //           component: () => import(/* webpackChunkName: "menu1-3" */ '@/views/nested/menu1/menu1-3/index.vue'),
-    //           meta: { title: 'Menu1-3' }
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       path: 'menu2',
-    //       component: () => import(/* webpackChunkName: "menu2" */ '@/views/nested/menu2/index.vue'),
-    //       meta: { title: 'Menu2' }
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: 'external-link',
-    //   component: Layout,
-    //   children: [
-    //     {
-    //       path: 'https://github.com/Armour/vue-typescript-admin-template',
-    //       meta: {
-    //         title: 'External Link',
-    //         icon: 'link'
-    //       }
-    //     }
-    //   ]
-    // },
-    {
-      path: '*',
-      redirect: '/404',
-      meta: { hidden: true }
-    }
-  ]
+  routes: constantRoutes
 })
+
+const router = createRouter()
+
+// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
+export function resetRouter() {
+  const newRouter = createRouter();
+  (router as any).matcher = (newRouter as any).matcher // reset router
+}
+
+export default router
