@@ -74,12 +74,27 @@ export const asyncRoutes: RouteConfig[] = [
     ]
   },
   {
+    path: '/users',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: () => import(/* webpackChunkName: "users" */ '@/views/users/index.vue'),
+        meta: {
+          title: 'Users',
+          icon: 'user',
+          roles: ['admin', 'user', 'editor']
+        }
+      }
+    ]
+  },
+  {
     path: '/errors',
     component: Layout,
     children: [
       {
         path: '',
-        component: () => import(/* webpackCunkName: "errors" */ '@/views/errors/index.vue'),
+        component: () => import(/* webpackChunkName: "errors" */ '@/views/errors/index.vue'),
         meta: {
           title: 'Errors',
           icon: 'error',

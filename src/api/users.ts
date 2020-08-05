@@ -1,5 +1,11 @@
 import request from '@/utils/request'
 
+export const getUsers = (data: any) =>
+  request({
+    url: '/users',
+    method: 'get'
+  })
+
 export const getUserInfo = (data: any) =>
   request({
     url: '/users/info',
