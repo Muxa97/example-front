@@ -5,7 +5,7 @@
         <el-input
           v-model="searchString"
           :placeholder="$t('table.filter')"
-          style="width: 250px;"
+          style="width: 500px; margin-right: 5px;"
           class="filter-item"
           @keyup.enter.native="handleFilter"
         />
@@ -39,7 +39,7 @@
         width="250px"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.atomicId }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -67,14 +67,14 @@
             style="width: 100%;"
           >
             <el-table-column
-              :label="$t('table.platform')"
+              :label="$t('table.os')"
             >
               <template slot-scope="scope_1">
                 <span>{{ scope_1.row.platform }}</span>
               </template>
             </el-table-column>
             <el-table-column
-              :label="$t('table.appVersion')"
+              :label="$t('table.version')"
             >
               <template slot-scope="scope_1">
                 <span>{{ scope_1.row.appVersion }}</span>
@@ -129,7 +129,7 @@ export default class extends Vue {
   }
 
   private redirectToUserPage(row: any): void {
-    this.$router.push({ path: 'dashboard', query: { userId: row.id } })
+    this.$router.push({ path: 'dashboard', query: { userId: row.atomicId } })
   }
 
   private handleFilter() {
@@ -150,11 +150,7 @@ export default class extends Vue {
     // TODO: Change to real request
     getUsers(userId)
       .then((response) => {
-        this.list = [
-          { id: '1234', status: 'member', devices: [{ platform: 'win32 X64 10.28.17.0392', appVersion: '2.18.2'}]},
-          { id: '1235', status: 'member', devices: [{ platform: 'win32 X64 10.28.17.0392', appVersion: '2.18.2'}]},
-          { id: '1236', status: 'member', devices: [{ platform: 'win32 X64 10.28.17.0392', appVersion: '2.18.2'}]},
-        ]
+        this.list = response
         this.total = 1000
         // const responseData = JSON.parse(response.data.result)
         // this.list = responseData.hits.hits.map((hit:any) => {
@@ -179,5 +175,12 @@ export default class extends Vue {
 </script>
 
 <style scoped>
-
+  .search-container{
+    display: block;
+    float: right;
+    margin-bottom: 5px;
+    /*position: absolute;*/
+    /*top: 99px;*/
+    /*right: 22px;*/
+  }
 </style>

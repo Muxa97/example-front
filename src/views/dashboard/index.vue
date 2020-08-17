@@ -15,7 +15,7 @@
               <span>User ID</span>
             </div>
             <div class="details-card-body">
-              <span>{{ currentUser.userId }}</span>
+              <span>{{ currentUser.atomicId }}</span>
             </div>
           </el-card>
         </div>
@@ -144,12 +144,12 @@
                 stripe
                 style="width: 100%;"
               >
-                <el-table-column :label="$t('table.platform')">
+                <el-table-column :label="$t('table.os')">
                   <template slot-scope="scope">
                     <span>{{ scope.row.platform }}</span>
                   </template>
                 </el-table-column>
-                <el-table-column :label="$t('table.appVersion')">
+                <el-table-column :label="$t('table.version')">
                   <template slot-scope="scope">
                     <span>{{ scope.row.appVersion }}</span>
                   </template>
@@ -160,9 +160,9 @@
         </div>
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="12">
-        <router-link :to="`exchanges?userId=${currentUser.userId}`">
+    <el-row style="margin-bottom: 20px;">
+      <el-col :span="8">
+        <router-link :to="`exchange?userId=${currentUser.atomicId}`">
           <div class="grid-content bg-purple linked-card__container">
             <el-card style="padding: 0;">
               <div class="details-card-body" style="text-align: center; vertical-align: middle;">
@@ -172,8 +172,8 @@
           </div>
         </router-link>
       </el-col>
-      <el-col :span="12">
-        <router-link :to="`exchanges?userId=${currentUser.userId}`">
+      <el-col :span="8">
+        <router-link :to="`buy?userId=${currentUser.atomicId}`">
           <div class="grid-content bg-purple linked-card__container">
             <el-card style="padding: 0;">
               <div class="details-card-body" style="text-align: center;">
@@ -183,10 +183,8 @@
           </div>
         </router-link>
       </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="12">
-        <router-link :to="`exchanges?userId=${currentUser.userId}`">
+      <el-col :span="8">
+        <router-link :to="`staking?userId=${currentUser.atomicId}`">
           <div class="grid-content bg-purple linked-card__container">
             <el-card style="padding: 0;">
               <div class="details-card-body" style="text-align: center;">
@@ -196,12 +194,25 @@
           </div>
         </router-link>
       </el-col>
+    </el-row>
+    <el-row>
       <el-col :span="12">
-        <router-link :to="`errors?userId=${currentUser.userId}`">
+        <router-link :to="`errors?userId=${currentUser.atomicId}`">
           <div class="grid-content bg-purple linked-card__container">
             <el-card>
               <div class="details-card-body" style="text-align: center;">
                 <span>Errors</span>
+              </div>
+            </el-card>
+          </div>
+        </router-link>
+      </el-col>
+      <el-col :span="12">
+        <router-link :to="`referrals?userId=${currentUser.atomicId}`">
+          <div class="grid-content bg-purple linked-card__container">
+            <el-card>
+              <div class="details-card-body" style="text-align: center;">
+                <span>Referrals</span>
               </div>
             </el-card>
           </div>
@@ -227,20 +238,27 @@ export default class extends Vue {
 
   created() {
     const uid = this.$route.query.userId
+    this.currentUser = {
+      atomicId: '',
+      status: '',
+      awcBalance: 0,
+      devices: [],
+      exchangeVolume: 0,
+      buyingVolume: 0,
+      stakingVolume: 0,
+      airdropsReferrals: []
+    }
     if (uid) {
-      this.currentUser = getUserInfo(uid)
+      getUserInfo({ atomicId: uid })
+        .then(({ data }) => {
+          this.currentUser = data.info
+          this.devices = this.currentUser.devices
+        })
     } else {
-      this.currentUser = {
-        userId: 'asdcrsearhgafdeq5rulgbJHgbjhligfbnyILYFVGibnh,byLjhbkv,jhvYJdwaacdsan',
-        status: 'Member',
-        awcBalance: 0.17,
-        devices: [{ platform: 'win32 X64 10.28.17.0392', appVersion: '2.18.2'}],
-        exchangeVolume: 0,
-        buyingVolume: 0,
-        stakingVolume: 0,
-        airdropsReferrals: []
+      if (UserModule.info) {
+        this.currentUser = UserModule.info
+        this.devices = this.currentUser.devices
       }
-      this.devices = this.currentUser.devices
     }
   }
 
@@ -254,9 +272,12 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .linked-card__container .el-card__body {
-  padding: 10px 10px 10px 10px;
-  vertical-align: middle;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
 }
 </style>
