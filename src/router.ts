@@ -74,6 +74,21 @@ export const asyncRoutes: RouteConfig[] = [
     ]
   },
   {
+    path: '/audience',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/audience/index.vue'),
+        meta: {
+          title: 'Audience',
+          icon: 'audience',
+          roles: ['admin', 'user', 'editor']
+        }
+      }
+    ]
+  },
+  {
     path: '/errors',
     component: Layout,
     children: [
