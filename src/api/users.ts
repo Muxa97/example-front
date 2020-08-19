@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import axios from 'axios'
 import { IUserData } from '@/api/types';
 
 const users: IUserData[] = [
@@ -34,12 +35,16 @@ const users: IUserData[] = [
   },
 ]
 
-export const getUsers = async (data: any) =>  {
-  await request({
-    url: '/users',
+export const getUsers = async (params: any) =>  {
+  const response = await axios({
+    headers: {
+      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+    },
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/users/all?offset=${params.offset}&limit=${params.limit}`,
     method: 'get'
   })
-  return users
+  const { data } = response
+  return data
 }
 
 export const getUserInfo = async (data: any) =>  {

@@ -39,7 +39,7 @@
         width="250px"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.atomicId }}</span>
+          <span style="font-weight: 600">{{ `${scope.row.atomicId.slice(0, 6)}...${scope.row.atomicId.slice(scope.row.atomicId.length - 6)}` }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -147,19 +147,10 @@ export default class extends Vue {
       userId = this.searchString
     }
 
-    // TODO: Change to real request
-    getUsers(userId)
-      .then((response) => {
-        this.list = response
+    getUsers(this.listQuery)
+      .then((data) => {
+        this.list = data
         this.total = 1000
-        // const responseData = JSON.parse(response.data.result)
-        // this.list = responseData.hits.hits.map((hit:any) => {
-        //   const error = hit._source
-        //   error.date = new Date(error.date).toLocaleString()
-        //   return error
-        // })
-        // this.total = responseData.hits.total.value
-        //
         if (this.pages === 0) {
           this.pages = Math.floor(this.total / this.pagination)
         }
