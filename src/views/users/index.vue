@@ -119,7 +119,8 @@ export default class extends Vue {
   private pagination = 100
   private listQuery = {
     offset: 0,
-    limit: this.pagination
+    limit: this.pagination,
+    atomicId: ''
   }
   private page = 1
   private pages = 0
@@ -139,18 +140,17 @@ export default class extends Vue {
   private async getList(params:any) {
     this.listLoading = true
     this.listQuery.offset = params ? (params.page - 1) * params.limit : 0
-    let userId
 
     if (this.$route.query.userId && this.searchString.length === 0) {
-      userId = this.$route.query.userId
+      this.listQuery.atomicId = this.$route.query.userId
     } else {
-      userId = this.searchString
+      this.listQuery.atomicId = this.searchString
     }
 
     getUsers(this.listQuery)
       .then((data) => {
-        this.list = data
-        this.total = 1000
+        this.list = data.users
+        this.total = data.total
         if (this.pages === 0) {
           this.pages = Math.floor(this.total / this.pagination)
         }
