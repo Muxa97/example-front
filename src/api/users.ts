@@ -53,14 +53,14 @@ export const getUserInfo = async (data: any) =>  {
     method: 'post',
     data
   })
-  const info = await axios({
+  const info = { data: {} } /*await axios({
     headers: {
       'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
     },
     url: `http://${process.env.VUE_APP_APOLLO_API_HOST}/users/info`,
     method: 'post',
     data
-  })
+  })*/
   return {
     data: {
       user: response.data.user,
