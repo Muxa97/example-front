@@ -241,7 +241,7 @@ export default class extends Vue {
 
     async created(): Promise<any> {
       NProgress.start()
-      if (this.$route.query.coin && this.$route.query.coin.length) this.searchString = this.$route.query.coin
+      if (this.$route.query.coin && this.$route.query.coin.length) this.searchString = this.$route.query.coin.toString()
       this.getExchangesByCoins().then(() => NProgress.done())
     }
     private onIntervalChange() {

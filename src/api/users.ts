@@ -64,7 +64,7 @@ export const getUserInfo = async(data: any) => {
   return {
     data: {
       user: response.data.user,
-      info: info.data
+      info: info.data as IUserData
     }
   }
 }
