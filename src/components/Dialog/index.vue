@@ -8,7 +8,7 @@
     >
       <el-input
         v-model="searchQuery.atomicId"
-        :placeholder="$t('dialog.atomicId')"
+        :placeholder="$t('table.atomicId')"
         style="width: 200px;"
         class="filter-item"
       />

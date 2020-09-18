@@ -14,7 +14,7 @@
                 </div>
                 <div class="details-card-body">
                   <el-date-picker
-                    v-model="searchTimestampTo"
+                    v-model="searchTimestampFrom"
                     type="date"
                     format="yyyy-MM-dd"
                     placeholder="Select Date"
@@ -128,8 +128,8 @@
   export default class extends Vue {
     private list: any[] = []
     private totalExchanges: number = 0;
-    private searchTimestampFrom: Date = moment().subtract(1, 'day').toDate();
-    private searchTimestampTo: Date = new Date();
+    private searchTimestampFrom: Date = new Date(new Date().setHours(0, 0, 0, 0));
+    private searchTimestampTo: Date = new Date(new Date().setHours(23, 59, 59, 999));
     private searchQuery = {
       offset: 0,
       limit: 10000
@@ -144,12 +144,17 @@
 
     async created(): Promise<any> {
       NProgress.start()
-      this.totalExchanges = (await getExchangesCount()).data.count
+
+      if (this.$route.query.date) {
+        this.searchTimestampFrom = new Date(new Date(this.$route.query.date).setHours(0, 0, 0, 0))
+        this.searchTimestampTo = new Date(new Date(this.searchTimestampFrom).setHours(23, 59, 59, 999))
+      }
       this.analyzeExchangesByInterval().then(() => NProgress.done())
     }
 
     private async onIntervalChange() {
-      this.searchTimestampFrom = moment(this.searchTimestampTo).subtract(1, 'day').toDate()
+      this.searchTimestampFrom = new Date(new Date(this.searchTimestampFrom).setHours(0, 0, 0, 0))
+      this.searchTimestampTo = new Date(new Date(this.searchTimestampFrom).setHours(23, 59, 59, 999))
       await this.analyzeExchangesByInterval()
     }
 
@@ -164,8 +169,12 @@
         constructQuery(this.searchQuery),
         `createdAtStart=${new Date(range.start.toDate()).toUTCString()}&createdAtEnd=${new Date(range.end.toDate()).toUTCString()}`
       )
-      this.list = data.transactions.filter((tx: any) => tx.status === 'waiting')
-      this.totalExchanges = data.count
+
+      this.list = data.transactions.filter((tx: any) => {
+        tx.amountSend = +tx.amountSend
+        return tx.status === 'waiting'
+      })
+      this.totalExchanges = this.list.length
 
       NProgress.done()
     }

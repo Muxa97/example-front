@@ -54,7 +54,7 @@ export const asyncRoutes: RouteConfig[] = [
     children: [
       {
         path: '',
-        component: () => import(/* webpackChunkName: "table" */ '@/views/exchanges/index.vue'),
+        component: () => import(/* webpackChunkName: "exchanges" */ '@/views/exchanges/index.vue'),
         meta: {
           title: 'Exchange',
           icon: 'education',
@@ -64,7 +64,7 @@ export const asyncRoutes: RouteConfig[] = [
       },
       {
         path: 'stats/daily',
-        component: () => import(/* webpackChunkName: "table" */ '@/views/exchanges/daily-stats.vue'),
+        component: () => import(/* webpackChunkName: "daily-stats" */ '@/views/exchanges/daily-stats.vue'),
         meta: {
           title: 'Daily Exchange Stats',
           icon: 'chart',
@@ -73,6 +73,7 @@ export const asyncRoutes: RouteConfig[] = [
       },
       {
         path: 'waiting',
+        name: 'waiting',
         component: () => import(/* webpackChunkName: "waiting-exchanges" */ '@/views/exchanges/waiting.vue'),
         meta: {
           title: 'Waiting Exchanges',
@@ -85,6 +86,16 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackChunkName: "coins-stats" */ '@/views/exchanges/coins-stats.vue'),
         meta: {
           title: 'Coins Stats',
+          icon: 'table',
+          roles: ['admin', 'user', 'editor']
+        }
+      },
+      {
+        path: 'stats/pairs',
+        name: 'pairs',
+        component: () => import(/* webpackCunkName: "pairs-stats" */ '@/views/exchanges/pairs-stats.vue'),
+        meta: {
+          title: 'Pairs Stats',
           icon: 'table',
           roles: ['admin', 'user', 'editor']
         }

@@ -48,48 +48,14 @@
             </div>
           </el-col>
           <el-col :span="6">
-            <div class="grid-content bg-purple-light statistics">
-              <el-row>
-                <el-col :span="12">
-                  <div class="grid-content bg-purple">
-                    <el-card shadow="never">
-                      <div
-                        slot="header"
-                        class="clearfix"
-                      >
-                        <span class="header">Analyzed Until</span>
-                      </div>
-                      <div class="details-card-body">
-                        <el-tag type="info">
-                          {{ lastAnalyzedTime }}
-                        </el-tag>
-                      </div>
-                    </el-card>
-                  </div>
-                </el-col>
-                <el-col :span="12">
-                  <div class="grid-content bg-purple">
-                    <el-card shadow="never">
-                      <div
-                        slot="header"
-                        class="clearfix"
-                      >
-                        <span class="header">{{ totalOrAnalyzed }}</span>
-                      </div>
-                      <div class="details-card-body">
-                        <el-tag type="info">
-                          {{ analyzedExchangesCount }}
-                        </el-tag>
-                      </div>
-                    </el-card>
-                  </div>
-                </el-col>
-              </el-row>
-            </div>
-          </el-col>
-          <el-col :span="6">
             <div class="grid-content bg-purple-light">
               <el-card>
+                <div
+                  slot="header"
+                  class="clearfix"
+                >
+                  <span>Search</span>
+                </div>
                 <div class="details-card-body search-button">
                   <el-button
                     v-waves
@@ -97,7 +63,7 @@
                     type="default"
                     icon="el-icon-search"
                     :autofocus="false"
-                    @click="analyzeExchangesByInterval"
+                    @click="getExchangesByCoins"
                   >
                     {{ `${$t('table.searchFor')} ${currentInterval}` }}
                   </el-button>
@@ -110,38 +76,39 @@
     </div>
 
     <el-table
-      :data="analyzedExchangeDayGroups"
+      :data="list"
       border
       fit
       highlight-current-row
       stripe
       style="width: 100%;"
-      @row-click="redirectToWaitingExchanges"
+      @row-click="redirectToPairsStats"
     >
       <el-table-column
-        :label="$t('table.date')"
-        width="250px"
-        align="left"
-      >
-        <template slot-scope="scope">
-          <span>{{ new Date(scope.row.date).toDateString() }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        :label="$t('table.created')"
-        min-width="150px"
+        :label="$t('table.coin')"
+        width="110px"
       >
         <template slot-scope="scope">
           <span
             class="link-type"
-          >{{ scope.row.created }}</span>
+          >{{ scope.row.coin }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        :label="$t('table.ticker')"
+        width="110px"
+      >
+        <template slot-scope="scope">
+          <span
+            class="link-type"
+          >{{ scope.row.ticker }}</span>
         </template>
       </el-table-column>
 
       <el-table-column
         :label="$t('table.waiting')"
-        width="180px"
+        width="100px"
         align="left"
       >
         <template slot-scope="scope">
@@ -151,7 +118,7 @@
 
       <el-table-column
         :label="$t('table.finished')"
-        width="125px"
+        width="100px"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.finished }}</span>
@@ -159,20 +126,57 @@
       </el-table-column>
 
       <el-table-column
-        :label="$t('table.volumeBTC')"
-        width="200px"
+        :label="$t('table.volumeBuy')"
+        min-width="150px"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.volumeBTC }} BTC</span>
+          <span>{{ scope.row.volumeBuy }}</span>
         </template>
       </el-table-column>
 
       <el-table-column
-        :label="$t('table.profitBTC')"
-        width="200px"
+        :label="$t('table.volumeSels')"
+        min-width="150px"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.profitBTC }} BTC</span>
+          <span>{{ scope.row.volumeSels }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        :label="$t('table.profitBtcBuy')"
+        width="180px"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.profitBtcBuy }} BTC</span>
+        </template>
+      </el-table-column>
+
+
+      <el-table-column
+        :label="$t('table.profitBtcSels')"
+        width="180px"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.profitBtcSels }} BTC</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        :label="$t('table.profitBtcTotal')"
+        width="180px"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.profitBtcTotal }} BTC</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        :label="$t('table.profitUsd')"
+        width="180px"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.profitUsd }} USD</span>
         </template>
       </el-table-column>
     </el-table>
@@ -216,7 +220,7 @@
   }
 
   @Component({
-    name: 'ExchangeStatsTable',
+    name: 'CoinsStatsTable',
     components: {
       Pagination
     },
@@ -224,22 +228,15 @@
     }
   })
   export default class extends Vue {
-    private statisticTable:any = [];
-    private totalExchangesCount:any = [];
-    private analyzedExchangeDayGroups:any = [];
-    private lastAnalyzedTime: string = new Date().toLocaleString();
-    private analyzedExchangesCount: number = 0;
-    private TotalExchanges: number = 0;
+    private list: any[] = []
     private searchTimestampFrom: Date = moment().subtract(1, 'week').toDate();
     private searchTimestampTo: Date = new Date();
     private currentInterval: any = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`;
     private searchString: string = '';
-    private totalOrAnalyzed: string = 'Total Count';
     private searchQuery = {
       offset: 0,
-      limit: 1000
+      limit: 10000
     };
-    private page: number = 0;
     private pickerOpts = pickerOptions
     constructor() {
       super()
@@ -248,8 +245,7 @@
 
     async created(): Promise<any> {
       NProgress.start()
-      this.analyzedExchangesCount = (await getExchangesCount()).data.count
-      this.analyzeExchangesByInterval().then(() => NProgress.done())
+      this.getExchangesByCoins().then(() => NProgress.done())
     }
     private onIntervalChange() {
       this.currentInterval = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`
@@ -262,84 +258,77 @@
       console.log(this.searchString)
     }
 
-    private async analyzeExchangesByInterval() {
+    private async getExchangesByCoins() {
       NProgress.start()
-      this.totalOrAnalyzed = 'Analyzed'
-      this.analyzedExchangeDayGroups = []
-      this.searchQuery.limit = 10000
-      this.analyzedExchangesCount = 0
 
       const range = moment.range(this.searchTimestampFrom, this.searchTimestampTo)
-      const ranges = split(range, 'days').reverse()
       const response = await fetch(`https://owl.atomicwallet.io/assetData?fiat=USD&tickers=BTC`)
       const { BTC } = (await response.json())
-      for (const range of ranges) {
-        const { data } = await getExchangesByTerms(constructQuery(this.searchQuery), `createdAtStart=${new Date(range.start).toUTCString()}&createdAtEnd=${new Date(range.end).toUTCString()}`)
-        this.analyzedExchangeDayGroups.push(
-          {
-            date: range.start.format('YYYY-MM-DD HH:mm:ss'),
-            created: data.transactions.length,
-            waiting: data.transactions.filter((element:any) => element.status === 'waiting').length,
-            finished: data.transactions.filter((element:any) => element.status === 'finished').length,
-            volumeBTC: (data.transactions.reduce((acc: number, tx: any) => acc + +tx.usdValue, 0) / BTC.PRICE).toFixed(9),
-            profitBTC: (data.transactions.reduce((acc: number, tx: any) => acc + (tx.status === 'finished' ? +tx.usdValue : 0), 0) / BTC.PRICE).toFixed(9)
-          }
+      const { data } = await getExchangesByTerms(
+        constructQuery(this.searchQuery),
+        `createdAtStart=${new Date(range.start.toDate()).toUTCString()}&createdAtEnd=${new Date(range.end.toDate()).toUTCString()}`
+      )
+
+      const acc = data.transactions.reduce((acc: any, tx: any) => {
+        const currencyFrom = tx.fromCurrency
+        const currencyTo = tx.toCurrency
+        if (!acc[currencyFrom]) {
+          acc[currencyFrom] = {}
+          acc[currencyFrom].finished = 0
+          acc[currencyFrom].waiting = 0
+          acc[currencyFrom].coin = currencyFrom
+          acc[currencyFrom].ticker = currencyFrom
+          acc[currencyFrom].volumeBuy = 0
+          acc[currencyFrom].volumeSels = 0
+          acc[currencyFrom].profitBtcBuy = 0
+          acc[currencyFrom].profitBtcSels = 0
+          acc[currencyFrom].profitBtcTotal = 0
+          acc[currencyFrom].profitUsd = 0
+        }
+        if (!acc[currencyTo]) {
+          acc[currencyTo] = {}
+          acc[currencyTo].finished = 0
+          acc[currencyTo].waiting = 0
+          acc[currencyTo].coin = currencyTo
+          acc[currencyTo].ticker = currencyTo
+          acc[currencyTo].volumeBuy = 0
+          acc[currencyTo].volumeSels = 0
+          acc[currencyTo].profitBtcBuy = 0
+          acc[currencyTo].profitBtcSels = 0
+          acc[currencyTo].profitBtcTotal = 0
+          acc[currencyTo].profitUsd = 0
+        }
+
+        if (tx.status === 'finished') {
+          acc[currencyFrom].finished++
+          acc[currencyFrom].profitUsd += +tx.usdValue
+        }
+        if (tx.status === 'waiting') acc[currencyFrom].waiting++
+        if (!Number.isNaN(+tx.amountSend)) acc[currencyFrom].volumeSels += +tx.amountSend
+        if (!Number.isNaN(+tx.amountReceive)) acc[currencyTo].volumeBuy += +tx.amountReceive
+
+        return acc
+      }, {})
+      this.list = Object.values(acc).map((coin: any) => {
+        coin.volumeSels = coin.volumeSels.toFixed(7)
+        coin.volumeBuy = coin.volumeBuy.toFixed(7)
+        coin.profitBtcTotal = (coin.profitUsd / BTC.PRICE).toFixed(9)
+        coin.profitUsd = coin.profitUsd.toFixed(4)
+        return coin
+      }).sort((a: any, b: any) =>
+        a.coin > b.coin ? 1 : (
+          a.coin < b.coin ? -1 : 0
         )
-        this.lastAnalyzedTime = new Date(range.end).toLocaleDateString()
-        this.analyzedExchangesCount += data.count
-      }
+      )
       NProgress.done()
     }
 
-    private async updateTableByDailyTransactions() {
-      try {
-        let { data } = await getExchanges(this.searchQuery)
-        for (const tx of data) {
-          this.statisticTable.push({ ...tx, createdAt: Number(new Date(tx.createdAt)), updatedAt: Number(new Date(tx.updatedAt)) })
-          this.lastAnalyzedTime = new Date(tx.updatedAt).toLocaleTimeString()
-          this.analyzedExchangesCount += 1
-
-          if ((moment().diff(moment(tx.createdAt), 'days') > 14)) {
-            NProgress.done()
-            return
-          }
-        }
-        const groups = _.groupBy(this.statisticTable, (date:any) => moment(date.updatedAt).startOf('day').format())
-        for (const group in groups) {
-          const finished = groups[group].filter((element:any) => element.status === 'finished')
-          const waiting = groups[group].filter((element:any) => element.status === 'waiting')
-          this.analyzedExchangeDayGroups.push(
-            {
-              date: group,
-              created: groups[group].length,
-              waiting: waiting.length,
-              finished: finished.length
-            }
-          )
-        }
-        this.searchQuery.offset += this.searchQuery.limit
-        await this.updateTableByDailyTransactions()
-      } catch (e) {
-        this.$notify({
-          title: 'get exchanges',
-          message: e.toString(),
-          type: 'error',
-          duration: 2000
-        })
-      }
-      NProgress.done()
-    }
-
-    private redirectToWaitingExchanges(row: any) {
-      this.$router.push({ name: 'waiting', query: { date: row.date }})
+    private redirectToPairsStats(row: any) {
+      this.$router.push({ name: 'pairs', query: { coin: row.coin }})
     }
   }
 </script>
 
 <style scoped>
-  .search-button {
-    position: absolute;
-    right: 20px;
-    top: 16px;
-  }
+
 </style>
