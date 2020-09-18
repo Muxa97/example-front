@@ -163,8 +163,13 @@
         :label="$t('table.errorMessage')"
         min-width="320px"
       >
-        <template slot-scope="scope" style="word-break: normal; max-height: 25px;">
-          <div class="error-message-wrapper">{{ scope.row.errorMessage }}</div>
+        <template
+          slot-scope="scope"
+          style="word-break: normal; max-height: 25px;"
+        >
+          <div class="error-message-wrapper">
+            {{ scope.row.errorMessage }}
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -177,8 +182,8 @@
     />
     <el-dialog
       :title="`${errorDetails.date && errorDetails.date.split(',')[0]}. ${errorDetails.errorType ?
-      'Error: ' + errorDetails.errorType :
-       'Unknown error'}`"
+        'Error: ' + errorDetails.errorType :
+        'Unknown error'}`"
       :visible.sync="errorDetails"
     >
       <ErrorDetails
