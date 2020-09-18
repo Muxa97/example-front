@@ -180,40 +180,40 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator'
-  import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
-  import _ from 'underscore'
-  import NProgress from 'nprogress'
-  import Pagination from '@/components/Pagination/index.vue'
-  import 'nprogress/nprogress.css'
-  import { constructQuery } from '@/utils/query'
-  import * as Moment from 'moment'
-  import { extendMoment } from 'moment-range'
+import { Component, Vue } from 'vue-property-decorator'
+import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
+import _ from 'underscore'
+import NProgress from 'nprogress'
+import Pagination from '@/components/Pagination/index.vue'
+import 'nprogress/nprogress.css'
+import { constructQuery } from '@/utils/query'
+import * as Moment from 'moment'
+import { extendMoment } from 'moment-range'
 
-  const moment = extendMoment(Moment)
-  const { split } = require('moment-range-split')
-  const pickerOptions = {
-    shortcuts: [{
-      text: 'Today',
-      onClick(picker: any) {
-        picker.$emit('pick', new Date())
-      }
-    }, {
-      text: 'Yesterday',
-      onClick(picker: any) {
-        const date = new Date()
-        date.setTime(date.getTime() - 3600 * 1000 * 24)
-        picker.$emit('pick', date)
-      }
-    }, {
-      text: 'A week ago',
-      onClick(picker: any) {
-        const date = new Date()
-        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
-        picker.$emit('pick', date)
-      }
-    }]
-  }
+const moment = extendMoment(Moment)
+const { split } = require('moment-range-split')
+const pickerOptions = {
+  shortcuts: [{
+    text: 'Today',
+    onClick(picker: any) {
+      picker.$emit('pick', new Date())
+    }
+  }, {
+    text: 'Yesterday',
+    onClick(picker: any) {
+      const date = new Date()
+      date.setTime(date.getTime() - 3600 * 1000 * 24)
+      picker.$emit('pick', date)
+    }
+  }, {
+    text: 'A week ago',
+    onClick(picker: any) {
+      const date = new Date()
+      date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+      picker.$emit('pick', date)
+    }
+  }]
+}
 
   @Component({
     name: 'ExchangeStatsTable',
@@ -223,7 +223,7 @@
     filters: {
     }
   })
-  export default class extends Vue {
+export default class extends Vue {
     private statisticTable:any = [];
     private totalExchangesCount:any = [];
     private analyzedExchangeDayGroups:any = [];
@@ -331,9 +331,9 @@
     }
 
     private redirectToWaitingExchanges(row: any) {
-      this.$router.push({ name: 'waiting', query: { date: row.date }})
+      this.$router.push({ name: 'waiting', query: { date: row.date } })
     }
-  }
+}
 </script>
 
 <style scoped>

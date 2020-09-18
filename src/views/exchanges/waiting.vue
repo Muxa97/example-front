@@ -90,32 +90,32 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator'
-  import {getExchangesByTerms, getExchangesByTermsCount, getExchangesCount} from '@/api/exchanges'
-  import NProgress from 'nprogress'
-  import Pagination from '@/components/Pagination/index.vue'
-  import 'nprogress/nprogress.css'
-  import { constructQuery } from '@/utils/query'
-  import * as Moment from 'moment'
-  import { extendMoment } from 'moment-range'
+import { Component, Vue } from 'vue-property-decorator'
+import { getExchangesByTerms, getExchangesByTermsCount, getExchangesCount } from '@/api/exchanges'
+import NProgress from 'nprogress'
+import Pagination from '@/components/Pagination/index.vue'
+import 'nprogress/nprogress.css'
+import { constructQuery } from '@/utils/query'
+import * as Moment from 'moment'
+import { extendMoment } from 'moment-range'
 
-  const moment = extendMoment(Moment)
-  const { split } = require('moment-range-split')
-  const pickerOptions = {
-    shortcuts: [{
-      text: 'Today',
-      onClick(picker: any) {
-        picker.$emit('pick', new Date())
-      }
-    }, {
-      text: 'Yesterday',
-      onClick(picker: any) {
-        const date = new Date()
-        date.setTime(date.getTime() - 3600 * 1000 * 24)
-        picker.$emit('pick', date)
-      }
-    }]
-  }
+const moment = extendMoment(Moment)
+const { split } = require('moment-range-split')
+const pickerOptions = {
+  shortcuts: [{
+    text: 'Today',
+    onClick(picker: any) {
+      picker.$emit('pick', new Date())
+    }
+  }, {
+    text: 'Yesterday',
+    onClick(picker: any) {
+      const date = new Date()
+      date.setTime(date.getTime() - 3600 * 1000 * 24)
+      picker.$emit('pick', date)
+    }
+  }]
+}
 
   @Component({
     name: 'WaitingExchanges',
@@ -125,7 +125,7 @@
     filters: {
     }
   })
-  export default class extends Vue {
+export default class extends Vue {
     private list: any[] = []
     private totalExchanges: number = 0;
     private searchTimestampFrom: Date = new Date(new Date().setHours(0, 0, 0, 0));
@@ -178,7 +178,7 @@
 
       NProgress.done()
     }
-  }
+}
 </script>
 
 <style scoped>

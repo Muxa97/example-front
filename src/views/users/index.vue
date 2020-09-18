@@ -69,15 +69,15 @@
             <el-table-column
               :label="$t('table.os')"
             >
-              <template slot-scope="scope_1">
-                <span>{{ scope_1.row.platform }}</span>
+              <template slot-scope="scope1">
+                <span>{{ scope1.row.platform }}</span>
               </template>
             </el-table-column>
             <el-table-column
               :label="$t('table.version')"
             >
-              <template slot-scope="scope_1">
-                <span>{{ scope_1.row.appVersion }}</span>
+              <template slot-scope="scope1">
+                <span>{{ scope1.row.appVersion }}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -96,9 +96,9 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue} from "vue-property-decorator";
-import Pagination from "@/components/Pagination/index.vue";
-import {getUsers} from "@/api/users";
+import { Component, Vue } from 'vue-property-decorator'
+import Pagination from '@/components/Pagination/index.vue'
+import { getUsers } from '@/api/users'
 
 @Component({
   name: 'UsersTable',
@@ -155,7 +155,7 @@ export default class extends Vue {
           this.pages = Math.floor(this.total / this.pagination)
         }
       })
-      .catch(() =>{
+      .catch(() => {
         // this.error = error.toString()
       })
       .finally(() => {
