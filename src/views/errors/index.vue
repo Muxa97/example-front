@@ -111,6 +111,7 @@
       highlight-current-row
       stripe
       style="width: 100%;"
+      @row-click="showDetails"
     >
       <el-table-column
         :label="$t('table.date')"
@@ -133,7 +134,7 @@
 
       <el-table-column
         :label="$t('table.type')"
-        width="100px"
+        width="150px"
         align="left"
       >
         <template slot-scope="scope">
@@ -152,7 +153,7 @@
 
       <el-table-column
         :label="$t('table.os')"
-        width="150px"
+        width="180px"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.platform }}</span>
@@ -160,13 +161,31 @@
       </el-table-column>
       <el-table-column
         :label="$t('table.errorMessage')"
-        min-width="400px"
+        min-width="320px"
       >
-        <template slot-scope="scope">
-          <span>{{ scope.row.errorMessage }}</span>
+        <template slot-scope="scope" style="word-break: normal; max-height: 25px;">
+          <div class="error-message-wrapper">{{ scope.row.errorMessage }}</div>
         </template>
       </el-table-column>
     </el-table>
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="page"
+      :limit.sync="listQuery.limit"
+      @pagination="getList"
+    />
+    <el-dialog
+      :title="`${errorDetails.date && errorDetails.date.split(',')[0]}. ${errorDetails.errorType ?
+      'Error: ' + errorDetails.errorType :
+       'Unknown error'}`"
+      :visible.sync="errorDetails"
+    >
+      <ErrorDetails
+        v-if="errorDetails"
+        :err="errorDetails"
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -174,6 +193,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import DraggableDialog from '@/components/Dialog/index.vue'
 import Pagination from '@/components/Pagination/index.vue'
+import ErrorDetails from '@/components/ErrorDetails/index.vue'
 import { IErrorData } from '@/api/types'
 import axios from 'axios'
 import * as Moment from 'moment'
@@ -207,7 +227,8 @@ const pickerOptions = {
     name: 'ErrorTable',
     components: {
       DraggableDialog,
-      Pagination
+      Pagination,
+      ErrorDetails
     },
     filters: {
     }
@@ -231,8 +252,14 @@ export default class extends Vue {
     private page = 1
     private pages = 0
 
+    private errorDetails: any = false
+
     created() {
       this.getList(false)
+    }
+
+    private showDetails(row:any) {
+      this.errorDetails = { ...row }
     }
 
     private handleFilter() {
@@ -325,5 +352,10 @@ export default class extends Vue {
 </script>
 
 <style scoped>
-
+  .error-message-wrapper {
+    max-height: 25px;
+    word-break: keep-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 </style>
