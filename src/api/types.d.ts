@@ -64,3 +64,19 @@ export interface IErrorData {
   errorMessage: string
   userId: string
 }
+
+export interface IDeviceData {
+  platform: string
+  appVersion: string
+}
+
+export interface IUserData {
+  atomicId: string
+  status: string
+  awcBalance: number
+  devices: IDeviceData[]
+  exchangeVolume: number
+  buyingVolume: number
+  stakingVolume: number
+  airdropsReferrals: string[]
+}

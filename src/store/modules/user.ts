@@ -2,6 +2,7 @@ import { VuexModule, Module, Action, Mutation, getModule } from 'vuex-module-dec
 import { login, logout, getUserInfo } from '@/api/users'
 import { getToken, setToken, removeToken } from '@/utils/cookies'
 import store from '@/store'
+import {IUserData} from "@/api/types";
 
 export interface IUserState {
   token: string
@@ -9,6 +10,7 @@ export interface IUserState {
   avatar: string
   introduction: string
   roles: string[]
+  info: IUserData | null
 }
 
 @Module({ dynamic: true, store, name: 'user' })
@@ -18,6 +20,7 @@ class User extends VuexModule implements IUserState {
   public avatar = ''
   public introduction = ''
   public roles: string[] = []
+  public info: IUserData | null = null
 
   @Mutation
   private SET_TOKEN(token: string) {
@@ -44,6 +47,11 @@ class User extends VuexModule implements IUserState {
     this.roles = roles
   }
 
+  @Mutation
+  private SET_INFO(info: IUserData) {
+    this.info = { ...info }
+  }
+
   @Action
   public async Login(userInfo: { username: string, password: string }) {
     let { username, password } = userInfo
@@ -66,6 +74,7 @@ class User extends VuexModule implements IUserState {
       throw Error('GetUserInfo: token is undefined!')
     }
     const { data } = await getUserInfo({ /* Your params here */ })
+
     if (!data) {
       throw Error('Verification failed, please Login again.')
     }
@@ -78,6 +87,9 @@ class User extends VuexModule implements IUserState {
     this.SET_NAME(name)
     this.SET_AVATAR(avatar)
     this.SET_INTRODUCTION(introduction)
+    if (data.info) {
+      this.SET_INFO(data.info)
+    }
   }
 
   @Action

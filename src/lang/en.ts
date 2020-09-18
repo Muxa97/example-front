@@ -155,7 +155,23 @@ export default {
     asset: 'Currency',
     version: 'App version',
     os: 'Platform',
-    errorMessage: 'Message'
+    errorMessage: 'Message',
+    userId: 'Atomic ID',
+    devices: 'User devices',
+    ticker: 'Ticker',
+    amount: 'Amount',
+    volumeBTC: 'BTC volume',
+    profitBTC: 'BTC profit',
+    coin: 'Coin',
+    volumeBuy: 'Volume buy',
+    volumeSels: 'Volume sells',
+    profitBtcBuy: 'BTC profit buy',
+    profitBtcSels: 'BTC profit sells',
+    profitBtcTotal: 'BTC profit total',
+    profitUsd: 'USD profit',
+    pair: 'Pair name',
+    volume: 'Volume by first coin',
+    percentage: 'Percentage'
   },
   example: {
     warning: 'Creating and editing pages cannot be cached by keep-alive because keep-alive\'s \'include\' currently does not support caching based on routes, so now it\'s cached based on component name. If you want to achieve a similar caching effect, you can use a browser caching scheme such as localStorage. Or don\'t use keep-alive\'s \'include\' to cache all pages directly. See details'
