@@ -146,7 +146,7 @@ export default class extends Vue {
       NProgress.start()
 
       if (this.$route.query.date) {
-        this.searchTimestampFrom = new Date(new Date(this.$route.query.date).setHours(0, 0, 0, 0))
+        this.searchTimestampFrom = new Date(new Date(this.$route.query.date.toString()).setHours(0, 0, 0, 0))
         this.searchTimestampTo = new Date(new Date(this.searchTimestampFrom).setHours(23, 59, 59, 999))
       }
       this.analyzeExchangesByInterval().then(() => NProgress.done())

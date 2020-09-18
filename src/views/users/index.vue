@@ -142,7 +142,7 @@ export default class extends Vue {
     this.listQuery.offset = params ? (params.page - 1) * params.limit : 0
 
     if (this.$route.query.userId && this.searchString.length === 0) {
-      this.listQuery.atomicId = this.$route.query.userId
+      this.listQuery.atomicId = this.$route.query.userId.toString()
     } else {
       this.listQuery.atomicId = this.searchString
     }
