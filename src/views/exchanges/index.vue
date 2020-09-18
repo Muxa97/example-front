@@ -189,12 +189,12 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue, Watch } from 'vue-property-decorator'
-  import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
-  import { IExchangeData } from '@/api/types'
-  import Pagination from '@/components/Pagination/index.vue'
-  import TxDetails from '@/components/TxDetails/index.vue'
-  import DraggableDialog from '@/components/Dialog/index.vue'
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
+import { IExchangeData } from '@/api/types'
+import Pagination from '@/components/Pagination/index.vue'
+import TxDetails from '@/components/TxDetails/index.vue'
+import DraggableDialog from '@/components/Dialog/index.vue'
 
   @Component({
     name: 'ComplexTable',
@@ -207,7 +207,7 @@
     }
   })
 
-  export default class extends Vue {
+export default class extends Vue {
     private tableKey = 0
     private list: IExchangeData[] = []
     private searchString = '';
@@ -328,7 +328,7 @@
       const sort = this.sort
       return sort === `+${key}` ? 'ascending' : sort === `-${key}` ? 'descending' : ''
     }
-  }
+}
 
 </script>
 
@@ -344,4 +344,3 @@
     margin: 5px 5px;
   }
 </style>
-

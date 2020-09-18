@@ -2,7 +2,7 @@ import { VuexModule, Module, Action, Mutation, getModule } from 'vuex-module-dec
 import { login, logout, getUserInfo } from '@/api/users'
 import { getToken, setToken, removeToken } from '@/utils/cookies'
 import store from '@/store'
-import {IUserData} from "@/api/types";
+import { IUserData } from '@/api/types'
 
 export interface IUserState {
   token: string

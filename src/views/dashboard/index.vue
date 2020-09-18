@@ -165,7 +165,10 @@
         <router-link :to="`exchange?userId=${currentUser.atomicId}`">
           <div class="grid-content bg-purple linked-card__container">
             <el-card style="padding: 0;">
-              <div class="details-card-body" style="text-align: center; vertical-align: middle;">
+              <div
+                class="details-card-body"
+                style="text-align: center; vertical-align: middle;"
+              >
                 <span>Exchanges</span>
               </div>
             </el-card>
@@ -176,7 +179,10 @@
         <router-link :to="`buy?userId=${currentUser.atomicId}`">
           <div class="grid-content bg-purple linked-card__container">
             <el-card style="padding: 0;">
-              <div class="details-card-body" style="text-align: center;">
+              <div
+                class="details-card-body"
+                style="text-align: center;"
+              >
                 <span>Buy</span>
               </div>
             </el-card>
@@ -187,7 +193,10 @@
         <router-link :to="`staking?userId=${currentUser.atomicId}`">
           <div class="grid-content bg-purple linked-card__container">
             <el-card style="padding: 0;">
-              <div class="details-card-body" style="text-align: center;">
+              <div
+                class="details-card-body"
+                style="text-align: center;"
+              >
                 <span>Stakings</span>
               </div>
             </el-card>
@@ -200,7 +209,10 @@
         <router-link :to="`errors?userId=${currentUser.atomicId}`">
           <div class="grid-content bg-purple linked-card__container">
             <el-card>
-              <div class="details-card-body" style="text-align: center;">
+              <div
+                class="details-card-body"
+                style="text-align: center;"
+              >
                 <span>Errors</span>
               </div>
             </el-card>
@@ -211,7 +223,10 @@
         <router-link :to="`referrals?userId=${currentUser.atomicId}`">
           <div class="grid-content bg-purple linked-card__container">
             <el-card>
-              <div class="details-card-body" style="text-align: center;">
+              <div
+                class="details-card-body"
+                style="text-align: center;"
+              >
                 <span>Referrals</span>
               </div>
             </el-card>
@@ -225,7 +240,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { UserModule } from '@/store/modules/user'
-import { getUserInfo } from "@/api/users";
+import { getUserInfo } from '@/api/users'
 
 @Component({
   name: 'Dashboard',
