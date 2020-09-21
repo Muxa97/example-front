@@ -4,13 +4,15 @@
     <el-col :span="12">
       <el-row style="margin-top: 20px;">
         <el-col :span="22">
-          <el-card v-loading="devicesLoading" :body-style="{padding: 0, height: '230px'}">
+          <el-card v-loading="devicesLoading" :body-style="{padding: 0, height: '300px'}">
             <div
               slot="header"
               class="clearfix"
               style="border: none; padding: 10px;"
             >
               <span>Devices usage</span>
+            </div>
+            <div class="details-card-body">
               <el-row>
                 <el-col :span="12">
                   <div class="grid-content bg-purple">
@@ -43,22 +45,24 @@
                   </div>
                 </el-col>
               </el-row>
-            </div>
-            <div class="details-card-body">
-              <VueEcharts :option="deviceUsage" :ei.sync="ei" style="height: 100%;"></VueEcharts>
+              <el-row style="height: 200px;">
+                <VueEcharts :option="deviceUsage" :ei.sync="ei" style="height: 100%;"></VueEcharts>
+              </el-row>
             </div>
           </el-card>
         </el-col>
       </el-row>
       <el-row style="margin-top: 20px;">
         <el-col :span="22">
-          <el-card v-loading="usersLoading" :body-style="{padding: 0, height: '230px'}">
+          <el-card v-loading="usersLoading" :body-style="{padding: 0, height: '300px'}">
             <div
               slot="header"
               class="clearfix"
               style="border: none; padding: 10px;"
             >
               <span>Unique users</span>
+            </div>
+            <div class="details-card-body">
               <el-row>
                 <el-col :span="12">
                   <div class="grid-content bg-purple">
@@ -93,9 +97,9 @@
                   </div>
                 </el-col>
               </el-row>
-            </div>
-            <div class="details-card-body">
-              <VueEcharts :option="uniqueUsers" :ei.sync="eiUsers" style="height: 100%;"></VueEcharts>
+              <el-row style="height: 200px;">
+                <VueEcharts :option="uniqueUsers" :ei.sync="eiUsers" style="height: 100%;"></VueEcharts>
+              </el-row>
             </div>
           </el-card>
         </el-col>
@@ -104,6 +108,13 @@
     <el-col :span="12">
       <el-row style="margin-top: 20px;">
         <el-card v-loading="countLoading" :body-style="{padding: 0, height: '230px'}">
+          <div
+            slot="header"
+            class="clearfix"
+            style="border: none; padding: 10px;"
+          >
+            <span>New users</span>
+          </div>
           <el-row>
             <el-col :span="8">
               <el-card>
@@ -157,7 +168,7 @@
 
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator'
-  import {getDeviceUsages, getUniqueUsers, getUsersCount} from "@/api/audience"
+  import { getUsersDevices, getUniqueUsers} from "@/api/users"
   import * as Moment from 'moment'
   import { extendMoment } from 'moment-range'
 
@@ -258,14 +269,17 @@
     created() {
       this.updateDeviceUsage()
       this.updateUniqueUsers()
-      this.updateUsersCount()
     }
 
     updateDeviceUsage() {
       this.devicesLoading = true
-      getDeviceUsages({ from: this.devicesSearchTimestampFrom, to: this.devicesSearchTimestampTo })
+      getUsersDevices({ from: this.devicesSearchTimestampFrom, to: this.devicesSearchTimestampTo })
         .then(({ data }) =>  {
-          this.deviceUsage.series[0].data = data;
+          this.deviceUsage.series[0].data = data.map((device: {os: string, count: number}) => ({
+            name: device.os,
+            value: device.count
+          }))
+
           this.ei.setOption(this.deviceUsage)
           this.devicesLoading = false
         })
@@ -273,21 +287,15 @@
 
     updateUniqueUsers() {
       this.usersLoading = true
-      getUniqueUsers({ from: this.devicesSearchTimestampFrom, to: this.devicesSearchTimestampTo })
-        .then(({ data }) => {
-          this.uniqueUsers.series[0].data = data
-          this.eiUsers.setOption(this.uniqueUsers)
-          this.usersLoading = false
-        })
-    }
-
-    updateUsersCount() {
       this.countLoading = true
-      getUsersCount({ from: this.devicesSearchTimestampFrom, to: this.devicesSearchTimestampTo })
-        .then(({ lastDay, lastWeek, lastMonth }) => {
-          this.lastDayUsers = lastDay
-          this.lastWeekUsers = lastWeek
-          this.lastMonthUsers = lastMonth
+      getUniqueUsers({ from: this.devicesSearchTimestampFrom, to: this.devicesSearchTimestampTo })
+        .then((data) => {
+          this.uniqueUsers.series[0].data = data.byHours
+          this.eiUsers.setOption(this.uniqueUsers)
+          this.lastDayUsers = data.lastDay
+          this.lastWeekUsers = data.lastWeek
+          this.lastMonthUsers = data.lastMonth
+          this.usersLoading = false
           this.countLoading = false
         })
     }
