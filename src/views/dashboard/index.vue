@@ -132,6 +132,27 @@
               class="clearfix"
               style="border: none"
             >
+              <span>Airdrop refferals</span>
+            </div>
+            <div class="details-card-body">
+              <div v-for="item in currentUser.airdropsReferrals">{{ item }}</div>
+            </div>
+          </el-card>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="24">
+        <div class="grid-content bg-purple">
+          <el-card
+            shadow="never"
+            style="border: none"
+          >
+            <div
+              slot="header"
+              class="clearfix"
+              style="border: none"
+            >
               <span>Devices</span>
             </div>
             <div class="details-card-body">
@@ -165,7 +186,10 @@
         <router-link :to="`exchange?userId=${currentUser.atomicId}`">
           <div class="grid-content bg-purple linked-card__container">
             <el-card style="padding: 0;">
-              <div class="details-card-body" style="text-align: center; vertical-align: middle;">
+              <div
+                class="details-card-body"
+                style="text-align: center; vertical-align: middle;"
+              >
                 <span>Exchanges</span>
               </div>
             </el-card>
@@ -176,7 +200,10 @@
         <router-link :to="`buy?userId=${currentUser.atomicId}`">
           <div class="grid-content bg-purple linked-card__container">
             <el-card style="padding: 0;">
-              <div class="details-card-body" style="text-align: center;">
+              <div
+                class="details-card-body"
+                style="text-align: center;"
+              >
                 <span>Buy</span>
               </div>
             </el-card>
@@ -187,7 +214,10 @@
         <router-link :to="`staking?userId=${currentUser.atomicId}`">
           <div class="grid-content bg-purple linked-card__container">
             <el-card style="padding: 0;">
-              <div class="details-card-body" style="text-align: center;">
+              <div
+                class="details-card-body"
+                style="text-align: center;"
+              >
                 <span>Stakings</span>
               </div>
             </el-card>
@@ -200,7 +230,10 @@
         <router-link :to="`errors?userId=${currentUser.atomicId}`">
           <div class="grid-content bg-purple linked-card__container">
             <el-card>
-              <div class="details-card-body" style="text-align: center;">
+              <div
+                class="details-card-body"
+                style="text-align: center;"
+              >
                 <span>Errors</span>
               </div>
             </el-card>
@@ -211,7 +244,10 @@
         <router-link :to="`referrals?userId=${currentUser.atomicId}`">
           <div class="grid-content bg-purple linked-card__container">
             <el-card>
-              <div class="details-card-body" style="text-align: center;">
+              <div
+                class="details-card-body"
+                style="text-align: center;"
+              >
                 <span>Referrals</span>
               </div>
             </el-card>
@@ -225,7 +261,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { UserModule } from '@/store/modules/user'
-import { getUserInfo } from "@/api/users";
+import { getUserInfo } from '@/api/users'
 
 @Component({
   name: 'Dashboard',
@@ -250,8 +286,8 @@ export default class extends Vue {
     }
     if (uid) {
       getUserInfo({ atomicId: uid })
-        .then(({ data }) => {
-          this.currentUser = data.info
+        .then((data) => {
+          this.currentUser = data
           this.devices = this.currentUser.devices
         })
     } else {

@@ -72,7 +72,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { getArticles } from '@/api/articles'
 import { getExchanges } from '@/api/exchanges'
 import { IArticleData, IExchangeData } from '@/api/types'
-import {Message} from 'element-ui'
+import { Message } from 'element-ui'
 
 @Component({
   name: 'Table',
@@ -105,7 +105,7 @@ export default class extends Vue {
   private async getList() {
     this.listLoading = true
     try {
-      const {data} = await getExchanges(this.listQuery)
+      const { data } = await getExchanges(this.listQuery)
       this.list = data.items
     } catch (err) {
       Message.error(err || 'Has Error')

@@ -1,83 +1,65 @@
-import request from '@/utils/request'
 import axios from 'axios'
-import { IUserData } from '@/api/types';
+import { IUserData } from '@/api/types'
 
-const users: IUserData[] = [
-  {
-    atomicId: 'abcrslkjhfrqlkabsdvuirlwslkj;AF',
-    status: 'Memeber',
-    awcBalance: 0.17,
-    devices: [ { platform: 'Win32 10.18.0', appVersion: '2.18.3'}, { platform: 'Win32 10.18.0', appVersion: '2.18.3'} ],
-    exchangeVolume: 0,
-    buyingVolume: 0.19,
-    stakingVolume: 2.0,
-    airdropsReferrals: []
-  },
-  {
-    atomicId: 'veraulnclw4ugfjaiewRUBCLYAKLWSHEDF',
-    status: 'Memeber',
-    awcBalance: 0.17,
-    devices: [ { platform: 'Win32 10.18.0', appVersion: '2.18.3'}, { platform: 'Win32 10.18.0', appVersion: '2.18.3'} ],
-    exchangeVolume: 0,
-    buyingVolume: 0.19,
-    stakingVolume: 2.0,
-    airdropsReferrals: []
-  },
-  {
-    atomicId: 'vnswleoof4msghtls;oqw4r',
-    status: 'Memeber',
-    awcBalance: 7.2,
-    devices: [ { platform: 'Win32 10.18.0', appVersion: '2.18.3'}, { platform: 'Win32 10.18.0', appVersion: '2.18.3'} ],
-    exchangeVolume: 0.33,
-    buyingVolume: 1.2,
-    stakingVolume: 0.3,
-    airdropsReferrals: []
-  },
-]
-
-export const getUsers = async (params: any) =>  {
+export const getUsers = async(params: any) => {
   const response = await axios({
     headers: {
       'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
     },
-    url: `http://${process.env.VUE_APP_APOLLO_API_HOST}/users/all?offset=${params.offset}&limit=${params.limit}${params.atomicId ? '&atomicId=' + params.atomicId : ''}`,
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/users/all?offset=${params.offset}&limit=${params.limit}${params.atomicId ? '&atomicId=' + params.atomicId : ''}`,
     method: 'get'
   })
   const { data } = response
   return data
 }
 
-export const getUserInfo = async (data: any) =>  {
-  const response = await request({
-    url: '/users/info',
-    method: 'post',
-    data
-  })
-  const info = await axios({
-    headers: {
-      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
-    },
-    url: `http://${process.env.VUE_APP_APOLLO_API_HOST}/users/info`,
-    method: 'post',
-    data
-  })
-  return {
-    data: {
-      user: response.data.user,
-      info: info.data
+export const getUserInfo = async(params: any) => {
+  try {
+    const {data} = await axios({
+      headers: {
+        'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+      },
+      url: `${process.env.VUE_APP_APOLLO_API_HOST}/users/info`,
+      method: 'post',
+      params
+    })
+    return data
+  } catch (err) {
+    console.error(err)
+    return {
+      atomicId: '5f274d0c742f687b216f40c060a3c2b9106ff1e33ad16746bd53717f27490437',
+      role: 'admin', // admin, user и т.д., пока не обсуждалось
+      status: 'Status',
+      awcBalance: 0,
+      devices: [],
+      exchangeVolume: 0, // USD или BTC?
+      buyingVolume: 0, // USD или BTC?
+      stakingVolume: 0, // USD или BTC?
+      airdropsReferrals: ['asdfgqre', 'SADVEQTR', 'asdgfvg']
     }
   }
 }
 
-export const login = (data: any) =>
-  request({
-    url: '/users/login',
+export const login = async (params: any) => {
+  const { data } = await axios({
+    headers: {
+      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+    },
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/login`,
     method: 'post',
-    data
+    params
   })
+  return data
+}
 
-export const logout = () =>
-  request({
-    url: '/users/logout',
-    method: 'post'
+export const logout = async (params: any) => {
+  const { data } = await axios({
+    headers: {
+      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+    },
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/logout`,
+    method: 'post',
+    params
   })
+  return data
+}

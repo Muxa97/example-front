@@ -102,7 +102,7 @@ export const asyncRoutes: RouteConfig[] = [
         }
       }
     ]
-  },
+  }
 ]
 
 const createRouter = () => new Router({
