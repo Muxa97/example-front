@@ -103,7 +103,7 @@
         v-if="details"
         :txs="transactions"
         :ticker="details.ticker"
-      ></WaitingDetails>
+      />
     </el-dialog>
   </div>
 </template>
@@ -191,7 +191,7 @@ export default class extends Vue {
 
       const range = moment.range(this.searchTimestampFrom, this.searchTimestampTo)
 
-      const {data} = await getExchangesByTerms(
+      const { data } = await getExchangesByTerms(
         constructQuery(this.searchQuery),
         `createdAtStart=${new Date(range.start.toDate()).toUTCString()}&createdAtEnd=${new Date(range.end.toDate()).toUTCString()}`
       )
@@ -214,8 +214,8 @@ export default class extends Vue {
         tx.usersCount = tx.users.size
         return tx
       }).sort((a: any, b: any) =>
-        a.fromCurrency > b.fromCurrency ? 1 :
-          a.fromCurrency < b.fromCurrency ? -1 : 0
+        a.fromCurrency > b.fromCurrency ? 1
+          : a.fromCurrency < b.fromCurrency ? -1 : 0
       )
       this.totalExchanges = this.list.length
 

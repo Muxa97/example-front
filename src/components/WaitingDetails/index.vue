@@ -51,7 +51,7 @@
 </template>
 
 <script lang="ts">
-  import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
   @Component({
     name: 'WaitingDetails',
@@ -68,7 +68,7 @@
       }
     }
   })
-  export default class extends Vue {
+export default class extends Vue {
     private transactions: any[] = []
 
     private created() {
@@ -76,7 +76,7 @@
         tx.fromCurrency === this.$props.ticker && tx.status === 'waiting'
       )
     }
-  }
+}
 </script>
 
 <style scoped>
