@@ -259,6 +259,8 @@ export default class extends Vue {
       NProgress.start()
 
       const range = moment.range(this.searchTimestampFrom, this.searchTimestampTo)
+      const response = await fetch(`https://owl.atomicwallet.io/assetData?fiat=USD&tickers=BTC`)
+      const { BTC } = (await response.json())
       const { data } = await getExchangesByTerms(
         constructQuery(this.searchQuery),
         `createdAtStart=${new Date(range.start.toDate()).toUTCString()}&createdAtEnd=${new Date(range.end.toDate()).toUTCString()}`
@@ -288,9 +290,11 @@ export default class extends Vue {
           acc[reversePairName].profitUsd = 0
         }
 
-        acc[pairName].volume += +tx.amountSend
-        acc[pairName].profitUsd += +tx.usdValue
-        if (tx.status === 'finished') acc[pairName].finished++
+        if (tx.status === 'finished') {
+          acc[pairName].finished++
+          acc[pairName].volume += +tx.amountSend
+          acc[pairName].profitUsd += +tx.usdValue
+        }
         if (tx.status === 'waiting') acc[pairName].waiting++
 
         return acc
@@ -309,10 +313,11 @@ export default class extends Vue {
         pair.percentage = ((pair.finished + pair.waiting) * 100 / filtered.length).toFixed(4)
         pair.volume = pair.volume.toFixed(7)
         pair.profitUsd = pair.profitUsd.toFixed(4)
+        pair.profitBtcTotal = (pair.profitUsd / BTC.PRICE).toFixed(9)
         return pair
       }).sort((a: any, b: any) =>
-        a.pair > b.pair ? 1 : (
-          a.pair < b.pair ? -1 : 0
+        a.profitBtcTotal > b.profitBtcTotal ? -1 : (
+          a.profitBtcTotal < b.profitBtcTotal ? 1 : 0
         )
       )
       NProgress.done()
