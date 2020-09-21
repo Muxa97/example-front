@@ -301,10 +301,13 @@ export default class extends Vue {
         if (tx.status === 'finished') {
           acc[currencyFrom].finished++
           acc[currencyFrom].profitUsd += +tx.usdValue
+          acc[currencyTo].profitUsd += +tx.usdValue
+          acc[currencyTo].profitBtcBuy += +tx.usdValue
+          acc[currencyFrom].profitBtcSels += +tx.usdValue
+          if (!Number.isNaN(+tx.amountSend)) acc[currencyFrom].volumeSels += +tx.amountSend
+          if (!Number.isNaN(+tx.amountReceive)) acc[currencyTo].volumeBuy += +tx.amountReceive
         }
         if (tx.status === 'waiting') acc[currencyFrom].waiting++
-        if (!Number.isNaN(+tx.amountSend)) acc[currencyFrom].volumeSels += +tx.amountSend
-        if (!Number.isNaN(+tx.amountReceive)) acc[currencyTo].volumeBuy += +tx.amountReceive
 
         return acc
       }, {})
@@ -312,13 +315,11 @@ export default class extends Vue {
         coin.volumeSels = coin.volumeSels.toFixed(7)
         coin.volumeBuy = coin.volumeBuy.toFixed(7)
         coin.profitBtcTotal = (coin.profitUsd / BTC.PRICE).toFixed(9)
+        coin.profitBtcBuy = (coin.profitBtcBuy / BTC.PRICE).toFixed(9)
+        coin.profitBtcSels = (coin.profitBtcSels / BTC.PRICE).toFixed(9)
         coin.profitUsd = coin.profitUsd.toFixed(4)
         return coin
-      }).sort((a: any, b: any) =>
-        a.coin > b.coin ? 1 : (
-          a.coin < b.coin ? -1 : 0
-        )
-      )
+      }).sort((a: any, b: any) => b.profitBtcTotal - a.profitBtcTotal)
       NProgress.done()
     }
 
