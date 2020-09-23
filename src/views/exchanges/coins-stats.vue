@@ -300,10 +300,12 @@ export default class extends Vue {
 
         if (tx.status === 'finished') {
           acc[currencyFrom].finished++
-          acc[currencyFrom].profitUsd += +tx.usdValue
-          acc[currencyTo].profitUsd += +tx.usdValue
-          acc[currencyTo].profitBtcBuy += +tx.usdValue
-          acc[currencyFrom].profitBtcSels += +tx.usdValue
+          if (!Number.isNaN(+tx.usdValue)) {
+            acc[currencyFrom].profitUsd += +tx.usdValue
+            acc[currencyTo].profitUsd += +tx.usdValue
+            acc[currencyTo].profitBtcBuy += +tx.usdValue
+            acc[currencyFrom].profitBtcSels += +tx.usdValue
+          }
           if (!Number.isNaN(+tx.amountSend)) acc[currencyFrom].volumeSels += +tx.amountSend
           if (!Number.isNaN(+tx.amountReceive)) acc[currencyTo].volumeBuy += +tx.amountReceive
         }
@@ -311,6 +313,7 @@ export default class extends Vue {
 
         return acc
       }, {})
+
       this.list = Object.values(acc).map((coin: any) => {
         coin.volumeSels = coin.volumeSels.toFixed(7)
         coin.volumeBuy = coin.volumeBuy.toFixed(7)

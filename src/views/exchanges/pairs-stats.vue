@@ -293,7 +293,7 @@ export default class extends Vue {
         if (tx.status === 'finished') {
           acc[pairName].finished++
           acc[pairName].volume += +tx.amountSend
-          acc[pairName].profitUsd += +tx.usdValue
+          if (!Number.isNaN(+tx.usdValue)) acc[pairName].profitUsd += +tx.usdValue
         }
         if (tx.status === 'waiting') acc[pairName].waiting++
 
