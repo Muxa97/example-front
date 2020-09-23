@@ -70,9 +70,9 @@
         min-width="150px"
       >
         <template slot-scope="scope">
-            <span
-              class="link-type"
-            >{{ scope.row.amountSend }} {{ scope.row.fromCurrency }}</span>
+          <span
+            class="link-type"
+          >{{ scope.row.amountSend }} {{ scope.row.fromCurrency }}</span>
         </template>
       </el-table-column>
 
@@ -107,7 +107,7 @@
 
 <script>
 export default {
-name: "index"
+  name: 'Index'
 }
 </script>
 

@@ -3,42 +3,55 @@
     <div class="filter-container">
       <div class="search-container">
         <el-row>
-          <el-col :span="5"><div class="grid-content bg-purple">
-            <el-card shadow="never">
-              <div slot="header" class="clearfix">
-                <span>Select From Date</span>
-              </div>
-              <div class="details-card-body">
-                <el-date-picker
-                  v-model="searchTimestampFrom"
-                  type="datetime"
-                  format="yyyy-MM-dd HH:mm:ss"
-                  placeholder="Select From"
-                  :picker-options="pickerOpts"
-                />
-              </div>
-            </el-card>
-          </div></el-col>
-          <el-col :span="5"><div class="grid-content bg-purple-light">
-            <el-card shadow="never">
-              <div slot="header" class="clearfix">
-                <span>Select To Date</span>
-              </div>
-              <div class="details-card-body">
-                <el-date-picker
-                  v-model="searchTimestampTo"
-                  type="datetime"
-                  format="yyyy-MM-dd HH:mm:ss"
-                  placeholder="Select To"
-                  :picker-options="pickerOpts"
-                />
-              </div>
-            </el-card>
-          </div></el-col>
+          <el-col :span="5">
+            <div class="grid-content bg-purple">
+              <el-card shadow="never">
+                <div
+                  slot="header"
+                  class="clearfix"
+                >
+                  <span>Select From Date</span>
+                </div>
+                <div class="details-card-body">
+                  <el-date-picker
+                    v-model="searchTimestampFrom"
+                    type="datetime"
+                    format="yyyy-MM-dd HH:mm:ss"
+                    placeholder="Select From"
+                    :picker-options="pickerOpts"
+                  />
+                </div>
+              </el-card>
+            </div>
+          </el-col>
+          <el-col :span="5">
+            <div class="grid-content bg-purple-light">
+              <el-card shadow="never">
+                <div
+                  slot="header"
+                  class="clearfix"
+                >
+                  <span>Select To Date</span>
+                </div>
+                <div class="details-card-body">
+                  <el-date-picker
+                    v-model="searchTimestampTo"
+                    type="datetime"
+                    format="yyyy-MM-dd HH:mm:ss"
+                    placeholder="Select To"
+                    :picker-options="pickerOpts"
+                  />
+                </div>
+              </el-card>
+            </div>
+          </el-col>
           <el-col :span="3">
             <div class="grid-content bg-purple-light">
               <el-card>
-                <div slot="header" class="clearfix">
+                <div
+                  slot="header"
+                  class="clearfix"
+                >
                   <span>Currency</span>
                 </div>
                 <el-input
@@ -54,7 +67,10 @@
           <el-col :span="11">
             <div class="grid-content bg-purple-light">
               <el-card>
-                <div slot="header" class="clearfix">
+                <div
+                  slot="header"
+                  class="clearfix"
+                >
                   <span>Search</span>
                 </div>
                 <el-input
@@ -133,7 +149,6 @@
         <template slot-scope="scope">
           <span>{{ scope.row.appVersion }}</span>
         </template>
-
       </el-table-column>
 
       <el-table-column
@@ -143,16 +158,19 @@
         <template slot-scope="scope">
           <span>{{ scope.row.platform }}</span>
         </template>
-
       </el-table-column>
       <el-table-column
         :label="$t('table.errorMessage')"
         min-width="320px"
       >
-        <template slot-scope="scope" style="word-break: normal; max-height: 25px;">
-          <div class="error-message-wrapper">{{ scope.row.errorMessage }}</div>
+        <template
+          slot-scope="scope"
+          style="word-break: normal; max-height: 25px;"
+        >
+          <div class="error-message-wrapper">
+            {{ scope.row.errorMessage }}
+          </div>
         </template>
-
       </el-table-column>
     </el-table>
     <pagination
@@ -164,8 +182,8 @@
     />
     <el-dialog
       :title="`${errorDetails.date && errorDetails.date.split(',')[0]}. ${errorDetails.errorType ?
-      'Error: ' + errorDetails.errorType :
-       'Unknown error'}`"
+        'Error: ' + errorDetails.errorType :
+        'Unknown error'}`"
       :visible.sync="errorDetails"
     >
       <ErrorDetails
@@ -220,7 +238,7 @@ const pickerOptions = {
     filters: {
     }
   })
-  export default class extends Vue {
+export default class extends Vue {
     private tableKey = 0
     private list: IErrorData[] = []
     private searchString = '';
@@ -268,41 +286,41 @@ const pickerOptions = {
       const dateTo: string = moment(this.searchTimestampTo).format()
 
       const data = {
-        "query": {
-          "bool": {
-            "must": [{
-              "range": {
-                "date": {
-                  "gte": dateFrom,
-                  "lte": dateTo,
-                  "boost": 2
-                }
-              },
-            },
-              {
-                "match": {
-                  "currency": {
-                    "query": currency,
-                    "zero_terms_query": "all"
-                  }
-                }
-              },
-              {
-                "match": {
-                  "userId": {
-                    "query": userId,
-                    "zero_terms_query": "all"
-                  }
+        'query': {
+          'bool': {
+            'must': [{
+              'range': {
+                'date': {
+                  'gte': dateFrom,
+                  'lte': dateTo,
+                  'boost': 2
                 }
               }
+            },
+            {
+              'match': {
+                'currency': {
+                  'query': currency,
+                  'zero_terms_query': 'all'
+                }
+              }
+            },
+            {
+              'match': {
+                'userId': {
+                  'query': userId,
+                  'zero_terms_query': 'all'
+                }
+              }
+            }
             ]
           }
         },
-        "size": this.pagination,
-        "from": this.listQuery.offset,
-        "sort": {
-          "date": {
-            "order": "desc"
+        'size': this.pagination,
+        'from': this.listQuery.offset,
+        'sort': {
+          'date': {
+            'order': 'desc'
           }
         }
       }
@@ -328,14 +346,14 @@ const pickerOptions = {
             this.pages = Math.floor(responseData.hits.total / this.pagination)
           }
         })
-        .catch(() =>{
+        .catch(() => {
           // this.error = error.toString()
         })
         .finally(() => {
           this.listLoading = false
         })
     }
-  }
+}
 </script>
 
 <style scoped>
