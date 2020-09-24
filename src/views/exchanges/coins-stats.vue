@@ -86,17 +86,6 @@
       :default-sort = "{prop: 'profitBtcTotal', order: 'descending'}"
     >
       <el-table-column
-        :label="$t('table.coin')"
-        width="110px"
-      >
-        <template slot-scope="scope">
-          <span
-            class="link-type"
-          >{{ scope.row.coin }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column
         :label="$t('table.ticker')"
         width="110px"
       >
@@ -294,7 +283,6 @@ export default class extends Vue {
           acc[currencyFrom] = {}
           acc[currencyFrom].finished = 0
           acc[currencyFrom].waiting = 0
-          acc[currencyFrom].coin = currencyFrom
           acc[currencyFrom].ticker = currencyFrom
           acc[currencyFrom].volumeBuy = 0
           acc[currencyFrom].volumeSels = 0
@@ -307,7 +295,6 @@ export default class extends Vue {
           acc[currencyTo] = {}
           acc[currencyTo].finished = 0
           acc[currencyTo].waiting = 0
-          acc[currencyTo].coin = currencyTo
           acc[currencyTo].ticker = currencyTo
           acc[currencyTo].volumeBuy = 0
           acc[currencyTo].volumeSels = 0

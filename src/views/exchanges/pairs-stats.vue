@@ -260,6 +260,7 @@ export default class extends Vue {
     }
     private onIntervalChange() {
       this.currentInterval = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`
+      this.getExchangesByCoins().catch(err => console.error(err))
     }
     private handleFilter(el: any) {
       console.log(el)
