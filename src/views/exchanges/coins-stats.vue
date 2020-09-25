@@ -88,6 +88,9 @@
       <el-table-column
         :label="$t('table.ticker')"
         width="110px"
+        prop="ticker"
+        sortable
+        :sort-method="sortByTicker"
       >
         <template slot-scope="scope">
           <span
@@ -256,6 +259,7 @@ export default class extends Vue {
     }
     private onIntervalChange() {
       this.currentInterval = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`
+      this.getExchangesByCoins().catch(err => console.error(err))
     }
     private handleFilter(el: any) {
       console.log(el)
@@ -358,6 +362,10 @@ export default class extends Vue {
 
     private sortByVolumeBuy(a: any, b: any) {
       return +a.volumeBuy - +b.volumeBuy
+    }
+
+    private sortByTicker(a: any, b: any) {
+      return a.ticker > b.ticker ? 1 : (a.ticker < b.ticker ? -1 : 0)
     }
 }
 </script>

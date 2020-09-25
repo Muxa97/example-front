@@ -108,7 +108,10 @@
     >
       <el-table-column
         :label="$t('table.pair')"
-        width="200px"
+        width="200px
+        prop="pair"
+        sortable
+        :sort-method="sortByPair"
       >
         <template slot-scope="scope">
           <span
@@ -366,6 +369,10 @@ export default class extends Vue {
 
     private sortByVolume(a: any, b: any) {
       return +a.volume - +b.volume
+    }
+
+    private sortByPair(a: any, b: any) {
+      return a.pair > b.pair ? 1 : (a.pair < b.pair ? -1 : 0)
     }
 }
 </script>
