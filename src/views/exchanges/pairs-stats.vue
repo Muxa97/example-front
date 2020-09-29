@@ -103,12 +103,11 @@
       highlight-current-row
       stripe
       style="width: 100%;"
-      @row-click="redirectToPairsStats"
-      :default-sort = "{prop: 'profitBtcTotal', order: 'descending'}"
+      :default-sort="{prop: 'profitBtcTotal', order: 'descending'}"
     >
       <el-table-column
         :label="$t('table.pair')"
-        width="200px
+        width="200px"
         prop="pair"
         sortable
         :sort-method="sortByPair"
@@ -312,11 +311,11 @@ export default class extends Vue {
         if (tx.status === 'finished') {
           acc[pairName].finished++
           if (this.searchString.length && !this.searchString.includes('/')) {
-            acc[pairName].volume += tx.fromCurrency.startsWith(this.searchString.toUpperCase()) ?
-              +tx.amountSend : +tx.amountReceive
+            acc[pairName].volume += tx.fromCurrency.startsWith(this.searchString.toUpperCase())
+              ? +tx.amountSend : +tx.amountReceive
 
-            volumeCoin = tx.fromCurrency.startsWith(this.searchString.toUpperCase()) ?
-              tx.fromCurrency : tx.toCurrency.startsWith(this.searchString.toUpperCase()) ? tx.toCurrency : volumeCoin
+            volumeCoin = tx.fromCurrency.startsWith(this.searchString.toUpperCase())
+              ? tx.fromCurrency : tx.toCurrency.startsWith(this.searchString.toUpperCase()) ? tx.toCurrency : volumeCoin
           } else {
             acc[pairName].volume += +tx.amountSend
           }
@@ -349,10 +348,6 @@ export default class extends Vue {
         )
       )
       NProgress.done()
-    }
-
-    private redirectToPairsStats() {
-      this.$router.push('/exchanges/stats/pairs')
     }
 
     private sortByUsd(a: any, b: any) {
