@@ -104,10 +104,14 @@
       stripe
       style="width: 100%;"
       @row-click="redirectToPairsStats"
+      :default-sort = "{prop: 'profitBtcTotal', order: 'descending'}"
     >
       <el-table-column
         :label="$t('table.pair')"
-        width="200px"
+        width="200px
+        prop="pair"
+        sortable
+        :sort-method="sortByPair"
       >
         <template slot-scope="scope">
           <span
@@ -139,8 +143,11 @@
       </el-table-column>
 
       <el-table-column
-        :label="$t('table.volume')"
+        :label="$t('table.volume') + ' (' + currencyVolume + ')'"
         min-width="200px"
+        prop="volume"
+        sortable
+        :sort-method="sortByVolume"
       >
         <template slot-scope="scope">
           <span
@@ -152,6 +159,9 @@
       <el-table-column
         :label="$t('table.profitBtcTotal')"
         min-width="180px"
+        prop="profitBtcTotal"
+        sortable
+        :sort-method="sortByBtcTotal"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.profitBtcTotal }} BTC</span>
@@ -161,6 +171,9 @@
       <el-table-column
         :label="$t('table.profitUsd')"
         width="180px"
+        prop="profitUsd"
+        sortable
+        :sort-method="sortByUsd"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.profitUsd }} USD</span>
@@ -170,6 +183,9 @@
       <el-table-column
         :label="$t('table.percentage')"
         width="180px"
+        prop="percentage"
+        sortable
+        :sort-method="sortByPercentage"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.percentage }} %</span>
@@ -229,6 +245,7 @@ export default class extends Vue {
     private searchTimestampTo: Date = new Date();
     private currentInterval: any = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`;
     private searchString: string = '';
+    private currencyVolume = 'first coin'
     private searchQuery = {
       offset: 0,
       limit: 10000
@@ -246,6 +263,7 @@ export default class extends Vue {
     }
     private onIntervalChange() {
       this.currentInterval = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`
+      this.getExchangesByCoins().catch(err => console.error(err))
     }
     private handleFilter(el: any) {
       console.log(el)
@@ -265,6 +283,7 @@ export default class extends Vue {
         constructQuery(this.searchQuery),
         `createdAtStart=${new Date(range.start.toDate()).toUTCString()}&createdAtEnd=${new Date(range.end.toDate()).toUTCString()}`
       )
+      let volumeCoin = 'first coin'
 
       const acc = data.transactions.reduce((acc: any, tx: any) => {
         const currencyFrom = tx.fromCurrency
@@ -292,13 +311,22 @@ export default class extends Vue {
 
         if (tx.status === 'finished') {
           acc[pairName].finished++
-          acc[pairName].volume += +tx.amountSend
+          if (this.searchString.length && !this.searchString.includes('/')) {
+            acc[pairName].volume += tx.fromCurrency.startsWith(this.searchString.toUpperCase()) ?
+              +tx.amountSend : +tx.amountReceive
+
+            volumeCoin = tx.fromCurrency.startsWith(this.searchString.toUpperCase()) ?
+              tx.fromCurrency : tx.toCurrency.startsWith(this.searchString.toUpperCase()) ? tx.toCurrency : volumeCoin
+          } else {
+            acc[pairName].volume += +tx.amountSend
+          }
           if (!Number.isNaN(+tx.usdValue)) acc[pairName].profitUsd += +tx.usdValue
         }
         if (tx.status === 'waiting') acc[pairName].waiting++
 
         return acc
       }, {})
+      this.currencyVolume = volumeCoin
 
       const filtered = Object.values(acc).filter((pair: any) => {
         if (!this.searchString.length) {
@@ -325,6 +353,26 @@ export default class extends Vue {
 
     private redirectToPairsStats() {
       this.$router.push('/exchanges/stats/pairs')
+    }
+
+    private sortByUsd(a: any, b: any) {
+      return +a.profitUsd - +b.profitUsd
+    }
+
+    private sortByBtcTotal(a: any, b: any) {
+      return +a.profitBtcTotal - +b.profitBtcTotal
+    }
+
+    private sortByPercentage(a: any, b: any) {
+      return +a.percentage - +b.percentage
+    }
+
+    private sortByVolume(a: any, b: any) {
+      return +a.volume - +b.volume
+    }
+
+    private sortByPair(a: any, b: any) {
+      return a.pair > b.pair ? 1 : (a.pair < b.pair ? -1 : 0)
     }
 }
 </script>

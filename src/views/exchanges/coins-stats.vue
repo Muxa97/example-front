@@ -83,21 +83,14 @@
       stripe
       style="width: 100%;"
       @row-click="redirectToPairsStats"
+      :default-sort = "{prop: 'profitBtcTotal', order: 'descending'}"
     >
-      <el-table-column
-        :label="$t('table.coin')"
-        width="110px"
-      >
-        <template slot-scope="scope">
-          <span
-            class="link-type"
-          >{{ scope.row.coin }}</span>
-        </template>
-      </el-table-column>
-
       <el-table-column
         :label="$t('table.ticker')"
         width="110px"
+        prop="ticker"
+        sortable
+        :sort-method="sortByTicker"
       >
         <template slot-scope="scope">
           <span
@@ -128,6 +121,9 @@
       <el-table-column
         :label="$t('table.volumeBuy')"
         min-width="150px"
+        prop="volumeBuy"
+        sortable
+        :sort-method="sortByVolumeBuy"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.volumeBuy }}</span>
@@ -137,6 +133,9 @@
       <el-table-column
         :label="$t('table.volumeSels')"
         min-width="150px"
+        prop="volumeSels"
+        sortable
+        :sort-method="sortByVolumeSels"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.volumeSels }}</span>
@@ -146,6 +145,9 @@
       <el-table-column
         :label="$t('table.profitBtcBuy')"
         width="180px"
+        prop="profitBtcBuy"
+        sortable
+        :sort-method="sortByBtcBuy"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.profitBtcBuy }} BTC</span>
@@ -155,6 +157,9 @@
       <el-table-column
         :label="$t('table.profitBtcSels')"
         width="180px"
+        prop="profitBtcSels"
+        sortable
+        :sort-method="sortByBtcSels"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.profitBtcSels }} BTC</span>
@@ -164,6 +169,9 @@
       <el-table-column
         :label="$t('table.profitBtcTotal')"
         width="180px"
+        prop="profitBtcTotal"
+        sortable
+        :sort-method="sortByBtcTotal"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.profitBtcTotal }} BTC</span>
@@ -173,6 +181,9 @@
       <el-table-column
         :label="$t('table.profitUsd')"
         width="180px"
+        prop="profitUsd"
+        sortable
+        :sort-method="sortByUsd"
       >
         <template slot-scope="scope">
           <span>{{ scope.row.profitUsd }} USD</span>
@@ -248,6 +259,7 @@ export default class extends Vue {
     }
     private onIntervalChange() {
       this.currentInterval = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`
+      this.getExchangesByCoins().catch(err => console.error(err))
     }
     private handleFilter(el: any) {
       console.log(el)
@@ -275,7 +287,6 @@ export default class extends Vue {
           acc[currencyFrom] = {}
           acc[currencyFrom].finished = 0
           acc[currencyFrom].waiting = 0
-          acc[currencyFrom].coin = currencyFrom
           acc[currencyFrom].ticker = currencyFrom
           acc[currencyFrom].volumeBuy = 0
           acc[currencyFrom].volumeSels = 0
@@ -288,7 +299,6 @@ export default class extends Vue {
           acc[currencyTo] = {}
           acc[currencyTo].finished = 0
           acc[currencyTo].waiting = 0
-          acc[currencyTo].coin = currencyTo
           acc[currencyTo].ticker = currencyTo
           acc[currencyTo].volumeBuy = 0
           acc[currencyTo].volumeSels = 0
@@ -328,6 +338,34 @@ export default class extends Vue {
 
     private redirectToPairsStats(row: any) {
       this.$router.push({ name: 'pairs', query: { coin: row.coin } })
+    }
+
+    private sortByUsd(a: any, b: any) {
+      return +a.profitUsd - +b.profitUsd
+    }
+
+    private sortByBtcTotal(a: any, b: any) {
+      return +a.profitBtcTotal - +b.profitBtcTotal
+    }
+
+    private sortByBtcSels(a: any, b: any) {
+      return +a.profitBtcSels - +b.profitBtcSels
+    }
+
+    private sortByBtcBuy(a: any, b: any) {
+      return +a.profitBtcBuy - +b.profitBtcBuy
+    }
+
+    private sortByVolumeSels(a: any, b: any) {
+      return +a.volumeSels - +b.volumeSels
+    }
+
+    private sortByVolumeBuy(a: any, b: any) {
+      return +a.volumeBuy - +b.volumeBuy
+    }
+
+    private sortByTicker(a: any, b: any) {
+      return a.ticker > b.ticker ? 1 : (a.ticker < b.ticker ? -1 : 0)
     }
 }
 </script>

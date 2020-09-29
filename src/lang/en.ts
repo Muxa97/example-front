@@ -170,7 +170,7 @@ export default {
     profitBtcTotal: 'BTC profit total',
     profitUsd: 'USD profit',
     pair: 'Pair name',
-    volume: 'Volume by first coin',
+    volume: 'Volume',
     percentage: 'Percentage',
     users: 'Users'
   },
