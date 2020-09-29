@@ -240,7 +240,7 @@ const pickerOptions = {
   })
 export default class extends Vue {
     private list: any[] = []
-    private searchTimestampFrom: Date = moment().subtract(1, 'day').toDate();
+    private searchTimestampFrom: Date = moment().subtract(1, 'week').toDate();
     private searchTimestampTo: Date = new Date();
     private currentInterval: any = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`;
     private searchString: string = '';
@@ -312,7 +312,7 @@ export default class extends Vue {
           acc[pairName].finished++
           if (this.searchString.length && !this.searchString.includes('/')) {
             acc[pairName].volume += tx.fromCurrency.startsWith(this.searchString.toUpperCase())
-              ? +tx.amountSend : +tx.amountReceive
+              ? +tx.amountSend : (tx.toCurrency.startsWith(this.searchString.toUpperCase()) ? +tx.amountReceive : 0)
 
             volumeCoin = tx.fromCurrency.startsWith(this.searchString.toUpperCase())
               ? tx.fromCurrency : tx.toCurrency.startsWith(this.searchString.toUpperCase()) ? tx.toCurrency : volumeCoin
