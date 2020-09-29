@@ -239,9 +239,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
     }
   })
 export default class extends Vue {
-  private created() {
-    console.log(this.$props.tx.Cashbacks)
-  }
   private getStatusBadgeClass(status: string) {
     return {
       'md-square el-badge__content': true,
