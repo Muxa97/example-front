@@ -196,7 +196,7 @@
               <span>Cashback</span>
             </div>
             <div class="details-card-body">
-              {{ tx.Cashbacks[0].expectedCashbackAmount }}
+              {{ tx.Cashbacks.expectedCashbackAmount }}
             </div>
           </el-card>
         </div>
@@ -239,6 +239,9 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
     }
   })
 export default class extends Vue {
+  private created() {
+    console.log(this.$props.tx.Cashbacks)
+  }
   private getStatusBadgeClass(status: string) {
     return {
       'md-square el-badge__content': true,
