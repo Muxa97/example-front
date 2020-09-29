@@ -253,6 +253,11 @@ export default class extends Vue {
     }
 
     private handleFilter() {
+      if (this.searchString.length) {
+        this.tableByTerms = `atomicId=${this.searchString}`
+      } else {
+        this.tableByTerms = ''
+      }
       this.getList(false)
     }
 
@@ -308,10 +313,13 @@ export default class extends Vue {
       try {
         if (this.tableByTerms) {
           data = await getExchangesByTerms(this.tableByTerms, `offset=${this.listQuery.offset}&limit=${this.listQuery.limit}`)
+          this.total = data.data.count
+          data = data.data.transactions
         } else {
           data = await getExchanges(this.listQuery)
+          data = data.data
         }
-        this.list = data.data
+        this.list = data
         this.page = params.page
       } catch (e) {
         this.$notify({
