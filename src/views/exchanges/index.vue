@@ -221,11 +221,10 @@ export default class extends Vue {
     private async refreshTableSearch(searchString:string) {
       this.listLoading = true
       try {
-        const response = await getExchangesByTermsCount(searchString)
-        this.total = response.data.count
         const { data } = await getExchangesByTerms(searchString, `offset=${this.listQuery.offset}&limit=${this.listQuery.limit}`)
         this.tableByTerms = searchString
-        this.list = data
+        this.total = data.count
+        this.list = data.transactions
       } catch (e) {
         this.$notify({
           title: 'error',

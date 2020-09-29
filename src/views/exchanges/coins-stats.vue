@@ -143,6 +143,18 @@
       </el-table-column>
 
       <el-table-column
+        :label="$t('table.volume')"
+        min-width="150px"
+        prop="volumeSels"
+        sortable
+        :sort-method="sortByVolume"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.volume }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column
         :label="$t('table.profitBtcBuy')"
         width="180px"
         prop="profitBtcBuy"
@@ -325,6 +337,7 @@ export default class extends Vue {
       }, {})
 
       this.list = Object.values(acc).map((coin: any) => {
+        coin.volume = (coin.volumeSels + coin.volumeBuy).toFixed(7)
         coin.volumeSels = coin.volumeSels.toFixed(7)
         coin.volumeBuy = coin.volumeBuy.toFixed(7)
         coin.profitBtcTotal = (coin.profitUsd / BTC.PRICE).toFixed(9)
@@ -362,6 +375,10 @@ export default class extends Vue {
 
     private sortByVolumeBuy(a: any, b: any) {
       return +a.volumeBuy - +b.volumeBuy
+    }
+
+    private sortByVolume(a: any, b: any) {
+      return +a.volume - +b.volume
     }
 
     private sortByTicker(a: any, b: any) {
