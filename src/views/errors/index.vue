@@ -112,6 +112,7 @@
       stripe
       style="width: 100%;"
       @row-click="showDetails"
+      max-height="700"
     >
       <el-table-column
         :label="$t('table.date')"

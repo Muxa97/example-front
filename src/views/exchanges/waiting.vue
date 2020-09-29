@@ -61,6 +61,7 @@
       stripe
       style="width: 100%;"
       @row-click="showDetails"
+      max-height="700"
     >
       <el-table-column
         :label="$t('table.ticker')"
@@ -88,13 +89,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination
-      v-show="totalExchanges>0"
-      :total="totalExchanges"
-      :page.sync="page"
-      :limit.sync="searchQuery.limit"
-      @pagination="analyzeExchangesByInterval"
-    />
     <el-dialog
       :title="details.title"
       :visible.sync="details"

@@ -44,6 +44,7 @@
       style="width: 100%;"
       @sort-change="sortChange"
       @row-click="showDetails"
+      max-height="700"
     >
       <el-table-column
         :label="$t('table.status')"
