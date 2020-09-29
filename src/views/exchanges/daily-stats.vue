@@ -116,8 +116,8 @@
       highlight-current-row
       stripe
       style="width: 100%;"
-      @row-click="redirectToWaitingExchanges"
       max-height="700"
+      @row-click="redirectToWaitingExchanges"
     >
       <el-table-column
         :label="$t('table.date')"

@@ -30,8 +30,8 @@
       highlight-current-row
       stripe
       style="width: 100%;"
-      @row-click="redirectToUserPage"
       max-height="700"
+      @row-click="redirectToUserPage"
     >
       <el-table-column
         :label="$t('table.userId')"

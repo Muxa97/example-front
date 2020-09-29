@@ -42,9 +42,9 @@
       highlight-current-row
       stripe
       style="width: 100%;"
+      max-height="700"
       @sort-change="sortChange"
       @row-click="showDetails"
-      max-height="700"
     >
       <el-table-column
         :label="$t('table.status')"

@@ -60,8 +60,8 @@
       highlight-current-row
       stripe
       style="width: 100%;"
-      @row-click="showDetails"
       max-height="700"
+      @row-click="showDetails"
     >
       <el-table-column
         :label="$t('table.ticker')"
