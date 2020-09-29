@@ -82,8 +82,8 @@
       highlight-current-row
       stripe
       style="width: 100%;"
+      :default-sort="{prop: 'profitBtcTotal', order: 'descending'}"
       @row-click="redirectToPairsStats"
-      :default-sort = "{prop: 'profitBtcTotal', order: 'descending'}"
     >
       <el-table-column
         :label="$t('table.ticker')"
@@ -337,7 +337,7 @@ export default class extends Vue {
     }
 
     private redirectToPairsStats(row: any) {
-      this.$router.push({ name: 'pairs', query: { coin: row.coin } })
+      this.$router.push({ name: 'pairs', query: { coin: row.ticker } })
     }
 
     private sortByUsd(a: any, b: any) {

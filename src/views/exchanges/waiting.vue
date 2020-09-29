@@ -98,6 +98,7 @@
     <el-dialog
       :title="details.title"
       :visible.sync="details"
+      width="90%"
     >
       <WaitingDetails
         v-if="details"
@@ -230,6 +231,5 @@ export default class extends Vue {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
 </style>

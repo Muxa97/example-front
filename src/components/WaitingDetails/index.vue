@@ -40,10 +40,10 @@
       </el-table-column>
       <el-table-column
         :label="$t('table.atomicId')"
-        width="125px"
+        width="500px"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.atomicId | formatAtomicId }}</span>
+          <span>{{ scope.row.atomicId }}</span>
         </template>
       </el-table-column>
     </el-table>
