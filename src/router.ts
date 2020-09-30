@@ -116,8 +116,6 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackChunkName: "staking" */ '@/views/staking/index.vue'),
         meta: {
           title: 'Staking',
-          icon: 'table',
-          roles: ['admin', 'user', 'editor']
         }
       },
       {
@@ -125,6 +123,36 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackChunkName: "staking-stats" */ '@/views/staking/stats.vue'),
         meta: {
           title: 'Staking Stats',
+          icon: 'table',
+          roles: ['admin', 'user', 'editor']
+        }
+      }
+    ]
+  },
+  {
+    path: '/buy',
+    component: Layout,
+    meta: {
+      breadcrumb: false,
+      title: 'Buy',
+      icon: 'table',
+      roles: ['admin', 'user', 'editor']
+    },
+    children: [
+      {
+        path: '',
+        component: () => import(/* webpackChunkName: "buy" */ '@/views/buy-crypto/index.vue'),
+        meta: {
+          title: 'Buy',
+          icon: 'table',
+          roles: ['admin', 'user', 'editor']
+        }
+      },
+      {
+        path: '/stats',
+        component: () => import(/* webpackChunkName: "buy-stats" */ '@/views/buy-crypto/stats.vue'),
+        meta: {
+          title: 'Buy Stats',
           icon: 'table',
           roles: ['admin', 'user', 'editor']
         }

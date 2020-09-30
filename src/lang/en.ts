@@ -179,7 +179,6 @@ export default {
     stakedUsd: 'Staked USD',
     staked: 'Staked',
     volume: 'Volume',
-    percentage: 'Percentage',
     users: 'Users'
   },
   example: {
