@@ -196,7 +196,7 @@
               <span>Cashback</span>
             </div>
             <div class="details-card-body">
-              {{ tx.Cashbacks[0].expectedCashbackAmount }}
+              {{ tx.Cashbacks.expectedCashbackAmount }}
             </div>
           </el-card>
         </div>

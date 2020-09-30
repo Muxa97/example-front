@@ -1,12 +1,39 @@
 import request from '@/utils/request'
 import axios from 'axios'
 
-export const getUserInfo = (data: any) =>
-  request({
+export const getUsers = async(params: any) => {
+  const response = await axios({
+    headers: {
+      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+    },
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/users/all?offset=${params.offset}&limit=${params.limit}${params.atomicId ? '&atomicId=' + params.atomicId : ''}`,
+    method: 'get'
+  })
+  const { data } = response
+  return data
+}
+
+export const getUserInfo = async(data: any) => {
+  const response = await request({
     url: '/users/info',
     method: 'post',
     data
   })
+  const info = { data: {} } /* await axios({
+    headers: {
+      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+    },
+    url: `http://${process.env.VUE_APP_APOLLO_API_HOST}/users/info`,
+    method: 'post',
+    data
+  }) */
+  return {
+    data: {
+      user: response.data.user,
+      info: info.data as IUserData
+    }
+  }
+}
 
 export const login = (data: any) =>
   request({

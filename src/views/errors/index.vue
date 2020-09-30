@@ -111,6 +111,7 @@
       highlight-current-row
       stripe
       style="width: 100%;"
+      max-height="700"
       @row-click="showDetails"
     >
       <el-table-column
