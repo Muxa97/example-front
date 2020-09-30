@@ -132,6 +132,27 @@
               class="clearfix"
               style="border: none"
             >
+              <span>Airdrop refferals</span>
+            </div>
+            <div class="details-card-body">
+              <div v-for="item in currentUser.airdropsReferrals">{{ item }}</div>
+            </div>
+          </el-card>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="24">
+        <div class="grid-content bg-purple">
+          <el-card
+            shadow="never"
+            style="border: none"
+          >
+            <div
+              slot="header"
+              class="clearfix"
+              style="border: none"
+            >
               <span>Devices</span>
             </div>
             <div class="details-card-body">
@@ -265,8 +286,8 @@ export default class extends Vue {
     }
     if (uid) {
       getUserInfo({ atomicId: uid })
-        .then(({ data }) => {
-          this.currentUser = data.info
+        .then((data) => {
+          this.currentUser = data
           this.devices = this.currentUser.devices
         })
     } else {
