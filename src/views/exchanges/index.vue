@@ -183,7 +183,7 @@ export default class extends Vue {
 
       this.total = data.data.count
     }
-
+    
     private handleFilter() {
       if (this.searchString.length) {
         this.tableByTerms = `atomicId=${this.searchString}`

@@ -1,4 +1,5 @@
 /* tslint:disable */
+import './audience'
 import './bug'
 import './chart'
 import './dashboard'

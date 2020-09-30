@@ -103,6 +103,35 @@ export const asyncRoutes: RouteConfig[] = [
     ]
   },
   {
+    path: '/staking',
+    component: Layout,
+    meta: {
+      title: 'Staking',
+      icon: 'education',
+      breadcrumb: false
+    },
+    children: [
+      {
+        path: '',
+        component: () => import(/* webpackChunkName: "staking" */ '@/views/staking/index.vue'),
+        meta: {
+          title: 'Staking',
+          icon: 'table',
+          roles: ['admin', 'user', 'editor']
+        }
+      },
+      {
+        path: '/stats',
+        component: () => import(/* webpackChunkName: "staking-stats" */ '@/views/staking/stats.vue'),
+        meta: {
+          title: 'Staking Stats',
+          icon: 'table',
+          roles: ['admin', 'user', 'editor']
+        }
+      }
+    ]
+  },
+  {
     path: '/users',
     component: Layout,
     children: [
@@ -112,6 +141,21 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Users',
           icon: 'user',
+          roles: ['admin', 'user', 'editor']
+        }
+      }
+    ]
+  },
+  {
+    path: '/audience',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/audience/index.vue'),
+        meta: {
+          title: 'Audience',
+          icon: 'audience',
           roles: ['admin', 'user', 'editor']
         }
       }
