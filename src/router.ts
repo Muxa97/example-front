@@ -48,8 +48,7 @@ export const asyncRoutes: RouteConfig[] = [
     component: Layout,
     meta: {
       title: 'Exchange',
-      icon: 'education',
-      breadcrumb: false
+      icon: 'education'
     },
     children: [
       {
@@ -119,7 +118,7 @@ export const asyncRoutes: RouteConfig[] = [
         }
       },
       {
-        path: '/stats',
+        path: 'stats',
         component: () => import(/* webpackChunkName: "staking-stats" */ '@/views/staking/stats.vue'),
         meta: {
           title: 'Staking Stats',
@@ -133,7 +132,6 @@ export const asyncRoutes: RouteConfig[] = [
     path: '/buy',
     component: Layout,
     meta: {
-      breadcrumb: false,
       title: 'Buy',
       icon: 'table',
       roles: ['admin', 'user', 'editor']
@@ -145,14 +143,33 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Buy',
           icon: 'table',
+          roles: ['admin', 'user', 'editor'],
+          breadcrumb: false
+        }
+      },
+      {
+        path: 'stats/coins',
+        component: () => import(/* webpackChunkName: "buy-stats" */ '@/views/buy-crypto/coins-stats.vue'),
+        meta: {
+          title: 'Coins Stats',
+          icon: 'table',
           roles: ['admin', 'user', 'editor']
         }
       },
       {
-        path: '/stats',
-        component: () => import(/* webpackChunkName: "buy-stats" */ '@/views/buy-crypto/stats.vue'),
+        path: 'stats/fiat',
+        component: () => import(/* webpackChunkName: "buy-fiat-stats" */ '@/views/buy-crypto/fiat-stats.vue'),
         meta: {
-          title: 'Buy Stats',
+          title: 'Fiat Stats',
+          icon: 'table',
+          roles: ['admin', 'user', 'editor']
+        }
+      },
+      {
+        path: 'stats/pairs',
+        component: () => import(/* webpackChunkName: "buy-pairs-stats" */ '@/views/buy-crypto/pairs-stats.vue'),
+        meta: {
+          title: 'Pairs Stats',
           icon: 'table',
           roles: ['admin', 'user', 'editor']
         }

@@ -4,7 +4,7 @@
 
 <script>
   export default {
-    name: 'stats'
+    name: 'fiat-stats'
   }
 </script>
 
