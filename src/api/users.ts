@@ -1,39 +1,5 @@
 import request from '@/utils/request'
 import axios from 'axios'
-import { IUserData } from '@/api/types'
-
-const users: IUserData[] = [
-  {
-    atomicId: 'abcrslkjhfrqlkabsdvuirlwslkj;AF',
-    status: 'Memeber',
-    awcBalance: 0.17,
-    devices: [ { platform: 'Win32 10.18.0', appVersion: '2.18.3' }, { platform: 'Win32 10.18.0', appVersion: '2.18.3' } ],
-    exchangeVolume: 0,
-    buyingVolume: 0.19,
-    stakingVolume: 2.0,
-    airdropsReferrals: []
-  },
-  {
-    atomicId: 'veraulnclw4ugfjaiewRUBCLYAKLWSHEDF',
-    status: 'Memeber',
-    awcBalance: 0.17,
-    devices: [ { platform: 'Win32 10.18.0', appVersion: '2.18.3' }, { platform: 'Win32 10.18.0', appVersion: '2.18.3' } ],
-    exchangeVolume: 0,
-    buyingVolume: 0.19,
-    stakingVolume: 2.0,
-    airdropsReferrals: []
-  },
-  {
-    atomicId: 'vnswleoof4msghtls;oqw4r',
-    status: 'Memeber',
-    awcBalance: 7.2,
-    devices: [ { platform: 'Win32 10.18.0', appVersion: '2.18.3' }, { platform: 'Win32 10.18.0', appVersion: '2.18.3' } ],
-    exchangeVolume: 0.33,
-    buyingVolume: 1.2,
-    stakingVolume: 0.3,
-    airdropsReferrals: []
-  }
-]
 
 export const getUsers = async(params: any) => {
   const response = await axios({
@@ -81,3 +47,36 @@ export const logout = () =>
     url: '/users/logout',
     method: 'post'
   })
+
+export const getHourData = async(params: any) => {
+  const { data } = await axios({
+    headers: {
+      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+    },
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/users/hour_data?fromDate=${params.from.toISOString()}&toDate=${params.to.toISOString()}`,
+    method: 'get'
+  })
+  return data
+}
+
+export const getUsersDevices = async(params: any) => {
+  try {
+    const { data } = await axios({
+      headers: {
+        'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+      },
+      url: `${process.env.VUE_APP_APOLLO_API_HOST}/users/devices?fromDate=${params.from}&toDate=${params.to}`,
+      method: 'get'
+    })
+    return data
+  } catch (err) {
+    console.error(err)
+    return { data: [
+      { os: 'darwin 13.12.8', count: Math.floor(Math.random() * 250) },
+      { os: 'win32 13.17.0', count: Math.floor(Math.random() * 250) },
+      { os: 'android', count: Math.floor(Math.random() * 250) },
+      { os: 'ios', count: Math.floor(Math.random() * 250) }
+    ]
+    }
+  }
+}
