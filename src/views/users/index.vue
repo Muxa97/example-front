@@ -30,6 +30,7 @@
       highlight-current-row
       stripe
       style="width: 100%;"
+      max-height="700"
       @row-click="redirectToUserPage"
     >
       <el-table-column
@@ -142,7 +143,7 @@ export default class extends Vue {
     this.listQuery.offset = params ? (params.page - 1) * params.limit : 0
 
     if (this.$route.query.userId && this.searchString.length === 0) {
-      this.listQuery.atomicId = this.$route.query.userId || ''
+      this.listQuery.atomicId = this.$route.query.userId.toString()
     } else {
       this.listQuery.atomicId = this.searchString
     }
@@ -150,7 +151,6 @@ export default class extends Vue {
     getUsers(this.listQuery)
       .then((data) => {
         this.list = data
-        this.total = data.length + 10000
         if (this.pages === 0) {
           this.pages = Math.floor(this.total / this.pagination)
         }

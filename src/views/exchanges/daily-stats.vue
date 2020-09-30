@@ -116,6 +116,8 @@
       highlight-current-row
       stripe
       style="width: 100%;"
+      max-height="700"
+      @row-click="redirectToWaitingExchanges"
     >
       <el-table-column
         :label="$t('table.date')"
@@ -156,12 +158,30 @@
           <span>{{ scope.row.finished }}</span>
         </template>
       </el-table-column>
+
+      <el-table-column
+        :label="$t('table.volumeBTC')"
+        width="200px"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.volumeBTC }} BTC</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column
+        :label="$t('table.profitBTC')"
+        width="200px"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.profitBTC }} BTC</span>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
 import _ from 'underscore'
 import NProgress from 'nprogress'
@@ -196,147 +216,125 @@ const pickerOptions = {
   }]
 }
 
-@Component({
-  name: 'ExchangeStatsTable',
-  components: {
-    Pagination
-  },
-  filters: {
-  }
-})
-export default class extends Vue {
-  private statisticTable:any = [];
-  private totalExchangesCount:any = [];
-  private analyzedExchangeDayGroups:any = [];
-  private lastAnalyzedTime: string = new Date().toLocaleString();
-  private analyzedExchangesCount: number = 0;
-  private TotalExchanges: number = 0;
-  private searchTimestampFrom: Date = moment().subtract(1, 'week').toDate();
-  private searchTimestampTo: Date = new Date();
-  private currentInterval: any = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`;
-  private searchString: string = '';
-  private totalOrAnalyzed: string = 'Total Count';
-  private searchQuery = {
-    offset: 0,
-    limit: 1000
-  };
-  private page: number = 0;
-  private pickerOpts = pickerOptions
-  constructor() {
-    super()
-    NProgress.configure({ showSpinner: true })
-  }
-
-  async created(): Promise<any> {
-    NProgress.start()
-    this.analyzedExchangesCount = (await getExchangesCount()).data.count
-    this.analyzeExchangesByInterval().then(() => NProgress.done())
-    // await this.analyzeExchangesByInterval()
-  }
-  private onIntervalChange() {
-    this.currentInterval = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`
-  }
-  private handleFilter(el: any) {
-    console.log(el)
-  }
-  private handleLocalFilter(el: any) {
-    console.log(el)
-    console.log(this.searchString)
-  }
-
-  private async analyzeExchangesByInterval() {
-    NProgress.start()
-    this.totalOrAnalyzed = 'Analyzed'
-    this.analyzedExchangeDayGroups = []
-    this.searchQuery.limit = 10000
-    this.analyzedExchangesCount = 0
-
-    const range = moment.range(this.searchTimestampFrom, this.searchTimestampTo)
-    const ranges = split(range, 'days').reverse()
-    for (const range of ranges) {
-      const { data } = await getExchangesByTerms(constructQuery(this.searchQuery), `createdAtStart=${new Date(range.start).toUTCString()}&createdAtEnd=${new Date(range.end).toUTCString()}`)
-      this.analyzedExchangeDayGroups.push(
-        {
-          date: range.start.format('YYYY-MM-DD HH:mm:ss'),
-          created: data.transactions.length,
-          waiting: data.transactions.filter((element:any) => element.status === 'waiting').length,
-          finished: data.transactions.filter((element:any) => element.status === 'finished').length
-        }
-      )
-      console.log(range.end)
-      this.lastAnalyzedTime = new Date(range.end).toLocaleDateString()
-      this.analyzedExchangesCount += data.count
+  @Component({
+    name: 'ExchangeStatsTable',
+    components: {
+      Pagination
+    },
+    filters: {
     }
-    NProgress.done()
-    // const { data } = await getExchangesByTerms(constructQuery(this.searchQuery), `createdAtStart=${this.searchTimestampFrom}&createdAtEnd=${this.searchTimestampTo}`)
-    // if (data.count === this.searchQuery.limit) {
-    //   this.searchQuery.offset += this.searchQuery.limit
-    //
-    // }
-    //
-    // this.analyzedExchangesCount = data.count
-    //
-    // for (const group in groups) {
-    //   const finished = groups[group].filter((element:any) => element.status === 'finished')
-    //   const waiting = groups[group].filter((element:any) => element.status === 'waiting')
-    //   this.analyzedExchangeDayGroups.push(
-    //     {
-    //       date: group,
-    //       created: groups[group].length,
-    //       waiting: waiting.length,
-    //       finished: finished.length
-    //     }
-    //   )
-    // }
-    // console.log(data)
-  }
+  })
+export default class extends Vue {
+    private statisticTable:any = [];
+    private totalExchangesCount:any = [];
+    private analyzedExchangeDayGroups:any = [];
+    private lastAnalyzedTime: string = new Date().toLocaleString();
+    private analyzedExchangesCount: number = 0;
+    private TotalExchanges: number = 0;
+    private searchTimestampFrom: Date = moment().subtract(1, 'week').toDate();
+    private searchTimestampTo: Date = new Date();
+    private currentInterval: any = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`;
+    private searchString: string = '';
+    private totalOrAnalyzed: string = 'Total Count';
+    private searchQuery = {
+      offset: 0,
+      limit: 1000
+    };
+    private page: number = 0;
+    private pickerOpts = pickerOptions
+    constructor() {
+      super()
+      NProgress.configure({ showSpinner: true })
+    }
 
-  private async updateTableByDailyTransactions() {
-    try {
-      let { data } = await getExchanges(this.searchQuery)
-      for (const tx of data) {
-        this.statisticTable.push({ ...tx, createdAt: Number(new Date(tx.createdAt)), updatedAt: Number(new Date(tx.updatedAt)) })
-        this.lastAnalyzedTime = new Date(tx.updatedAt).toLocaleTimeString()
-        this.analyzedExchangesCount += 1
+    async created(): Promise<any> {
+      NProgress.start()
+      this.analyzedExchangesCount = (await getExchangesCount()).data.count
+      this.analyzeExchangesByInterval().then(() => NProgress.done())
+    }
+    private onIntervalChange() {
+      this.currentInterval = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`
+    }
+    private handleFilter(el: any) {
+      console.log(el)
+    }
+    private handleLocalFilter(el: any) {
+      console.log(el)
+      console.log(this.searchString)
+    }
 
-        if ((moment().diff(moment(tx.createdAt), 'days') > 14)) {
-          // console.log('(moment().diff(moment(tx.createdAt), \'days\') > 14)')
-          NProgress.done()
-          return
-        }
+    private async analyzeExchangesByInterval() {
+      NProgress.start()
+      this.totalOrAnalyzed = 'Analyzed'
+      this.analyzedExchangeDayGroups = []
+      this.searchQuery.limit = 10000
+      this.analyzedExchangesCount = 0
 
-        console.log('moment().diff(moment(tx.createdAt), \'days\')', moment().diff(moment(tx.createdAt), 'days'))
-        // end loop
-        // if (moment().diff(moment(tx.createdAt), 'days') > 14) {
-        //   NProgress.done()
-        //   return
-        // }
-      }
-      const groups = _.groupBy(this.statisticTable, (date:any) => moment(date.updatedAt).startOf('day').format())
-      for (const group in groups) {
-        const finished = groups[group].filter((element:any) => element.status === 'finished')
-        const waiting = groups[group].filter((element:any) => element.status === 'waiting')
+      const range = moment.range(this.searchTimestampFrom, this.searchTimestampTo)
+      const ranges = split(range, 'days').reverse()
+      const response = await fetch(`https://owl.atomicwallet.io/assetData?fiat=USD&tickers=BTC`)
+      const { BTC } = (await response.json())
+      for (const range of ranges) {
+        const { data } = await getExchangesByTerms(constructQuery(this.searchQuery), `createdAtStart=${new Date(range.start).toUTCString()}&createdAtEnd=${new Date(range.end).toUTCString()}`)
+        console.log(data.transactions)
         this.analyzedExchangeDayGroups.push(
           {
-            date: group,
-            created: groups[group].length,
-            waiting: waiting.length,
-            finished: finished.length
+            date: range.start.format('YYYY-MM-DD HH:mm:ss'),
+            created: data.transactions.length,
+            waiting: data.transactions.filter((element:any) => element.status === 'waiting').length,
+            finished: data.transactions.filter((element:any) => element.status === 'finished').length,
+            volumeBTC: (data.transactions.reduce((acc: number, tx: any) => acc + +tx.usdValue, 0) / BTC.PRICE).toFixed(9),
+            profitBTC: (data.transactions.reduce((acc: number, tx: any) => acc + (tx.status === 'finished' ? +tx.usdValue : 0), 0) / BTC.PRICE).toFixed(9)
           }
         )
+        this.lastAnalyzedTime = new Date(range.end).toLocaleDateString()
+        this.analyzedExchangesCount += data.count
       }
-      this.searchQuery.offset += this.searchQuery.limit
-      await this.updateTableByDailyTransactions()
-    } catch (e) {
-      this.$notify({
-        title: 'get exchanges',
-        message: e.toString(),
-        type: 'error',
-        duration: 2000
-      })
+      NProgress.done()
     }
-    NProgress.done()
-  }
+
+    private async updateTableByDailyTransactions() {
+      try {
+        let { data } = await getExchanges(this.searchQuery)
+        for (const tx of data) {
+          this.statisticTable.push({ ...tx, createdAt: Number(new Date(tx.createdAt)), updatedAt: Number(new Date(tx.updatedAt)) })
+          this.lastAnalyzedTime = new Date(tx.updatedAt).toLocaleTimeString()
+          this.analyzedExchangesCount += 1
+
+          if ((moment().diff(moment(tx.createdAt), 'days') > 14)) {
+            NProgress.done()
+            return
+          }
+        }
+        const groups = _.groupBy(this.statisticTable, (date:any) => moment(date.updatedAt).startOf('day').format())
+        for (const group in groups) {
+          const finished = groups[group].filter((element:any) => element.status === 'finished')
+          const waiting = groups[group].filter((element:any) => element.status === 'waiting')
+          this.analyzedExchangeDayGroups.push(
+            {
+              date: group,
+              created: groups[group].length,
+              waiting: waiting.length,
+              finished: finished.length
+            }
+          )
+        }
+        this.searchQuery.offset += this.searchQuery.limit
+        await this.updateTableByDailyTransactions()
+      } catch (e) {
+        this.$notify({
+          title: 'get exchanges',
+          message: e.toString(),
+          type: 'error',
+          duration: 2000
+        })
+      }
+      NProgress.done()
+    }
+
+    private redirectToWaitingExchanges(row: any) {
+      this.$router.push({ name: 'waiting', query: { date: row.date } })
+    }
 }
 </script>
 

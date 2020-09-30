@@ -20,8 +20,7 @@ export const getUserInfo = async(params: any) => {
         'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
       },
       url: `${process.env.VUE_APP_APOLLO_API_HOST}/users/info`,
-      method: 'post',
-      params
+      method: 'get'
     })
     return data
   } catch (err) {
