@@ -68,7 +68,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Daily Exchange Stats',
           icon: 'chart',
-          roles: ['admin']
+          roles: ['admin', 'user', 'editor']
         }
       },
       {

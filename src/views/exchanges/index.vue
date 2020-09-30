@@ -1,74 +1,5 @@
 <template>
   <div class="app-container">
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-    >
-      <el-table-column
-        align="center"
-        label="ID"
-        width="95"
-      >
-        <template slot-scope="scope">
-          {{ scope.$index }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Title">
-        <template slot-scope="scope">
-          {{ scope.row.title }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="Author"
-        width="180"
-        align="center"
-      >
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="Pageviews"
-        width="110"
-        align="center"
-      >
-        <template slot-scope="scope">
-          {{ scope.row.pageviews }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        class-name="status-col"
-        label="Status"
-        width="110"
-        align="center"
-      >
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">
-            {{ scope.row.status }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="created_at"
-        label="Created at"
-        width="250"
-      >
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.timestamp | parseTime }}</span>
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
-</template>
-
-<template>
-  <div class="app-container">
     <DraggableDialog
       ref="dialogVisible"
       @search="refreshTableSearch"
@@ -111,6 +42,7 @@
       highlight-current-row
       stripe
       style="width: 100%;"
+      max-height="700"
       @sort-change="sortChange"
       @row-click="showDetails"
     >
@@ -253,6 +185,11 @@ export default class extends Vue {
     }
 
     private handleFilter() {
+      if (this.searchString.length) {
+        this.tableByTerms = `atomicId=${this.searchString}`
+      } else {
+        this.tableByTerms = ''
+      }
       this.getList(false)
     }
 
@@ -285,11 +222,10 @@ export default class extends Vue {
     private async refreshTableSearch(searchString:string) {
       this.listLoading = true
       try {
-        const response = await getExchangesByTermsCount(searchString)
-        this.total = response.data.count
         const { data } = await getExchangesByTerms(searchString, `offset=${this.listQuery.offset}&limit=${this.listQuery.limit}`)
         this.tableByTerms = searchString
-        this.list = data
+        this.total = data.count
+        this.list = data.transactions
       } catch (e) {
         this.$notify({
           title: 'error',
@@ -308,10 +244,13 @@ export default class extends Vue {
       try {
         if (this.tableByTerms) {
           data = await getExchangesByTerms(this.tableByTerms, `offset=${this.listQuery.offset}&limit=${this.listQuery.limit}`)
+          this.total = data.data.count
+          data = data.data.transactions
         } else {
           data = await getExchanges(this.listQuery)
+          data = data.data
         }
-        this.list = data.data
+        this.list = data
         this.page = params.page
       } catch (e) {
         this.$notify({

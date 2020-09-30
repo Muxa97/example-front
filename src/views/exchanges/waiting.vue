@@ -60,6 +60,8 @@
       highlight-current-row
       stripe
       style="width: 100%;"
+      max-height="700"
+      @row-click="showDetails"
     >
       <el-table-column
         :label="$t('table.ticker')"
@@ -71,21 +73,33 @@
         </template>
       </el-table-column>
       <el-table-column
-        :label="$t('table.amount')"
+        :label="$t('table.waiting')"
         align="left"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.amountSend }}</span>
+          <span>{{ scope.row.waiting }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        :label="$t('table.users')"
+        align="left"
+      >
+        <template slot-scope="scope">
+          <span>{{ scope.row.usersCount }}</span>
         </template>
       </el-table-column>
     </el-table>
-    <pagination
-      v-show="totalExchanges>0"
-      :total="totalExchanges"
-      :page.sync="page"
-      :limit.sync="searchQuery.limit"
-      @pagination="analyzeExchangesByInterval"
-    />
+    <el-dialog
+      :title="details.title"
+      :visible.sync="details"
+      width="90%"
+    >
+      <WaitingDetails
+        v-if="details"
+        :txs="transactions"
+        :ticker="details.ticker"
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -98,6 +112,8 @@ import 'nprogress/nprogress.css'
 import { constructQuery } from '@/utils/query'
 import * as Moment from 'moment'
 import { extendMoment } from 'moment-range'
+import WaitingDetails from '@/components/WaitingDetails/index.vue'
+import DraggableDialog from '@/components/Dialog/index.vue'
 
 const moment = extendMoment(Moment)
 const { split } = require('moment-range-split')
@@ -120,7 +136,9 @@ const pickerOptions = {
   @Component({
     name: 'WaitingExchanges',
     components: {
-      Pagination
+      Pagination,
+      DraggableDialog,
+      WaitingDetails
     },
     filters: {
     }
@@ -128,6 +146,7 @@ const pickerOptions = {
 export default class extends Vue {
     private list: any[] = []
     private totalExchanges: number = 0;
+    private transactions: any[] = []
     private searchTimestampFrom: Date = new Date(new Date().setHours(0, 0, 0, 0));
     private searchTimestampTo: Date = new Date(new Date().setHours(23, 59, 59, 999));
     private searchQuery = {
@@ -137,6 +156,8 @@ export default class extends Vue {
     private pagination = 200
     private page: number = 0;
     private pickerOpts = pickerOptions
+    private details:any = false
+
     constructor() {
       super()
       NProgress.configure({ showSpinner: true })
@@ -169,18 +190,40 @@ export default class extends Vue {
         constructQuery(this.searchQuery),
         `createdAtStart=${new Date(range.start.toDate()).toUTCString()}&createdAtEnd=${new Date(range.end.toDate()).toUTCString()}`
       )
+      this.transactions = data.transactions
+      const txs = this.transactions.reduce((acc: any, tx: any) => {
+        if (tx.status === 'waiting') {
+          if (!acc[tx.fromCurrency]) {
+            acc[tx.fromCurrency] = {}
+            acc[tx.fromCurrency].fromCurrency = tx.fromCurrency
+            acc[tx.fromCurrency].waiting = 0
+            acc[tx.fromCurrency].users = new Set()
+          }
 
-      this.list = data.transactions.filter((tx: any) => {
-        tx.amountSend = +tx.amountSend
-        return tx.status === 'waiting'
-      })
+          acc[tx.fromCurrency].waiting++
+          acc[tx.fromCurrency].users.add(tx.atomicId)
+        }
+        return acc
+      }, {})
+      this.list = Object.values(txs).map((tx: any) => {
+        tx.usersCount = tx.users.size
+        return tx
+      }).sort((a: any, b: any) =>
+        a.fromCurrency > b.fromCurrency ? 1
+          : a.fromCurrency < b.fromCurrency ? -1 : 0
+      )
       this.totalExchanges = this.list.length
 
       NProgress.done()
     }
+
+    private showDetails(row:any) {
+      this.details = {}
+      this.details.title = `Waiting exchanges for ${row.fromCurrency}`
+      this.details.ticker = row.fromCurrency
+    }
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
 </style>

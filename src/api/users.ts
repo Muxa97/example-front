@@ -40,7 +40,7 @@ export const getUsers = async(params: any) => {
     headers: {
       'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
     },
-    url: `http://${process.env.VUE_APP_APOLLO_API_HOST}/users/all?offset=${params.offset}&limit=${params.limit}${params.atomicId ? '&atomicId=' + params.atomicId : ''}`,
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/users/all?offset=${params.offset}&limit=${params.limit}${params.atomicId ? '&atomicId=' + params.atomicId : ''}`,
     method: 'get'
   })
   const { data } = response

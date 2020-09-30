@@ -116,6 +116,7 @@
       highlight-current-row
       stripe
       style="width: 100%;"
+      max-height="700"
       @row-click="redirectToWaitingExchanges"
     >
       <el-table-column
@@ -275,6 +276,7 @@ export default class extends Vue {
       const { BTC } = (await response.json())
       for (const range of ranges) {
         const { data } = await getExchangesByTerms(constructQuery(this.searchQuery), `createdAtStart=${new Date(range.start).toUTCString()}&createdAtEnd=${new Date(range.end).toUTCString()}`)
+        console.log(data.transactions)
         this.analyzedExchangeDayGroups.push(
           {
             date: range.start.format('YYYY-MM-DD HH:mm:ss'),

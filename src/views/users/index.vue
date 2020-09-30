@@ -30,6 +30,7 @@
       highlight-current-row
       stripe
       style="width: 100%;"
+      max-height="700"
       @row-click="redirectToUserPage"
     >
       <el-table-column
@@ -149,8 +150,7 @@ export default class extends Vue {
 
     getUsers(this.listQuery)
       .then((data) => {
-        this.list = data.users
-        this.total = data.total
+        this.list = data
         if (this.pages === 0) {
           this.pages = Math.floor(this.total / this.pagination)
         }
