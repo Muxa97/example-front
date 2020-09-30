@@ -104,6 +104,7 @@
       stripe
       style="width: 100%;"
       :default-sort="{prop: 'profitBtcTotal', order: 'descending'}"
+      max-height="700"
     >
       <el-table-column
         :label="$t('table.pair')"

@@ -42,6 +42,7 @@
       highlight-current-row
       stripe
       style="width: 100%;"
+      max-height="700"
       @sort-change="sortChange"
       @row-click="showDetails"
     >

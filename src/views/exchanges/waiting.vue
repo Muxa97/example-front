@@ -60,6 +60,7 @@
       highlight-current-row
       stripe
       style="width: 100%;"
+      max-height="700"
       @row-click="showDetails"
     >
       <el-table-column
@@ -88,13 +89,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination
-      v-show="totalExchanges>0"
-      :total="totalExchanges"
-      :page.sync="page"
-      :limit.sync="searchQuery.limit"
-      @pagination="analyzeExchangesByInterval"
-    />
     <el-dialog
       :title="details.title"
       :visible.sync="details"
