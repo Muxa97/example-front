@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const getStakings = async (params: any) => {
+export const getStakings = async(params: any) => {
   return axios({
     headers: {
       'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
@@ -10,7 +10,7 @@ export const getStakings = async (params: any) => {
   })
 }
 
-export const getStakingsCount = async (params: any) => {
+export const getStakingsCount = async(params: any) => {
   return axios({
     headers: {
       'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
@@ -20,7 +20,7 @@ export const getStakingsCount = async (params: any) => {
   })
 }
 
-export const getStakingsByUser = async (params: any) => {
+export const getStakingsByUser = async(params: any) => {
   return axios({
     headers: {
       'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER

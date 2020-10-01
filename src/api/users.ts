@@ -14,7 +14,7 @@ export const getUsers = async(params: any) => {
 
 export const getUserInfo = async(params: any) => {
   try {
-    const {data} = await axios({
+    const { data } = await axios({
       headers: {
         'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
       },
@@ -38,7 +38,7 @@ export const getUserInfo = async(params: any) => {
   }
 }
 
-export const login = async (params: any) => {
+export const login = async(params: any) => {
   const { data } = await axios({
     headers: {
       'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
@@ -50,7 +50,7 @@ export const login = async (params: any) => {
   return data
 }
 
-export const logout = async (params: any) => {
+export const logout = async(params: any) => {
   const { data } = await axios({
     headers: {
       'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER

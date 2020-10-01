@@ -48,8 +48,7 @@ export const asyncRoutes: RouteConfig[] = [
     component: Layout,
     meta: {
       title: 'Exchange',
-      icon: 'education',
-      breadcrumb: false
+      icon: 'education'
     },
     children: [
       {
@@ -115,16 +114,63 @@ export const asyncRoutes: RouteConfig[] = [
         path: '',
         component: () => import(/* webpackChunkName: "staking" */ '@/views/staking/index.vue'),
         meta: {
-          title: 'Staking',
+          title: 'Staking'
+        }
+      },
+      {
+        path: 'stats',
+        component: () => import(/* webpackChunkName: "staking-stats" */ '@/views/staking/stats.vue'),
+        meta: {
+          title: 'Staking Stats',
+          icon: 'table',
+          roles: ['admin', 'user', 'editor']
+        }
+      }
+    ]
+  },
+  {
+    path: '/buy',
+    component: Layout,
+    meta: {
+      title: 'Buy',
+      icon: 'table',
+      roles: ['admin', 'user', 'editor']
+    },
+    children: [
+      {
+        path: '',
+        component: () => import(/* webpackChunkName: "buy" */ '@/views/buy-crypto/index.vue'),
+        meta: {
+          title: 'Buy',
+          icon: 'table',
+          roles: ['admin', 'user', 'editor'],
+          breadcrumb: false
+        }
+      },
+      {
+        path: 'stats/coins',
+        component: () => import(/* webpackChunkName: "buy-stats" */ '@/views/buy-crypto/coins-stats.vue'),
+        meta: {
+          title: 'Coins Stats',
           icon: 'table',
           roles: ['admin', 'user', 'editor']
         }
       },
       {
-        path: '/stats',
-        component: () => import(/* webpackChunkName: "staking-stats" */ '@/views/staking/stats.vue'),
+        path: 'stats/fiat',
+        component: () => import(/* webpackChunkName: "buy-fiat-stats" */ '@/views/buy-crypto/fiat-stats.vue'),
         meta: {
-          title: 'Staking Stats',
+          title: 'Fiat Stats',
+          icon: 'table',
+          roles: ['admin', 'user', 'editor']
+        }
+      },
+      {
+        path: 'stats/pairs',
+        name: 'buy-pairs',
+        component: () => import(/* webpackChunkName: "buy-pairs-stats" */ '@/views/buy-crypto/pairs-stats.vue'),
+        meta: {
+          title: 'Pairs Stats',
           icon: 'table',
           roles: ['admin', 'user', 'editor']
         }

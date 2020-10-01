@@ -195,9 +195,9 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator'
-  import Pagination from '@/components/Pagination/index.vue'
-  import {getStakings, getStakingsByUser, getStakingsCount} from '@/api/staking'
+import { Component, Vue } from 'vue-property-decorator'
+import Pagination from '@/components/Pagination/index.vue'
+import { getStakings, getStakingsByUser, getStakingsCount } from '@/api/staking'
 
   @Component({
     name: 'StakingTable',
@@ -207,7 +207,7 @@
     filters: {
     }
   })
-  export default class extends Vue {
+export default class extends Vue {
     private tableKey = 0
     private list: any[] = []
     private searchString = '';
@@ -248,7 +248,7 @@
       }
       this.listLoading = false
     }
-  }
+}
 </script>
 
 <style scoped>
