@@ -167,6 +167,7 @@ export const asyncRoutes: RouteConfig[] = [
       },
       {
         path: 'stats/pairs',
+        name: 'buy-pairs',
         component: () => import(/* webpackChunkName: "buy-pairs-stats" */ '@/views/buy-crypto/pairs-stats.vue'),
         meta: {
           title: 'Pairs Stats',

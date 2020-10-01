@@ -262,12 +262,12 @@
           coin.volume = coin.volume.toFixed(9)
         }
         return coin
-      }).sort((a: any, b: any) => b.profitBtcTotal - a.profitBtcTotal)
+      }).sort((a: any, b: any) => +b.profitBtcTotal - +a.profitBtcTotal)
       NProgress.done()
     }
 
     private redirectToPairsStats(row: any) {
-      this.$router.push({ name: 'pairs', query: { coin: row.ticker } })
+      this.$router.push({ name: 'buy-pairs', query: { coin: row.ticker } })
     }
 
     private sortByUsd(a: any, b: any) {
