@@ -150,41 +150,41 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator'
-  import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
-  import _ from 'underscore'
-  import NProgress from 'nprogress'
-  import Pagination from '@/components/Pagination/index.vue'
-  import 'nprogress/nprogress.css'
-  import { constructQuery } from '@/utils/query'
-  import * as Moment from 'moment'
-  import { extendMoment } from 'moment-range'
-  import {getSimplexBuy, getSimplexRange} from '@/api/simplex'
+import { Component, Vue } from 'vue-property-decorator'
+import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
+import _ from 'underscore'
+import NProgress from 'nprogress'
+import Pagination from '@/components/Pagination/index.vue'
+import 'nprogress/nprogress.css'
+import { constructQuery } from '@/utils/query'
+import * as Moment from 'moment'
+import { extendMoment } from 'moment-range'
+import { getSimplexBuy, getSimplexRange } from '@/api/simplex'
 
-  const moment = extendMoment(Moment)
-  const { split } = require('moment-range-split')
-  const pickerOptions = {
-    shortcuts: [{
-      text: 'Today',
-      onClick(picker: any) {
-        picker.$emit('pick', new Date())
-      }
-    }, {
-      text: 'Yesterday',
-      onClick(picker: any) {
-        const date = new Date()
-        date.setTime(date.getTime() - 3600 * 1000 * 24)
-        picker.$emit('pick', date)
-      }
-    }, {
-      text: 'A week ago',
-      onClick(picker: any) {
-        const date = new Date()
-        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
-        picker.$emit('pick', date)
-      }
-    }]
-  }
+const moment = extendMoment(Moment)
+const { split } = require('moment-range-split')
+const pickerOptions = {
+  shortcuts: [{
+    text: 'Today',
+    onClick(picker: any) {
+      picker.$emit('pick', new Date())
+    }
+  }, {
+    text: 'Yesterday',
+    onClick(picker: any) {
+      const date = new Date()
+      date.setTime(date.getTime() - 3600 * 1000 * 24)
+      picker.$emit('pick', date)
+    }
+  }, {
+    text: 'A week ago',
+    onClick(picker: any) {
+      const date = new Date()
+      date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+      picker.$emit('pick', date)
+    }
+  }]
+}
 
   @Component({
     name: 'BuyCoinsStatsTable',
@@ -194,7 +194,7 @@
     filters: {
     }
   })
-  export default class extends Vue {
+export default class extends Vue {
     private list: any[] = []
     private searchTimestampFrom: Date = moment().subtract(1, 'week').toDate();
     private searchTimestampTo: Date = new Date();
@@ -298,7 +298,7 @@
     private sortByTicker(a: any, b: any) {
       return a.ticker > b.ticker ? 1 : (a.ticker < b.ticker ? -1 : 0)
     }
-  }
+}
 </script>
 
 <style scoped>

@@ -68,7 +68,7 @@
         width="125px"
       >
         <template slot-scope="scope">
-          <router-link :to="{ path: 'dashboard', query: { userId: scope.row.atomicId }}">
+          <router-link :to="{path: 'dashboard', query: {userId: scope.row.atomicId}}">
             <span>{{ scope.row.atomicId | formatAtomicId }}</span>
           </router-link>
         </template>
@@ -95,13 +95,13 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue, Watch } from 'vue-property-decorator'
-  import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
-  import { IExchangeData } from '@/api/types'
-  import Pagination from '@/components/Pagination/index.vue'
-  import SimplexDetails from '@/components/SimplexDetails/index.vue'
-  import DraggableDialog from '@/components/Dialog/index.vue'
-  import {getSimplexBuy} from '@/api/simplex'
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
+import { IExchangeData } from '@/api/types'
+import Pagination from '@/components/Pagination/index.vue'
+import SimplexDetails from '@/components/SimplexDetails/index.vue'
+import DraggableDialog from '@/components/Dialog/index.vue'
+import { getSimplexBuy } from '@/api/simplex'
 
   @Component({
     name: 'ComplexTable',
@@ -114,7 +114,7 @@
     }
   })
 
-  export default class extends Vue {
+export default class extends Vue {
     private tableKey = 0
     private list: any[] = []
     private searchString = '';
@@ -229,7 +229,7 @@
       const sort = this.sort
       return sort === `+${key}` ? 'ascending' : sort === `-${key}` ? 'descending' : ''
     }
-  }
+}
 
 </script>
 

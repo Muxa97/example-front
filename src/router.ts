@@ -114,7 +114,7 @@ export const asyncRoutes: RouteConfig[] = [
         path: '',
         component: () => import(/* webpackChunkName: "staking" */ '@/views/staking/index.vue'),
         meta: {
-          title: 'Staking',
+          title: 'Staking'
         }
       },
       {

@@ -396,7 +396,9 @@
               <span>Atomic ID</span>
             </div>
             <div class="details-card-body">
-              <router-link :to="{ path: 'dashboard', query: { userId: tx.atomicId }}">{{ tx.atomicId }}</router-link>
+              <router-link :to="{path: 'dashboard', query: {userId: tx.atomicId}}">
+                {{ tx.atomicId }}
+              </router-link>
             </div>
           </el-card>
         </div>
@@ -406,7 +408,7 @@
 </template>
 
 <script lang="ts">
-  import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
   @Component({
     name: 'SimplexDetails',
@@ -419,21 +421,21 @@
       }
     }
   })
-  export default class extends Vue {
-    private created() {
-      console.log(this.$props.tx)
-    }
+export default class extends Vue {
+  private created() {
+    console.log(this.$props.tx)
+  }
 
-    private getStatusBadgeClass(status: string) {
-      return {
-        'md-square': true,
-        'md-green': ['Finished', 'Refunded'].includes(status),
-        'md-gray': ['Attempt', 'waiting'].includes(status),
-        'md-lightblue': ['confirming', 'sending', 'exchanging'].includes(status),
-        'md-red': ['Canceled'].includes(status)
-      }
+  private getStatusBadgeClass(status: string) {
+    return {
+      'md-square': true,
+      'md-green': ['Finished', 'Refunded'].includes(status),
+      'md-gray': ['Attempt', 'waiting'].includes(status),
+      'md-lightblue': ['confirming', 'sending', 'exchanging'].includes(status),
+      'md-red': ['Canceled'].includes(status)
     }
   }
+}
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const getSimplexBuy = async (params: any) => {
+export const getSimplexBuy = async(params: any) => {
   return axios({
     headers: {
       'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
@@ -11,7 +11,7 @@ export const getSimplexBuy = async (params: any) => {
   // ?limit=${params.limit}&offset=${params.offset}
 }
 
-export const getSimplexRange = async (params: any) => {
+export const getSimplexRange = async(params: any) => {
   return axios({
     headers: {
       'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
