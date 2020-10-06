@@ -1,7 +1,7 @@
 import axios from 'axios'
-import {createQueryString} from '@/utils/createQueryString'
+import { createQueryString } from '@/utils/createQueryString'
 
-export const getStakings = async (params: any) => {
+export const getStakings = async(params: any) => {
   const queryString = createQueryString(params)
 
   return axios({
@@ -13,8 +13,7 @@ export const getStakings = async (params: any) => {
   })
 }
 
-
-export const getStakingsByUser = async (params: any) => {
+export const getStakingsByUser = async(params: any) => {
   const queryString = createQueryString(params)
 
   return axios({
