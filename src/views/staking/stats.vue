@@ -171,12 +171,6 @@
     private totalUsd = 0
     private totalStakes = 0
 
-    private pagination = 100
-    private listQuery = {
-      offset: 0,
-      limit: this.pagination
-    }
-
     created() {
       this.getList(false)
     }
@@ -191,9 +185,8 @@
 
     private async getList(params:any) {
       this.listLoading = true
-      this.listQuery.limit = 10000
 
-      const stakings = (await getStakings({ ...this.listQuery, from: this.searchTimestampFrom, to: this.searchTimestampTo})).data
+      const stakings = (await getStakings({ createdAtStart: this.searchTimestampFrom, createdAtEnd: this.searchTimestampTo})).data.stakes
       let total = 0
       const agregated = stakings.reduce((acc: any, stake: any) => {
         const coin = stake.currency
