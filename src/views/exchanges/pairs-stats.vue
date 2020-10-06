@@ -340,7 +340,7 @@ export default class extends Vue {
       this.list = filtered.map((pair: any) => {
         pair.percentage = ((pair.finished + pair.waiting) * 100 / filtered.length).toFixed(4)
         pair.volume = pair.volume.toFixed(7)
-        pair.profitUsd = pair.profitUsd.toFixed(4)
+        pair.profitUsd = pair.profitUsd.toFixed(2)
         pair.profitBtcTotal = (pair.profitUsd / BTC.PRICE).toFixed(9)
         return pair
       }).sort((a: any, b: any) =>

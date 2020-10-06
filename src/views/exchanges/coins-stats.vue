@@ -344,7 +344,7 @@ export default class extends Vue {
         coin.profitBtcTotal = (coin.profitUsd / BTC.PRICE).toFixed(9)
         coin.profitBtcBuy = (coin.profitBtcBuy / BTC.PRICE).toFixed(9)
         coin.profitBtcSels = (coin.profitBtcSels / BTC.PRICE).toFixed(9)
-        coin.profitUsd = coin.profitUsd.toFixed(4)
+        coin.profitUsd = coin.profitUsd.toFixed(2)
         return coin
       }).sort((a: any, b: any) => b.profitBtcTotal - a.profitBtcTotal)
       NProgress.done()

@@ -186,7 +186,7 @@ export default class extends Vue {
     private async getList(params:any) {
       this.listLoading = true
 
-      const stakings = (await getStakings({ createdAtStart: this.searchTimestampFrom, createdAtEnd: this.searchTimestampTo})).data.stakes
+      const stakings = (await getStakings({ createdAtStart: this.searchTimestampFrom, createdAtEnd: this.searchTimestampTo })).data.stakes
       let total = 0
       const agregated = stakings.reduce((acc: any, stake: any) => {
         const coin = stake.currency
@@ -205,13 +205,15 @@ export default class extends Vue {
       const prices = await response.json()
 
       this.list = Object.values(agregated).map((row: any) => {
-        row.stakedUsd = row.amount * prices[row.coin].PRICE
+        row.stakedUsd = (row.amount * prices[row.coin].PRICE).toFixed(2)
         return row
-      }).sort((a: any, b: any) => b.stakedUsd - a.stakedUsd)
+      }).sort((a: any, b: any) => +b.stakedUsd - +a.stakedUsd)
 
       this.totalStakes = total
       this.totalUsd = this.list.reduce((acc: number, row: any) => {
-        return acc + row.stakedUsd
+        // TODO: remove next line after fix TRX stakings
+        if (row.coin === 'TRX') return acc
+        return acc + +row.stakedUsd
       }, 0)
       this.listLoading = false
     }

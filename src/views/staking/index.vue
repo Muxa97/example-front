@@ -195,9 +195,9 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator'
-  import Pagination from '@/components/Pagination/index.vue'
-  import { getStakings, getStakingsByUser } from '@/api/staking'
+import { Component, Vue } from 'vue-property-decorator'
+import Pagination from '@/components/Pagination/index.vue'
+import { getStakings, getStakingsByUser } from '@/api/staking'
 
   @Component({
     name: 'StakingTable',
