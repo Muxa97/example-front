@@ -231,7 +231,7 @@ export default class extends Vue {
 
       const range = moment.range(this.searchTimestampFrom, this.searchTimestampTo)
       const { data } = await getSimplexBuy({ from: this.searchTimestampFrom, to: this.searchTimestampTo, ...this.searchQuery })
-      console.log(data)
+
       const fiats = new Set()
       const acc = data.reduce((acc: any, tx: any) => {
         const coin = tx.toCurrency
@@ -257,7 +257,7 @@ export default class extends Vue {
 
       this.list = Object.values(acc).map((coin: any) => {
         if (RAW[coin.ticker]) {
-          coin.profitUsd = (coin.volume * RAW[coin.ticker]['USD'].PRICE / 100).toFixed(4)
+          coin.profitUsd = (coin.volume * RAW[coin.ticker]['USD'].PRICE / 100).toFixed(2)
           coin.profitBtcTotal = (+coin.profitUsd / RAW['BTC']['USD'].PRICE).toFixed(9)
           coin.volume = coin.volume.toFixed(9)
         }
@@ -276,22 +276,6 @@ export default class extends Vue {
 
     private sortByBtcTotal(a: any, b: any) {
       return +a.profitBtcTotal - +b.profitBtcTotal
-    }
-
-    private sortByBtcSels(a: any, b: any) {
-      return +a.profitBtcSels - +b.profitBtcSels
-    }
-
-    private sortByBtcBuy(a: any, b: any) {
-      return +a.profitBtcBuy - +b.profitBtcBuy
-    }
-
-    private sortByVolumeSels(a: any, b: any) {
-      return +a.volumeSels - +b.volumeSels
-    }
-
-    private sortByVolumeBuy(a: any, b: any) {
-      return +a.volumeBuy - +b.volumeBuy
     }
 
     private sortByVolume(a: any, b: any) {

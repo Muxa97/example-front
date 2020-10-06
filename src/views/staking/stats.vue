@@ -205,13 +205,13 @@ export default class extends Vue {
       const prices = await response.json()
 
       this.list = Object.values(agregated).map((row: any) => {
-        row.stakedUsd = row.amount * prices[row.coin].PRICE
+        row.stakedUsd = (row.amount * prices[row.coin].PRICE).toFixed(2)
         return row
-      }).sort((a: any, b: any) => b.stakedUsd - a.stakedUsd)
+      }).sort((a: any, b: any) => +b.stakedUsd - +a.stakedUsd)
 
       this.totalStakes = total
       this.totalUsd = this.list.reduce((acc: number, row: any) => {
-        return acc + row.stakedUsd
+        return acc + +row.stakedUsd
       }, 0)
       this.listLoading = false
     }

@@ -255,8 +255,8 @@ export default class extends Vue {
       const { RAW } = await rates.json()
       this.list = Object.values(acc).map((coin: any) => {
         coin.profitBtcTotal = (coin.volume / RAW['BTC'][coin.ticker].PRICE / 100)
-        coin.profitUsd = (coin.profitBtcTotal * RAW['BTC']['USD'].PRICE).toFixed(4)
-        coin.volume = coin.volume.toFixed(9)
+        coin.profitUsd = (coin.profitBtcTotal * RAW['BTC']['USD'].PRICE).toFixed(2)
+        coin.volume = coin.volume.toFixed(2)
         coin.profitBtcTotal = coin.profitBtcTotal.toFixed(9)
         return coin
       }).sort((a: any, b: any) => +b.profitBtcTotal - +a.profitBtcTotal)
@@ -273,22 +273,6 @@ export default class extends Vue {
 
     private sortByBtcTotal(a: any, b: any) {
       return +a.profitBtcTotal - +b.profitBtcTotal
-    }
-
-    private sortByBtcSels(a: any, b: any) {
-      return +a.profitBtcSels - +b.profitBtcSels
-    }
-
-    private sortByBtcBuy(a: any, b: any) {
-      return +a.profitBtcBuy - +b.profitBtcBuy
-    }
-
-    private sortByVolumeSels(a: any, b: any) {
-      return +a.volumeSels - +b.volumeSels
-    }
-
-    private sortByVolumeBuy(a: any, b: any) {
-      return +a.volumeBuy - +b.volumeBuy
     }
 
     private sortByVolume(a: any, b: any) {

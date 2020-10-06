@@ -295,7 +295,7 @@ export default class extends Vue {
 
       this.list = filtered.map((pair: any) => {
         const profit = pair.volume / 100
-        pair.volume = pair.volume.toFixed(7)
+        pair.volume = fiats.has(volumeCoin) ? pair.volume.toFixed(2) : pair.volume.toFixed(7)
         if (volumeCoin === 'first coin') {
           pair.profitUsd = profit / RAW[pair.coin][pair.fiat].PRICE * RAW[pair.coin]['USD'].PRICE
           pair.profitBtcTotal = pair.profitUsd / RAW['BTC']['USD'].PRICE
@@ -306,7 +306,7 @@ export default class extends Vue {
           pair.profitUsd = profit * RAW[pair.coin]['USD'].PRICE
           pair.profitBtcTotal = pair.profitUsd / RAW['BTC']['USD'].PRICE
         }
-        pair.profitUsd = pair.profitUsd.toFixed(4)
+        pair.profitUsd = pair.profitUsd.toFixed(2)
         pair.profitBtcTotal = pair.profitBtcTotal.toFixed(9)
         return pair
       }).sort((a: any, b: any) =>
@@ -323,10 +323,6 @@ export default class extends Vue {
 
     private sortByBtcTotal(a: any, b: any) {
       return +a.profitBtcTotal - +b.profitBtcTotal
-    }
-
-    private sortByPercentage(a: any, b: any) {
-      return +a.percentage - +b.percentage
     }
 
     private sortByVolume(a: any, b: any) {
