@@ -135,7 +135,12 @@
               <span>Airdrop refferals</span>
             </div>
             <div class="details-card-body">
-              <div v-for="item in currentUser.airdropsReferrals">{{ item }}</div>
+              <div
+                v-for="(item, index) in currentUser.airdropsReferrals"
+                :key="index"
+              >
+                {{ item }}
+              </div>
             </div>
           </el-card>
         </div>

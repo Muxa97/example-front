@@ -207,7 +207,7 @@
     filters: {
     }
   })
-  export default class extends Vue {
+export default class extends Vue {
     private tableKey = 0
     private list: any[] = []
     private searchString = '';
@@ -249,7 +249,7 @@
       }
       this.listLoading = false
     }
-  }
+}
 </script>
 
 <style scoped>

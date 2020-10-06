@@ -125,34 +125,34 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator'
-  import * as Moment from 'moment'
-  import { extendMoment } from 'moment-range'
-  import {getStakings} from '@/api/staking'
+import { Component, Vue } from 'vue-property-decorator'
+import * as Moment from 'moment'
+import { extendMoment } from 'moment-range'
+import { getStakings } from '@/api/staking'
 
-  const moment = extendMoment(Moment)
-  const pickerOptions = {
-    shortcuts: [{
-      text: 'Today',
-      onClick(picker: any) {
-        picker.$emit('pick', new Date())
-      }
-    }, {
-      text: 'Yesterday',
-      onClick(picker: any) {
-        const date = new Date()
-        date.setTime(date.getTime() - 3600 * 1000 * 24)
-        picker.$emit('pick', date)
-      }
-    }, {
-      text: 'A week ago',
-      onClick(picker: any) {
-        const date = new Date()
-        date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
-        picker.$emit('pick', date)
-      }
-    }]
-  }
+const moment = extendMoment(Moment)
+const pickerOptions = {
+  shortcuts: [{
+    text: 'Today',
+    onClick(picker: any) {
+      picker.$emit('pick', new Date())
+    }
+  }, {
+    text: 'Yesterday',
+    onClick(picker: any) {
+      const date = new Date()
+      date.setTime(date.getTime() - 3600 * 1000 * 24)
+      picker.$emit('pick', date)
+    }
+  }, {
+    text: 'A week ago',
+    onClick(picker: any) {
+      const date = new Date()
+      date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+      picker.$emit('pick', date)
+    }
+  }]
+}
 
   @Component({
     name: 'StakingStatsTable',
@@ -160,7 +160,7 @@
     filters: {
     }
   })
-  export default class extends Vue {
+export default class extends Vue {
     private tableKey = 0
     private list: any[] = []
     private currency = ''
@@ -215,7 +215,7 @@
       }, 0)
       this.listLoading = false
     }
-  }
+}
 </script>
 
 <style scoped>

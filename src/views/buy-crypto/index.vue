@@ -5,34 +5,6 @@
       @search="refreshTableSearch"
     />
 
-    <div class="filter-container">
-      <div class="search-container">
-        <el-input
-          v-model="searchString"
-          :placeholder="$t('table.filter')"
-          style="width: 250px;"
-          class="filter-item"
-          @keyup.enter.native="handleLocalFilter"
-        />
-
-        <el-button
-          type="primary"
-          @click="showDialog"
-        >
-          Search config
-        </el-button>
-        <el-button
-          v-waves
-          class="filter-item"
-          type="primary"
-          icon="el-icon-search"
-          @click="handleFilter"
-        >
-          {{ $t('table.search') }}
-        </el-button>
-      </div>
-    </div>
-
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -42,7 +14,6 @@
       highlight-current-row
       stripe
       style="width: 100%;"
-      max-height="700"
       @sort-change="sortChange"
       @row-click="showDetails"
     >
@@ -97,7 +68,9 @@
         width="125px"
       >
         <template slot-scope="scope">
-          <span>{{ scope.row.atomicId | formatAtomicId }}</span>
+          <router-link :to="{path: 'dashboard', query: {userId: scope.row.atomicId}}">
+            <span>{{ scope.row.atomicId | formatAtomicId }}</span>
+          </router-link>
         </template>
       </el-table-column>
     </el-table>
@@ -111,8 +84,9 @@
     <el-dialog
       :title="detailsTx.title"
       :visible.sync="detailsTx"
+      width="90%"
     >
-      <TxDetails
+      <SimplexDetails
         v-if="detailsTx"
         :tx="detailsTx"
       />
@@ -125,15 +99,16 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
 import { IExchangeData } from '@/api/types'
 import Pagination from '@/components/Pagination/index.vue'
-import TxDetails from '@/components/TxDetails/index.vue'
+import SimplexDetails from '@/components/SimplexDetails/index.vue'
 import DraggableDialog from '@/components/Dialog/index.vue'
+import { getSimplexBuy } from '@/api/simplex'
 
   @Component({
     name: 'ComplexTable',
     components: {
       DraggableDialog,
       Pagination,
-      TxDetails
+      SimplexDetails
     },
     filters: {
     }
@@ -141,7 +116,7 @@ import DraggableDialog from '@/components/Dialog/index.vue'
 
 export default class extends Vue {
     private tableKey = 0
-    private list: IExchangeData[] = []
+    private list: any[] = []
     private searchString = '';
     private total = 0
     private listLoading = true
@@ -185,11 +160,6 @@ export default class extends Vue {
     }
 
     private handleFilter() {
-      if (this.searchString.length) {
-        this.tableByTerms = `atomicId=${this.searchString}`
-      } else {
-        this.tableByTerms = ''
-      }
       this.getList(false)
     }
 
@@ -212,20 +182,21 @@ export default class extends Vue {
     private getStatusBadgeClass(status: string) {
       return {
         'md-square': true,
-        'md-green': ['finished', 'refunded'].includes(status),
-        'md-gray': ['waiting', 'expired', 'failed'].includes(status),
+        'md-green': ['Finished', 'Refunded'].includes(status),
+        'md-gray': ['Attempt', 'waiting'].includes(status),
         'md-lightblue': ['confirming', 'sending', 'exchanging'].includes(status),
-        'md-red': ['verifying'].includes(status)
+        'md-red': ['Canceled'].includes(status)
       }
     }
 
     private async refreshTableSearch(searchString:string) {
       this.listLoading = true
       try {
+        const response = await getExchangesByTermsCount(searchString)
+        this.total = response.data.count
         const { data } = await getExchangesByTerms(searchString, `offset=${this.listQuery.offset}&limit=${this.listQuery.limit}`)
         this.tableByTerms = searchString
-        this.total = data.count
-        this.list = data.transactions
+        this.list = data
       } catch (e) {
         this.$notify({
           title: 'error',
@@ -238,20 +209,11 @@ export default class extends Vue {
     }
 
     private async getList(params:any) {
-      let data
       this.listLoading = true
       this.listQuery.offset = params ? (params.page - 1) * params.limit : 0
       try {
-        if (this.tableByTerms) {
-          data = await getExchangesByTerms(this.tableByTerms, `offset=${this.listQuery.offset}&limit=${this.listQuery.limit}`)
-          this.total = data.data.count
-          data = data.data.transactions
-        } else {
-          data = await getExchanges(this.listQuery)
-          data = data.data
-        }
+        const { data } = await getSimplexBuy({})
         this.list = data
-        this.page = params.page
       } catch (e) {
         this.$notify({
           title: 'error',
