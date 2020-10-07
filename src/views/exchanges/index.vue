@@ -241,6 +241,9 @@ export default class extends Vue {
       let data
       this.listLoading = true
       this.listQuery.offset = params ? (params.page - 1) * params.limit : 0
+      if (this.$route.query.userId) {
+        this.tableByTerms += 'atomicId=' + this.$route.query.userId
+      }
       try {
         if (this.tableByTerms) {
           data = await getExchangesByTerms(this.tableByTerms, `offset=${this.listQuery.offset}&limit=${this.listQuery.limit}`)

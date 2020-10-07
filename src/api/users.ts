@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { createQueryString } from '@/utils/createQueryString'
 
 export const getUsers = async(params: any) => {
   const response = await axios({
@@ -13,12 +14,13 @@ export const getUsers = async(params: any) => {
 }
 
 export const getUserInfo = async(params: any) => {
+  const query = createQueryString(params)
   try {
     const { data } = await axios({
       headers: {
         'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
       },
-      url: `${process.env.VUE_APP_APOLLO_API_HOST}/users/info`,
+      url: `${process.env.VUE_APP_APOLLO_API_HOST}/users/info${query}`,
       method: 'get'
     })
     return data

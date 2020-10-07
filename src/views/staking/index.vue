@@ -235,7 +235,7 @@ export default class extends Vue {
     private async getList(params:any) {
       this.listLoading = true
       this.listQuery.offset = params ? (params.page - 1) * params.limit : 0
-      const atomicId = this.searchString
+      const atomicId = (this.$route.query.userId && this.searchString.length === 0) ? this.$route.query.userId : this.searchString
       const provider = this.provider
 
       if (atomicId.length) {
