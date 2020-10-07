@@ -15,6 +15,7 @@ export const getStakings = async(params: any) => {
 
 export const getStakingsByUser = async(params: any) => {
   const queryString = createQueryString(params)
+  console.log(queryString)
 
   return axios({
     headers: {

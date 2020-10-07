@@ -101,7 +101,7 @@ import { IExchangeData } from '@/api/types'
 import Pagination from '@/components/Pagination/index.vue'
 import SimplexDetails from '@/components/SimplexDetails/index.vue'
 import DraggableDialog from '@/components/Dialog/index.vue'
-import { getSimplexBuy } from '@/api/simplex'
+import { getSimplexBuy, getSimplexUser } from '@/api/simplex'
 
   @Component({
     name: 'ComplexTable',
@@ -135,7 +135,6 @@ export default class extends Vue {
     private tableByTerms = ''
 
     created() {
-      this.getCount()
       this.getList(false)
     }
     private showDialog() {
@@ -152,11 +151,6 @@ export default class extends Vue {
           item.refundAddress.includes(this.searchString)
       })
       this.total = this.list.length
-    }
-    private async getCount() {
-      const data:any = await getExchangesCount()
-
-      this.total = data.data.count
     }
 
     private handleFilter() {
@@ -211,9 +205,17 @@ export default class extends Vue {
     private async getList(params:any) {
       this.listLoading = true
       this.listQuery.offset = params ? (params.page - 1) * params.limit : 0
+      const atomicId = this.$route.query.userId
       try {
-        const { data } = await getSimplexBuy({})
-        this.list = data
+        if (atomicId) {
+          const { data } = await getSimplexUser({ atomicId, ...this.listQuery })
+          this.list = data // .buy
+          // this.total = data.total
+        } else {
+          const { data } = await getSimplexBuy({ ...this.listQuery })
+          this.list = data // .buy
+          // this.total = data.total
+        }
       } catch (e) {
         this.$notify({
           title: 'error',

@@ -95,7 +95,7 @@
               <span>Buying volume</span>
             </div>
             <div class="details-card-body">
-              <span>{{ currentUser.buyingVolume }}</span>
+              <span>{{ currentUser.buyVolume }}</span>
             </div>
           </el-card>
         </div>
@@ -279,26 +279,24 @@ export default class extends Vue {
 
   created() {
     const uid = this.$route.query.userId
-    this.currentUser = {
-      atomicId: '',
-      status: '',
-      awcBalance: 0,
-      devices: [],
-      exchangeVolume: 0,
-      buyingVolume: 0,
-      stakingVolume: 0,
-      airdropsReferrals: []
-    }
+
     if (uid) {
       getUserInfo({ atomicId: uid })
         .then((data) => {
           this.currentUser = data
+          console.log(this.currentUser, data)
           this.devices = this.currentUser.devices
         })
     } else {
-      if (UserModule.info) {
-        this.currentUser = UserModule.info
-        this.devices = this.currentUser.devices
+      this.currentUser = {
+        atomicId: '',
+        status: '',
+        awcBalance: 0,
+        devices: [],
+        exchangeVolume: 0,
+        buyVolume: 0,
+        stakingVolume: 0,
+        airdropsReferrals: []
       }
     }
   }
