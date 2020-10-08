@@ -151,15 +151,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
-import _ from 'underscore'
 import NProgress from 'nprogress'
 import Pagination from '@/components/Pagination/index.vue'
 import 'nprogress/nprogress.css'
-import { constructQuery } from '@/utils/query'
 import * as Moment from 'moment'
 import { extendMoment } from 'moment-range'
-import { getSimplexBuy, getSimplexRange } from '@/api/simplex'
+import { getSimplexBuy } from '@/api/simplex'
 
 const moment = extendMoment(Moment)
 const { split } = require('moment-range-split')
@@ -200,10 +197,7 @@ export default class extends Vue {
     private searchTimestampTo: Date = new Date();
     private currentInterval: any = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`;
     private searchString: string = '';
-    private searchQuery = {
-      offset: 0,
-      limit: 10000
-    };
+
     private pickerOpts = pickerOptions
     constructor() {
       super()
@@ -229,41 +223,50 @@ export default class extends Vue {
     private async getBuysByCoins() {
       NProgress.start()
 
-      const range = moment.range(this.searchTimestampFrom, this.searchTimestampTo)
-      const { data } = await getSimplexBuy({ from: this.searchTimestampFrom, to: this.searchTimestampTo, ...this.searchQuery })
+      try {
+        const { data } = await getSimplexBuy({ createdAtStart: this.searchTimestampFrom, createdAtEnd: this.searchTimestampTo })
 
-      const fiats = new Set()
-      const acc = data.reduce((acc: any, tx: any) => {
-        const coin = tx.toCurrency
-        fiats.add(tx.fromCurrency)
-        if (!acc[coin]) {
-          acc[coin] = {}
-          acc[coin].orders = 0
-          acc[coin].ticker = coin
-          acc[coin].volume = 0
-          acc[coin].profitBtcTotal = 0
-          acc[coin].profitUsd = 0
-        }
+        const fiats = new Set()
+        const acc = data.purchases.reduce((acc: any, tx: any) => {
+          const coin = tx.toCurrency
+          fiats.add(tx.fromCurrency)
+          if (!acc[coin]) {
+            acc[coin] = {}
+            acc[coin].orders = 0
+            acc[coin].ticker = coin
+            acc[coin].volume = 0
+            acc[coin].profitBtcTotal = 0
+            acc[coin].profitUsd = 0
+          }
 
-        if (tx.status === 'Finished') {
-          acc[coin].orders++
-          if (!Number.isNaN(+tx.amountReceive)) acc[coin].volume += +tx.amountReceive
-        }
+          if (tx.status === 'Finished') {
+            acc[coin].orders++
+            if (!Number.isNaN(+tx.amountReceive)) acc[coin].volume += +tx.amountReceive
+          }
 
-        return acc
-      }, {})
-      const rates = await fetch(`https://owl.atomicwallet.io/pricemultifull?fsyms=${Object.keys(acc).join(',')}BTC&tsyms=${Array.from(fiats).join(',')}`)
-      const { RAW } = await rates.json()
+          return acc
+        }, {})
+        const rates = await fetch(`https://owl.atomicwallet.io/pricemultifull?fsyms=${Object.keys(acc).join(',')}BTC&tsyms=${Array.from(fiats).join(',')}`)
+        const { RAW } = await rates.json()
 
-      this.list = Object.values(acc).map((coin: any) => {
-        if (RAW[coin.ticker]) {
-          coin.profitUsd = (coin.volume * RAW[coin.ticker]['USD'].PRICE / 100).toFixed(2)
-          coin.profitBtcTotal = (+coin.profitUsd / RAW['BTC']['USD'].PRICE).toFixed(9)
-          coin.volume = coin.volume.toFixed(9)
-        }
-        return coin
-      }).sort((a: any, b: any) => +b.profitBtcTotal - +a.profitBtcTotal)
-      NProgress.done()
+        this.list = Object.values(acc).map((coin: any) => {
+          if (RAW[coin.ticker]) {
+            coin.profitUsd = (coin.volume * RAW[coin.ticker]['USD'].PRICE / 100).toFixed(2)
+            coin.profitBtcTotal = (+coin.profitUsd / RAW['BTC']['USD'].PRICE).toFixed(9)
+            coin.volume = coin.volume.toFixed(9)
+          }
+          return coin
+        }).sort((a: any, b: any) => +b.profitBtcTotal - +a.profitBtcTotal)
+      } catch (e) {
+        this.$notify({
+          title: 'error',
+          message: e.toString(),
+          type: 'error',
+          duration: 2000
+        })
+      } finally {
+        NProgress.done()
+      }
     }
 
     private redirectToPairsStats(row: any) {

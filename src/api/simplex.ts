@@ -22,14 +22,3 @@ export const getSimplexUser = async(params: any) => {
     method: 'get'
   })
 }
-
-export const getSimplexRange = async(params: any) => {
-  return axios({
-    headers: {
-      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
-    },
-    url: `${process.env.VUE_APP_APOLLO_API_HOST}/simplex/buy/range`,
-    method: 'get'
-  })
-  // ?from=${params.from.toISOString()}&to=${params.to.toISOString()}
-}

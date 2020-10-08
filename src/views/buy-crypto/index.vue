@@ -183,25 +183,6 @@ export default class extends Vue {
       }
     }
 
-    private async refreshTableSearch(searchString:string) {
-      this.listLoading = true
-      try {
-        const response = await getExchangesByTermsCount(searchString)
-        this.total = response.data.count
-        const { data } = await getExchangesByTerms(searchString, `offset=${this.listQuery.offset}&limit=${this.listQuery.limit}`)
-        this.tableByTerms = searchString
-        this.list = data
-      } catch (e) {
-        this.$notify({
-          title: 'error',
-          message: e.toString(),
-          type: 'error',
-          duration: 2000
-        })
-      }
-      this.listLoading = false
-    }
-
     private async getList(params:any) {
       this.listLoading = true
       this.listQuery.offset = params ? (params.page - 1) * params.limit : 0
@@ -209,12 +190,12 @@ export default class extends Vue {
       try {
         if (atomicId) {
           const { data } = await getSimplexUser({ atomicId, ...this.listQuery })
-          this.list = data // .buy
-          // this.total = data.total
+          this.list = data.purchases
+          this.total = data.total
         } else {
           const { data } = await getSimplexBuy({ ...this.listQuery })
-          this.list = data // .buy
-          // this.total = data.total
+          this.list = data.purchases
+          this.total = data.total
         }
       } catch (e) {
         this.$notify({

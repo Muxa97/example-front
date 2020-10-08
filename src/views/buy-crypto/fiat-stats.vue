@@ -151,15 +151,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
-import _ from 'underscore'
 import NProgress from 'nprogress'
 import Pagination from '@/components/Pagination/index.vue'
 import 'nprogress/nprogress.css'
-import { constructQuery } from '@/utils/query'
 import * as Moment from 'moment'
 import { extendMoment } from 'moment-range'
-import { getSimplexBuy, getSimplexRange } from '@/api/simplex'
+import { getSimplexBuy } from '@/api/simplex'
 
 const moment = extendMoment(Moment)
 const { split } = require('moment-range-split')
@@ -230,9 +227,9 @@ export default class extends Vue {
       NProgress.start()
 
       const range = moment.range(this.searchTimestampFrom, this.searchTimestampTo)
-      const { data } = await getSimplexBuy({ from: this.searchTimestampFrom, to: this.searchTimestampTo, ...this.searchQuery })
+      const { data } = await getSimplexBuy({ createdAtStart: this.searchTimestampFrom, createdAtEnd: this.searchTimestampTo })
       const tickers = new Set()
-      const acc = data.reduce((acc: any, tx: any) => {
+      const acc = data.purchases.reduce((acc: any, tx: any) => {
         const coin = tx.fromCurrency
         tickers.add(tx.toCurrency)
         if (!acc[coin]) {
