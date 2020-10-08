@@ -150,7 +150,8 @@ export default class extends Vue {
 
     getUsers(this.listQuery)
       .then((data) => {
-        this.list = data
+        this.list = data.users
+        this.total = data.total
         if (this.pages === 0) {
           this.pages = Math.floor(this.total / this.pagination)
         }
