@@ -254,6 +254,7 @@ export default class extends Vue {
           this.total = data.data.count
           data = data.data.transactions
         } else {
+          await this.getCount()
           data = await getExchanges(this.listQuery)
           data = data.data
         }
