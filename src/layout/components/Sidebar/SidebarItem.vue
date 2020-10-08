@@ -15,6 +15,8 @@
           <svg-icon
             v-if="theOnlyOneChild.meta.icon"
             :name="theOnlyOneChild.meta.icon"
+            width="25px"
+            height="25px"
           />
           <span
             v-if="theOnlyOneChild.meta.title"
@@ -32,6 +34,8 @@
         <svg-icon
           v-if="item.meta && item.meta.icon"
           :name="item.meta.icon"
+          width="25px"
+          height="25px"
         />
         <span
           v-if="item.meta && item.meta.title"
@@ -166,6 +170,7 @@ export default class extends Vue {
 <style lang="scss" scoped>
 .svg-icon {
   margin-right: 16px;
+  vertical-align: middle;
 }
 
 .simple-mode {

@@ -48,7 +48,7 @@ export const asyncRoutes: RouteConfig[] = [
     component: Layout,
     meta: {
       title: 'Exchange',
-      icon: 'education'
+      icon: 'exchange'
     },
     children: [
       {
@@ -56,7 +56,7 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackChunkName: "exchanges" */ '@/views/exchanges/index.vue'),
         meta: {
           title: 'Exchange',
-          icon: 'education',
+          icon: 'list',
           // TODO: remove editor role after changing mocking backend to real backend
           roles: ['user', 'admin', 'editor']
         }
@@ -66,7 +66,7 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackChunkName: "daily-stats" */ '@/views/exchanges/daily-stats.vue'),
         meta: {
           title: 'Daily Exchange Stats',
-          icon: 'chart',
+          icon: 'daily',
           roles: ['admin', 'user', 'editor']
         }
       },
@@ -76,7 +76,7 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackChunkName: "waiting-exchanges" */ '@/views/exchanges/waiting.vue'),
         meta: {
           title: 'Waiting Exchanges',
-          icon: 'education',
+          icon: 'clock',
           roles: ['admin', 'user', 'editor']
         }
       },
@@ -85,7 +85,7 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackChunkName: "coins-stats" */ '@/views/exchanges/coins-stats.vue'),
         meta: {
           title: 'Coins Stats',
-          icon: 'table',
+          icon: 'bitcoin',
           roles: ['admin', 'user', 'editor']
         }
       },
@@ -95,7 +95,7 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackCunkName: "pairs-stats" */ '@/views/exchanges/pairs-stats.vue'),
         meta: {
           title: 'Pairs Stats',
-          icon: 'table',
+          icon: 'pair',
           roles: ['admin', 'user', 'editor']
         }
       }
@@ -114,7 +114,9 @@ export const asyncRoutes: RouteConfig[] = [
         path: '',
         component: () => import(/* webpackChunkName: "staking" */ '@/views/staking/index.vue'),
         meta: {
-          title: 'Staking'
+          title: 'Staking',
+          icon: 'table',
+          roles: ['admin', 'user', 'editor']
         }
       },
       {
@@ -122,7 +124,7 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackChunkName: "staking-stats" */ '@/views/staking/stats.vue'),
         meta: {
           title: 'Staking Stats',
-          icon: 'table',
+          icon: 'chart',
           roles: ['admin', 'user', 'editor']
         }
       }
@@ -133,7 +135,7 @@ export const asyncRoutes: RouteConfig[] = [
     component: Layout,
     meta: {
       title: 'Buy',
-      icon: 'table',
+      icon: 'cryptocurrency',
       roles: ['admin', 'user', 'editor']
     },
     children: [
@@ -142,7 +144,7 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackChunkName: "buy" */ '@/views/buy-crypto/index.vue'),
         meta: {
           title: 'Buy',
-          icon: 'table',
+          icon: 'list',
           roles: ['admin', 'user', 'editor'],
           breadcrumb: false
         }
@@ -152,7 +154,7 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackChunkName: "buy-stats" */ '@/views/buy-crypto/coins-stats.vue'),
         meta: {
           title: 'Coins Stats',
-          icon: 'table',
+          icon: 'bitcoin',
           roles: ['admin', 'user', 'editor']
         }
       },
@@ -161,7 +163,7 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackChunkName: "buy-fiat-stats" */ '@/views/buy-crypto/fiat-stats.vue'),
         meta: {
           title: 'Fiat Stats',
-          icon: 'table',
+          icon: 'dollar',
           roles: ['admin', 'user', 'editor']
         }
       },
@@ -171,7 +173,7 @@ export const asyncRoutes: RouteConfig[] = [
         component: () => import(/* webpackChunkName: "buy-pairs-stats" */ '@/views/buy-crypto/pairs-stats.vue'),
         meta: {
           title: 'Pairs Stats',
-          icon: 'table',
+          icon: 'pair',
           roles: ['admin', 'user', 'editor']
         }
       }
