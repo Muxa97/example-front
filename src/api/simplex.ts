@@ -12,6 +12,17 @@ export const getSimplexBuy = async(params: any) => {
   })
 }
 
+export const getSimplexCount = async(params: any) => {
+  const query = createQueryString(params)
+  return axios({
+    headers: {
+      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+    },
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/simplex/buy/count${query}`,
+    method: 'get'
+  })
+}
+
 export const getSimplexUser = async(params: any) => {
   const query = createQueryString(params)
   return axios({

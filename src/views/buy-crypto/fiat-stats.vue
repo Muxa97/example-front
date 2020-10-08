@@ -229,7 +229,7 @@ export default class extends Vue {
       const range = moment.range(this.searchTimestampFrom, this.searchTimestampTo)
       const { data } = await getSimplexBuy({ createdAtStart: this.searchTimestampFrom, createdAtEnd: this.searchTimestampTo })
       const tickers = new Set()
-      const acc = data.purchases.reduce((acc: any, tx: any) => {
+      const acc = data.reduce((acc: any, tx: any) => {
         const coin = tx.fromCurrency
         tickers.add(tx.toCurrency)
         if (!acc[coin]) {
