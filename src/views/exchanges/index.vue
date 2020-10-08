@@ -2,6 +2,7 @@
   <div class="app-container">
     <DraggableDialog
       ref="dialogVisible"
+      :atomic-id="searchString"
       @search="refreshTableSearch"
     />
 
@@ -160,6 +161,9 @@ export default class extends Vue {
     private tableByTerms = ''
 
     created() {
+      if (this.$route.query.userId) {
+        this.searchString = this.$route.query.userId.toString()
+      }
       this.getCount()
       this.getList(false)
     }
