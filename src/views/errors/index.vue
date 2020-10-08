@@ -261,6 +261,9 @@ export default class extends Vue {
     private errorDetails: any = false
 
     created() {
+      if (this.$route.query.userId) {
+        this.searchString = this.$route.query.userId.toString()
+      }
       this.getList(false)
     }
 
@@ -277,11 +280,7 @@ export default class extends Vue {
       this.listQuery.offset = params ? (params.page - 1) * params.limit : 0
       let userId
       const currency = this.currency
-      if (this.$route.query.userId && this.searchString.length === 0) {
-        userId = this.$route.query.userId
-      } else {
-        userId = this.searchString
-      }
+      userId = this.searchString
 
       const dateFrom: string = moment(this.searchTimestampFrom).format()
       const dateTo: string = moment(this.searchTimestampTo).format()
