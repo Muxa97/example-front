@@ -101,7 +101,7 @@ import { IExchangeData } from '@/api/types'
 import Pagination from '@/components/Pagination/index.vue'
 import SimplexDetails from '@/components/SimplexDetails/index.vue'
 import DraggableDialog from '@/components/Dialog/index.vue'
-import { getSimplexBuy, getSimplexUser } from '@/api/simplex'
+import { getSimplexBuy, getSimplexCount, getSimplexUser } from '@/api/simplex'
 
   @Component({
     name: 'ComplexTable',
@@ -190,12 +190,12 @@ export default class extends Vue {
       try {
         if (atomicId) {
           const { data } = await getSimplexUser({ atomicId, ...this.listQuery })
-          this.list = data.purchases
-          this.total = data.total
+          this.list = data
+          this.total = (await getSimplexCount({ atomicId })).data
         } else {
           const { data } = await getSimplexBuy({ ...this.listQuery })
-          this.list = data.purchases
-          this.total = data.total
+          this.list = data
+          this.total = (await getSimplexCount({})).data
         }
       } catch (e) {
         this.$notify({

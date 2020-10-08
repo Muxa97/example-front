@@ -244,7 +244,7 @@ export default class extends Vue {
       let volumeCoin = 'first coin'
       const fiats = new Set()
       const coins = new Set()
-      const acc = data.purchases.reduce((acc: any, tx: any) => {
+      const acc = data.reduce((acc: any, tx: any) => {
         const currencyFrom = tx.fromCurrency
         const currencyTo = tx.toCurrency
         fiats.add(currencyFrom)

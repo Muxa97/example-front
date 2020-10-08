@@ -13,6 +13,18 @@ export const getStakings = async(params: any) => {
   })
 }
 
+export const getStakingsCount = async(params: any) => {
+  const queryString = createQueryString(params)
+
+  return axios({
+    headers: {
+      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+    },
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/stakings/count${queryString}`,
+    method: 'get'
+  })
+}
+
 export const getStakingsByUser = async(params: any) => {
   const queryString = createQueryString(params)
   console.log(queryString)

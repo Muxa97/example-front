@@ -227,7 +227,7 @@ export default class extends Vue {
         const { data } = await getSimplexBuy({ createdAtStart: this.searchTimestampFrom, createdAtEnd: this.searchTimestampTo })
 
         const fiats = new Set()
-        const acc = data.purchases.reduce((acc: any, tx: any) => {
+        const acc = data.reduce((acc: any, tx: any) => {
           const coin = tx.toCurrency
           fiats.add(tx.fromCurrency)
           if (!acc[coin]) {

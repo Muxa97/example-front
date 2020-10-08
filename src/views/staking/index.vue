@@ -197,7 +197,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import Pagination from '@/components/Pagination/index.vue'
-import { getStakings, getStakingsByUser } from '@/api/staking'
+import { getStakings, getStakingsByUser, getStakingsCount } from '@/api/staking'
 
   @Component({
     name: 'StakingTable',
@@ -243,12 +243,12 @@ export default class extends Vue {
 
       if (atomicId.length) {
         const stakings = await getStakingsByUser({ ...this.listQuery, atomicId, provider, currency: this.currency })
-        this.list = stakings.data.stakes
-        this.total = stakings.data.total
+        this.list = stakings.data
+        this.total = (await getStakingsCount({ atomicId, provider, currency: this.currency })).data
       } else {
         const stakings = await getStakings({ ...this.listQuery, provider, currency: this.currency })
-        this.list = await stakings.data.stakes
-        this.total = await stakings.data.total
+        this.list = await stakings.data
+        this.total = (await getStakingsCount({ provider, currency: this.currency })).data
       }
       this.listLoading = false
     }
