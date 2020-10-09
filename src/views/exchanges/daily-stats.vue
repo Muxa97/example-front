@@ -283,8 +283,8 @@ export default class extends Vue {
             created: data.transactions.length,
             waiting: data.transactions.filter((element:any) => element.status === 'waiting').length,
             finished: data.transactions.filter((element:any) => element.status === 'finished').length,
-            volumeBTC: (data.transactions.reduce((acc: number, tx: any) => acc + +tx.usdValue, 0) / BTC.PRICE).toFixed(9),
-            profitBTC: (data.transactions.reduce((acc: number, tx: any) => acc + (tx.status === 'finished' ? +tx.usdValue : 0), 0) / BTC.PRICE).toFixed(9)
+            volumeBTC: (data.transactions.reduce((acc: number, tx: any) => acc + (tx.status === 'finished' ? +tx.usdValue : 0), 0) / BTC.PRICE).toFixed(9),
+            profitBTC: (data.transactions.reduce((acc: number, tx: any) => acc + (tx.status === 'finished' ? +tx.usdValue : 0), 0) / BTC.PRICE / 100).toFixed(9)
           }
         )
         this.lastAnalyzedTime = new Date(range.end).toLocaleDateString()
