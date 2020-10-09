@@ -244,11 +244,12 @@ export default class extends Vue {
       if (atomicId.length) {
         const stakings = await getStakingsByUser({ ...this.listQuery, atomicId, provider, currency: this.currency })
         this.list = stakings.data
-        this.total = (await getStakingsCount({ atomicId, provider, currency: this.currency })).data
+        this.total = (await getStakingsCount({ atomicId, provider, currency: this.currency })).data.count
       } else {
         const stakings = await getStakings({ ...this.listQuery, provider, currency: this.currency })
         this.list = await stakings.data
-        this.total = (await getStakingsCount({ provider, currency: this.currency })).data
+        this.total = (await getStakingsCount({ provider, currency: this.currency })).data.count
+        console.log(this.total)
       }
       this.listLoading = false
     }

@@ -186,7 +186,7 @@ export default class extends Vue {
     private async getList(params:any) {
       this.listLoading = true
 
-      const stakings = (await getStakings({ createdAtStart: this.searchTimestampFrom, createdAtEnd: this.searchTimestampTo })).data.stakes
+      const stakings = (await getStakings({ createdAtStart: this.searchTimestampFrom, createdAtEnd: this.searchTimestampTo })).data
       let total = 0
       const agregated = stakings.reduce((acc: any, stake: any) => {
         const coin = stake.currency
