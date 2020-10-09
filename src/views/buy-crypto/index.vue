@@ -191,11 +191,11 @@ export default class extends Vue {
         if (atomicId) {
           const { data } = await getSimplexUser({ atomicId, ...this.listQuery })
           this.list = data
-          this.total = (await getSimplexCount({ atomicId })).data
+          this.total = (await getSimplexCount({ atomicId })).data.count
         } else {
           const { data } = await getSimplexBuy({ ...this.listQuery })
           this.list = data
-          this.total = (await getSimplexCount({})).data
+          this.total = (await getSimplexCount({})).data.count
         }
       } catch (e) {
         this.$notify({
