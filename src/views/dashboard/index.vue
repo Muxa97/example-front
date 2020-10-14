@@ -279,23 +279,23 @@ export default class extends Vue {
   created() {
     const uid = this.$route.query.userId
 
+    this.currentUser = {
+      atomicId: '',
+      status: '',
+      awcBalance: 0,
+      devices: [],
+      exchangeVolume: 0,
+      buyVolume: 0,
+      stakingVolume: 0,
+      airdropsReferrals: []
+    }
+
     if (uid) {
       getUserInfo({ atomicId: uid })
         .then(async(data) => {
           this.currentUser = data
           this.devices = (await getDevicesByAtomicId({ atomicId: data.atomicId })).data
         })
-    } else {
-      this.currentUser = {
-        atomicId: '',
-        status: '',
-        awcBalance: 0,
-        devices: [],
-        exchangeVolume: 0,
-        buyVolume: 0,
-        stakingVolume: 0,
-        airdropsReferrals: []
-      }
     }
   }
 }
