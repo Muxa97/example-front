@@ -5,57 +5,60 @@
         <el-row style="margin-top: 20px;">
           <el-col :span="22">
             <el-card
-              v-loading="devicesLoading"
-              :body-style="{padding: 0, height: '300px'}"
+              v-loading="countLoading"
+              :body-style="{padding: 0, height: '230px'}"
             >
               <div
                 slot="header"
                 class="clearfix"
                 style="border: none; padding: 10px;"
               >
-                <span>Devices usage</span>
+                <span>New users</span>
               </div>
-              <div class="details-card-body">
-                <el-row>
-                  <el-col :span="12">
-                    <div class="grid-content bg-purple">
-                      <el-card shadow="never">
-                        <div class="details-card-body">
-                          <el-date-picker
-                            v-model="devicesSearchTimestampFrom"
-                            type="date"
-                            format="yyyy-MM-dd"
-                            placeholder="Select From"
-                            @change="updateDeviceUsage"
-                          />
-                        </div>
-                      </el-card>
+              <el-row>
+                <el-col :span="8">
+                  <el-card>
+                    <div
+                      slot="header"
+                      class="clearfix"
+                      style="border: none; padding: 10px;"
+                    >
+                      <span>Last day</span>
                     </div>
-                  </el-col>
-                  <el-col :span="12">
-                    <div class="grid-content bg-purple-light">
-                      <el-card shadow="never">
-                        <div class="details-card-body">
-                          <el-date-picker
-                            v-model="devicesSearchTimestampTo"
-                            type="date"
-                            format="yyyy-MM-dd"
-                            placeholder="Select To"
-                            @change="updateDeviceUsage"
-                          />
-                        </div>
-                      </el-card>
+                    <div class="details-card-body">
+                      <span>{{ lastDayUsers }}</span>
                     </div>
-                  </el-col>
-                </el-row>
-                <el-row style="height: 200px;">
-                  <VueEcharts
-                    :option="deviceUsage"
-                    :ei.sync="ei"
-                    style="height: 100%;"
-                  />
-                </el-row>
-              </div>
+                  </el-card>
+                </el-col>
+                <el-col :span="8">
+                  <el-card>
+                    <div
+                      slot="header"
+                      class="clearfix"
+                      style="border: none; padding: 10px;"
+                    >
+                      <span>Last week</span>
+                    </div>
+                    <div class="details-card-body">
+                      <span>{{ lastWeekUsers }}</span>
+                    </div>
+                  </el-card>
+                </el-col>
+                <el-col :span="8">
+                  <el-card>
+                    <div
+                      slot="header"
+                      class="clearfix"
+                      style="border: none; padding: 10px;"
+                    >
+                      <span>Last month</span>
+                    </div>
+                    <div class="details-card-body">
+                      <span>{{ lastMonthUsers }}</span>
+                    </div>
+                  </el-card>
+                </el-col>
+              </el-row>
             </el-card>
           </el-col>
         </el-row>
@@ -120,63 +123,65 @@
         </el-row>
       </el-col>
       <el-col :span="12">
-        <el-row style="margin-top: 20px;">
-          <el-card
-            v-loading="countLoading"
-            :body-style="{padding: 0, height: '230px'}"
+        <el-row style="margin-top: 20px; height: 500px;">
+          <el-col
+            :span="22"
+            style="height: 100%;"
           >
-            <div
-              slot="header"
-              class="clearfix"
-              style="border: none; padding: 10px;"
+            <el-card
+              v-loading="devicesLoading"
+              :body-style="{padding: 0, height: '500px'}"
             >
-              <span>New users</span>
-            </div>
-            <el-row>
-              <el-col :span="8">
-                <el-card>
-                  <div
-                    slot="header"
-                    class="clearfix"
-                    style="border: none; padding: 10px;"
-                  >
-                    <span>Last day</span>
-                  </div>
-                  <div class="details-card-body">
-                    <span>{{ lastDayUsers }}</span>
-                  </div>
-                </el-card>
-              </el-col>
-              <el-col :span="8">
-                <el-card>
-                  <div
-                    slot="header"
-                    class="clearfix"
-                    style="border: none; padding: 10px;"
-                  >
-                    <span>Last week</span>
-                  </div>
-                  <div class="details-card-body">
-                    <span>{{ lastWeekUsers }}</span>
-                  </div>
-                </el-card>
-              </el-col>
-              <el-col :span="8">
-                <el-card>
-                  <div
-                    slot="header"
-                    class="clearfix"
-                    style="border: none; padding: 10px;"
-                  >
-                    <span>Last month</span>
-                  </div>
-                  <div class="details-card-body">
-                    <span>{{ lastMonthUsers }}</span>
-                  </div>
-                </el-card>
-              </el-col>
-            </el-row>
-          </el-card>
+              <div
+                slot="header"
+                class="clearfix"
+                style="border: none; padding: 10px;"
+              >
+                <span>Devices usage</span>
+              </div>
+              <div class="details-card-body">
+                <el-row>
+                  <el-col :span="12">
+                    <div class="grid-content bg-purple">
+                      <el-card shadow="never">
+                        <div class="details-card-body">
+                          <el-date-picker
+                            v-model="devicesSearchTimestampFrom"
+                            type="date"
+                            format="yyyy-MM-dd"
+                            placeholder="Select From"
+                            @change="updateDeviceUsage"
+                          />
+                        </div>
+                      </el-card>
+                    </div>
+                  </el-col>
+                  <el-col :span="12">
+                    <div class="grid-content bg-purple-light">
+                      <el-card shadow="never">
+                        <div class="details-card-body">
+                          <el-date-picker
+                            v-model="devicesSearchTimestampTo"
+                            type="date"
+                            format="yyyy-MM-dd"
+                            placeholder="Select To"
+                            @change="updateDeviceUsage"
+                          />
+                        </div>
+                      </el-card>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row style="height: 80%;">
+                  <VueEcharts
+                    :option="deviceUsage"
+                    :ei.sync="ei"
+                    style="height: 100%;"
+                  />
+                </el-row>
+              </div>
+            </el-card>
+          </el-col>
         </el-row>
       </el-col>
     </el-row>
@@ -232,15 +237,26 @@ export default class Audience extends Vue {
     private pickerOpts = pickerOptions
 
     private deviceUsage = {
+      legend: {
+        type: 'scroll',
+        orient: 'vertical',
+        right: 10,
+        top: 20,
+        bottom: 20,
+        data: {},
+        selected: {}
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{b}: {c}'
+      },
       series: [
         {
           type: 'pie',
           id: 'devices',
           radius: '50%',
-          center: ['50%', '55%'],
-          label: {
-            formatter: '{b} ({d}%)'
-          },
+          center: ['25%', '50%'],
+          label: null,
           data: [{ name: '', value: 0 }]
         }
       ]
@@ -292,10 +308,28 @@ export default class Audience extends Vue {
       this.devicesLoading = true
       getUsersDevices({ from: this.devicesSearchTimestampFrom, to: this.devicesSearchTimestampTo })
         .then(({ data }) => {
-          this.deviceUsage.series[0].data = data.map((device: {os: string, count: number}) => ({
-            name: device.os,
-            value: device.count
-          }))
+          let total = 0
+          const selected: any = {}
+          this.deviceUsage.series[0].data = Object.entries(data
+            .reduce((acc: any, device: any) => {
+              if (!acc[device.platform]) acc[device.platform] = { users_count: 0 }
+
+              acc[device.platform].users_count += Number(device.users_count)
+              total += Number(device.users_count)
+              return acc
+            }, {}))
+            .sort((a: any, b: any) => b[1].users_count - a[1].users_count)
+            .map((e: any) => {
+              const part = e[1].users_count / total * 100
+              selected[e[0] + ' (' + part.toFixed(2) + '%)'] = part >= 1
+
+              return {
+                name: e[0] + ' (' + part.toFixed(2) + '%)',
+                value: e[1].users_count
+              }
+            })
+          this.deviceUsage.legend.data = this.deviceUsage.series[0].data
+          this.deviceUsage.legend.selected = selected
 
           this.ei.setOption(this.deviceUsage)
           this.devicesLoading = false

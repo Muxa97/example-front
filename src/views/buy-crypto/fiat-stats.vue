@@ -152,7 +152,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import NProgress from 'nprogress'
-import Pagination from '@/components/Pagination/index.vue'
 import 'nprogress/nprogress.css'
 import * as Moment from 'moment'
 import { extendMoment } from 'moment-range'
@@ -186,7 +185,6 @@ const pickerOptions = {
   @Component({
     name: 'BuyCoinsStatsTable',
     components: {
-      Pagination
     },
     filters: {
     }
@@ -208,25 +206,17 @@ export default class extends Vue {
     }
 
     async created(): Promise<any> {
-      NProgress.start()
       this.getBuysByCoins().then(() => NProgress.done())
     }
+
     private onIntervalChange() {
       this.currentInterval = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`
       this.getBuysByCoins().catch(err => console.error(err))
-    }
-    private handleFilter(el: any) {
-      console.log(el)
-    }
-    private handleLocalFilter(el: any) {
-      console.log(el)
-      console.log(this.searchString)
     }
 
     private async getBuysByCoins() {
       NProgress.start()
 
-      const range = moment.range(this.searchTimestampFrom, this.searchTimestampTo)
       const { data } = await getSimplexBuy({ createdAtStart: this.searchTimestampFrom, createdAtEnd: this.searchTimestampTo })
       const tickers = new Set()
       const acc = data.reduce((acc: any, tx: any) => {

@@ -208,8 +208,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
-import _ from 'underscore'
+import { getExchangesByTerms } from '@/api/exchanges'
 import NProgress from 'nprogress'
 import Pagination from '@/components/Pagination/index.vue'
 import 'nprogress/nprogress.css'
@@ -255,7 +254,6 @@ export default class extends Vue {
     private searchTimestampFrom: Date = moment().subtract(1, 'week').toDate();
     private searchTimestampTo: Date = new Date();
     private currentInterval: any = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`;
-    private searchString: string = '';
     private searchQuery = {
       offset: 0,
       limit: 10000
@@ -274,23 +272,15 @@ export default class extends Vue {
       this.currentInterval = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`
       this.getExchangesByCoins().catch(err => console.error(err))
     }
-    private handleFilter(el: any) {
-      console.log(el)
-    }
-    private handleLocalFilter(el: any) {
-      console.log(el)
-      console.log(this.searchString)
-    }
 
     private async getExchangesByCoins() {
       NProgress.start()
 
-      const range = moment.range(this.searchTimestampFrom, this.searchTimestampTo)
       const response = await fetch(`https://owl.atomicwallet.io/assetData?fiat=USD&tickers=BTC`)
       const { BTC } = (await response.json())
       const { data } = await getExchangesByTerms(
         constructQuery(this.searchQuery),
-        `createdAtStart=${new Date(range.start.toDate()).toUTCString()}&createdAtEnd=${new Date(range.end.toDate()).toUTCString()}`
+        `createdAtStart=${this.searchTimestampFrom.toUTCString()}&createdAtEnd=${this.searchTimestampTo.toUTCString()}`
       )
 
       const acc = data.transactions.reduce((acc: any, tx: any) => {

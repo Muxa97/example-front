@@ -99,7 +99,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import Pagination from '@/components/Pagination/index.vue'
-import { getUsers } from '@/api/users'
+import { getDevicesByAtomicId, getUsers } from '@/api/users'
 
 @Component({
   name: 'UsersTable',

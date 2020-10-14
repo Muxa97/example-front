@@ -76,23 +76,21 @@ export const getHourData = async(params: any) => {
 }
 
 export const getUsersDevices = async(params: any) => {
-  try {
-    const { data } = await axios({
-      headers: {
-        'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
-      },
-      url: `${process.env.VUE_APP_APOLLO_API_HOST}/users/devices?fromDate=${params.from}&toDate=${params.to}`,
-      method: 'get'
-    })
-    return data
-  } catch (err) {
-    console.error(err)
-    return { data: [
-      { os: 'darwin 13.12.8', count: Math.floor(Math.random() * 250) },
-      { os: 'win32 13.17.0', count: Math.floor(Math.random() * 250) },
-      { os: 'android', count: Math.floor(Math.random() * 250) },
-      { os: 'ios', count: Math.floor(Math.random() * 250) }
-    ]
-    }
-  }
+  return axios({
+    headers: {
+      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+    },
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/users/devices_stats`,
+    method: 'get'
+  })
+}
+
+export const getDevicesByAtomicId = async(params: any) => {
+  return axios({
+    headers: {
+      'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+    },
+    url: `${process.env.VUE_APP_APOLLO_API_HOST}/users/devices?atomicId=${params.atomicId}`,
+    method: 'get'
+  })
 }

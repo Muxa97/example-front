@@ -177,7 +177,7 @@
                 </el-table-column>
                 <el-table-column :label="$t('table.version')">
                   <template slot-scope="scope">
-                    <span>{{ scope.row.appVersion }}</span>
+                    <span>{{ scope.row.wallet_version }}</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -265,8 +265,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { UserModule } from '@/store/modules/user'
-import { getUserInfo } from '@/api/users'
+import { getDevicesByAtomicId, getUserInfo } from '@/api/users'
 
 @Component({
   name: 'Dashboard',
@@ -282,10 +281,9 @@ export default class extends Vue {
 
     if (uid) {
       getUserInfo({ atomicId: uid })
-        .then((data) => {
+        .then(async(data) => {
           this.currentUser = data
-          console.log(this.currentUser, data)
-          this.devices = this.currentUser.devices
+          this.devices = (await getDevicesByAtomicId({ atomicId: data.atomicId })).data
         })
     } else {
       this.currentUser = {
@@ -299,14 +297,6 @@ export default class extends Vue {
         airdropsReferrals: []
       }
     }
-  }
-
-  get name() {
-    return UserModule.name
-  }
-
-  get roles() {
-    return UserModule.roles
   }
 }
 </script>

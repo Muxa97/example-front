@@ -197,10 +197,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { getExchanges, getExchangesByTerms, getExchangesCount, getExchangesByTermsCount } from '@/api/exchanges'
-import _ from 'underscore'
+import { getExchangesByTerms } from '@/api/exchanges'
 import NProgress from 'nprogress'
-import Pagination from '@/components/Pagination/index.vue'
 import 'nprogress/nprogress.css'
 import { constructQuery } from '@/utils/query'
 import * as Moment from 'moment'
@@ -234,7 +232,6 @@ const pickerOptions = {
   @Component({
     name: 'PairsStatsTable',
     components: {
-      Pagination
     },
     filters: {
     }
@@ -257,31 +254,23 @@ export default class extends Vue {
     }
 
     async created(): Promise<any> {
-      NProgress.start()
       if (this.$route.query.coin && this.$route.query.coin.length) this.searchString = this.$route.query.coin.toString()
       this.getExchangesByCoins().then(() => NProgress.done())
     }
+
     private onIntervalChange() {
       this.currentInterval = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`
       this.getExchangesByCoins().catch(err => console.error(err))
-    }
-    private handleFilter(el: any) {
-      console.log(el)
-    }
-    private handleLocalFilter(el: any) {
-      console.log(el)
-      console.log(this.searchString)
     }
 
     private async getExchangesByCoins() {
       NProgress.start()
 
-      const range = moment.range(this.searchTimestampFrom, this.searchTimestampTo)
       const response = await fetch(`https://owl.atomicwallet.io/assetData?fiat=USD&tickers=BTC`)
       const { BTC } = (await response.json())
       const { data } = await getExchangesByTerms(
         constructQuery(this.searchQuery),
-        `createdAtStart=${new Date(range.start.toDate()).toUTCString()}&createdAtEnd=${new Date(range.end.toDate()).toUTCString()}`
+        `createdAtStart=${this.searchTimestampFrom.toUTCString()}&createdAtEnd=${this.searchTimestampTo.toUTCString()}`
       )
       let volumeCoin = 'first coin'
 
