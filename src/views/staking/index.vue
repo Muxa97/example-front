@@ -222,7 +222,6 @@ export default class extends Vue {
       limit: this.pagination
     }
     private page = 1
-    private pages = 0
 
     created() {
       if (this.$route.query.userId) {
@@ -241,15 +240,23 @@ export default class extends Vue {
       const atomicId = this.searchString
       const provider = this.provider
 
-      if (atomicId.length) {
-        const stakings = await getStakingsByUser({ ...this.listQuery, atomicId, provider, currency: this.currency })
-        this.list = stakings.data
-        this.total = (await getStakingsCount({ atomicId, provider, currency: this.currency })).data.count
-      } else {
-        const stakings = await getStakings({ ...this.listQuery, provider, currency: this.currency })
-        this.list = await stakings.data
-        this.total = (await getStakingsCount({ provider, currency: this.currency })).data.count
-        console.log(this.total)
+      try {
+        if (atomicId.length) {
+          const stakings = await getStakingsByUser({ ...this.listQuery, atomicId, provider, currency: this.currency })
+          this.list = stakings.data
+          this.total = (await getStakingsCount({ atomicId, provider, currency: this.currency })).data.count
+        } else {
+          const stakings = await getStakings({ ...this.listQuery, provider, currency: this.currency })
+          this.list = await stakings.data
+          this.total = (await getStakingsCount({ provider, currency: this.currency })).data.count
+        }
+      } catch (error) {
+        this.$notify({
+          title: 'error',
+          message: error.toString(),
+          type: 'error',
+          duration: 2000
+        })
       }
       this.listLoading = false
     }

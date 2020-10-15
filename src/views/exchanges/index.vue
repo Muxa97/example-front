@@ -283,9 +283,6 @@ export default class extends Vue {
   .search-container{
     display: block;
     float: right;
-    /*position: absolute;*/
-    /*top: 99px;*/
-    /*right: 22px;*/
   }
   .filter-item {
     margin: 5px 5px;

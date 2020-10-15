@@ -164,8 +164,6 @@ export default class extends Vue {
     }
 
     async created(): Promise<any> {
-      NProgress.start()
-
       if (this.$route.query.date) {
         this.searchTimestampFrom = new Date(new Date(this.$route.query.date.toString()).setHours(0, 0, 0, 0))
         this.searchTimestampTo = new Date(new Date(this.searchTimestampFrom).setHours(23, 59, 59, 999))
@@ -184,11 +182,9 @@ export default class extends Vue {
       this.searchQuery.limit = 10000
       this.searchQuery.offset = this.page > 0 ? (this.page - 1) * this.pagination : 0
 
-      const range = moment.range(this.searchTimestampFrom, this.searchTimestampTo)
-
       const { data } = await getExchangesByTerms(
         constructQuery(this.searchQuery),
-        `createdAtStart=${new Date(range.start.toDate()).toUTCString()}&createdAtEnd=${new Date(range.end.toDate()).toUTCString()}`
+        `createdAtStart=${this.searchTimestampFrom.toUTCString()}&createdAtEnd=${this.searchTimestampTo.toUTCString()}`
       )
       this.transactions = data.transactions
       const txs = this.transactions.reduce((acc: any, tx: any) => {

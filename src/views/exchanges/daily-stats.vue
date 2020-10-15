@@ -254,13 +254,7 @@ export default class extends Vue {
     }
     private onIntervalChange() {
       this.currentInterval = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`
-    }
-    private handleFilter(el: any) {
-      console.log(el)
-    }
-    private handleLocalFilter(el: any) {
-      console.log(el)
-      console.log(this.searchString)
+      this.analyzeExchangesByInterval()
     }
 
     private async analyzeExchangesByInterval() {
@@ -272,23 +266,31 @@ export default class extends Vue {
 
       const range = moment.range(this.searchTimestampFrom, this.searchTimestampTo)
       const ranges = split(range, 'days').reverse()
-      const response = await fetch(`https://owl.atomicwallet.io/assetData?fiat=USD&tickers=BTC`)
-      const { BTC } = (await response.json())
-      for (const range of ranges) {
-        const { data } = await getExchangesByTerms(constructQuery(this.searchQuery), `createdAtStart=${new Date(range.start).toUTCString()}&createdAtEnd=${new Date(range.end).toUTCString()}`)
-        console.log(data.transactions)
-        this.analyzedExchangeDayGroups.push(
-          {
-            date: range.start.format('YYYY-MM-DD HH:mm:ss'),
-            created: data.transactions.length,
-            waiting: data.transactions.filter((element:any) => element.status === 'waiting').length,
-            finished: data.transactions.filter((element:any) => element.status === 'finished').length,
-            volumeBTC: (data.transactions.reduce((acc: number, tx: any) => acc + (tx.status === 'finished' ? +tx.usdValue : 0), 0) / BTC.PRICE).toFixed(9),
-            profitBTC: (data.transactions.reduce((acc: number, tx: any) => acc + (tx.status === 'finished' ? +tx.usdValue : 0), 0) / BTC.PRICE / 100).toFixed(9)
-          }
-        )
-        this.lastAnalyzedTime = new Date(range.end).toLocaleDateString()
-        this.analyzedExchangesCount += data.count
+      try {
+        const response = await fetch(`https://owl.atomicwallet.io/assetData?fiat=USD&tickers=BTC`)
+        const { BTC } = (await response.json())
+        for (const range of ranges) {
+          const { data } = await getExchangesByTerms(constructQuery(this.searchQuery), `createdAtStart=${new Date(range.start).toUTCString()}&createdAtEnd=${new Date(range.end).toUTCString()}`)
+          this.analyzedExchangeDayGroups.push(
+            {
+              date: range.start.format('YYYY-MM-DD HH:mm:ss'),
+              created: data.transactions.length,
+              waiting: data.transactions.filter((element: any) => element.status === 'waiting').length,
+              finished: data.transactions.filter((element: any) => element.status === 'finished').length,
+              volumeBTC: (data.transactions.reduce((acc: number, tx: any) => acc + (tx.status === 'finished' ? +tx.usdValue : 0), 0) / BTC.PRICE).toFixed(9),
+              profitBTC: (data.transactions.reduce((acc: number, tx: any) => acc + (tx.status === 'finished' ? +tx.usdValue : 0), 0) / BTC.PRICE / 100).toFixed(9)
+            }
+          )
+          this.lastAnalyzedTime = new Date(range.end).toLocaleDateString()
+          this.analyzedExchangesCount += data.count
+        }
+      } catch (error) {
+        this.$notify({
+          title: 'error',
+          message: error.toString(),
+          type: 'error',
+          duration: 2000
+        })
       }
       NProgress.done()
     }

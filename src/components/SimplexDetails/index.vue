@@ -99,7 +99,7 @@
               <span>OS</span>
             </div>
             <div class="details-card-body">
-              {{ tx.Cashbacks[0].platform }}
+              {{ tx.Cashbacks && tx.Cashbacks[0].platform }}
             </div>
           </el-card>
         </div>
@@ -118,7 +118,7 @@
               <span>Wallet version</span>
             </div>
             <div class="details-card-body">
-              {{ tx.Cashbacks[0].walletVersion }}
+              {{ tx.Cashbacks && tx.Cashbacks[0].walletVersion }}
             </div>
           </el-card>
         </div>
@@ -298,7 +298,7 @@
               <span>Cashback</span>
             </div>
             <div class="details-card-body">
-              {{ tx.Cashbacks[0].expectedCashbackAmount }}
+              {{ tx.Cashbacks && tx.Cashbacks[0].expectedCashbackAmount }}
             </div>
           </el-card>
         </div>
@@ -317,7 +317,7 @@
               <span>BNB address</span>
             </div>
             <div class="details-card-body">
-              {{ tx.Cashbacks[0].bnbAddress }}
+              {{ tx.Cashbacks && tx.Cashbacks[0].bnbAddress }}
             </div>
           </el-card>
         </div>
@@ -336,7 +336,7 @@
               <span>ETH address</span>
             </div>
             <div class="details-card-body">
-              {{ tx.Cashbacks[0].ethAddress }}
+              {{ tx.Cashbacks && tx.Cashbacks[0].ethAddress }}
             </div>
           </el-card>
         </div>
@@ -358,7 +358,7 @@
               <span>AWC balance</span>
             </div>
             <div class="details-card-body">
-              {{ tx.Cashbacks[0].awcBep2Balance }}
+              {{ tx.Cashbacks && tx.Cashbacks[0].awcBep2Balance }}
             </div>
           </el-card>
         </div>
@@ -377,7 +377,7 @@
               <span>AWC rate</span>
             </div>
             <div class="details-card-body">
-              {{ tx.Cashbacks[0].awcBep2Rate }}
+              {{ tx.Cashbacks && tx.Cashbacks[0].awcBep2Rate }}
             </div>
           </el-card>
         </div>
@@ -408,7 +408,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 
   @Component({
     name: 'SimplexDetails',
@@ -422,10 +422,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
     }
   })
 export default class extends Vue {
-  private created() {
-    console.log(this.$props.tx)
-  }
-
   private getStatusBadgeClass(status: string) {
     return {
       'md-square': true,
