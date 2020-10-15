@@ -55,20 +55,22 @@
 
       <el-table-column
         :label="$t('table.devices')"
-        min-width="150px"
+        min-width="230px"
       >
         <template slot-scope="scope">
           <el-table
             :key="devicesTableKey"
-            :data="scope.row.devices"
+            :data="scope.row.user_devices"
             border
             fit
             highlight-current-row
             stripe
             style="width: 100%;"
+            max-height="200px"
           >
             <el-table-column
               :label="$t('table.os')"
+              width="200px"
             >
               <template slot-scope="scope1">
                 <span>{{ scope1.row.platform }}</span>
@@ -78,7 +80,7 @@
               :label="$t('table.version')"
             >
               <template slot-scope="scope1">
-                <span>{{ scope1.row.appVersion }}</span>
+                <span>{{ scope1.row.walletVersion }}</span>
               </template>
             </el-table-column>
           </el-table>

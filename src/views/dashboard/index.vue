@@ -294,7 +294,10 @@ export default class extends Vue {
       getUserInfo({ atomicId: uid })
         .then(async(data) => {
           this.currentUser = data
-          this.devices = (await getDevicesByAtomicId({ atomicId: data.atomicId })).data
+          return getDevicesByAtomicId({ atomicId: data.atomicId })
+        })
+        .then((res: any) => {
+          this.devices = res.data
         })
     }
   }
