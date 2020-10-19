@@ -13,6 +13,22 @@ export const getUsers = async(params: any) => {
   return data
 }
 
+export const getUsersCount = async(params: any) => {
+  try {
+    const response = await axios({
+      headers: {
+        'Authorization': process.env.VUE_APP_APOLLO_AUTHORIZATION_HEADER
+      },
+      url: `${process.env.VUE_APP_APOLLO_API_HOST}/users/countAll`,
+      method: 'get'
+    })
+    return response
+  } catch (err) {
+    console.error(err)
+  }
+  return { data: 1000 }
+}
+
 export const getUserInfo = async(params: any) => {
   const query = createQueryString(params)
   try {

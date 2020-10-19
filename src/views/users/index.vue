@@ -60,7 +60,7 @@
         <template slot-scope="scope">
           <el-table
             :key="devicesTableKey"
-            :data="scope.row.devices"
+            :data="scope.row.user_devices"
             border
             fit
             highlight-current-row
@@ -78,7 +78,7 @@
               :label="$t('table.version')"
             >
               <template slot-scope="scope1">
-                <span>{{ scope1.row.appVersion }}</span>
+                <span>{{ scope1.row.version }}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -99,7 +99,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import Pagination from '@/components/Pagination/index.vue'
-import { getUsers } from '@/api/users'
+import { getUsers, getUsersCount } from '@/api/users'
 
 @Component({
   name: 'UsersTable',
@@ -125,6 +125,7 @@ export default class extends Vue {
   }
   private page = 1
   private pages = 0
+  private lastPage = 0
 
   created() {
     this.getList(false)
@@ -141,6 +142,7 @@ export default class extends Vue {
   private async getList(params:any) {
     this.listLoading = true
     this.listQuery.offset = params ? (params.page - 1) * params.limit : 0
+    this.lastPage = params ? params.page : 0
 
     if (this.$route.query.userId && this.searchString.length === 0) {
       this.listQuery.atomicId = this.$route.query.userId.toString()
@@ -150,11 +152,19 @@ export default class extends Vue {
 
     getUsers(this.listQuery)
       .then((data) => {
-        this.list = data.users
-        this.total = data.total
+        this.list = data.users.map((user: any) => {
+          user.atomicId = user.atomic_id
+          delete user.atomic_id
+          return user
+        })
+
         if (this.pages === 0) {
           this.pages = Math.floor(this.total / this.pagination)
         }
+        return getUsersCount({})
+      })
+      .then(({ data }) => {
+        this.total = data
       })
       .catch(() => {
         // this.error = error.toString()
@@ -171,8 +181,5 @@ export default class extends Vue {
     display: block;
     float: right;
     margin-bottom: 5px;
-    /*position: absolute;*/
-    /*top: 99px;*/
-    /*right: 22px;*/
   }
 </style>

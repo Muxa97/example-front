@@ -3,6 +3,7 @@ import { login, logout, getUserInfo } from '@/api/users'
 import { getToken, setToken, removeToken } from '@/utils/cookies'
 import store from '@/store'
 import { IUserData } from '@/api/types'
+import { users } from '@/users'
 
 export interface IUserState {
   token: string
@@ -53,13 +54,18 @@ class User extends VuexModule implements IUserState {
   }
 
   @Action
-  public async Login(userInfo: { username: string, password: string }) {
+  public Login(userInfo: { username: string, password: string }) {
     let { username, password } = userInfo
     username = username.trim()
-    const data = { accessToken: 'qwerty' }
-    // const { data } = await login({ username, password })
-    setToken(data.accessToken)
-    this.SET_TOKEN(data.accessToken)
+    const user = users.find((u: any) => u.username === username)
+
+    if (user && user.password === password) {
+      setToken('any')
+      this.SET_TOKEN('any')
+      this.SET_NAME(user.username)
+    } else {
+      throw Error('User not found')
+    }
   }
 
   @Action
@@ -70,32 +76,17 @@ class User extends VuexModule implements IUserState {
   }
 
   @Action
-  public async GetUserInfo() {
+  public GetUserInfo() {
     if (this.token === '') {
       throw Error('GetUserInfo: token is undefined!')
     }
-    // const { data } = await getUserInfo({ /* Your params here */ })
-    const data = {
-      roles: ['admin'],
-      atomicId: 'string',
-      status: 'string',
-      awcBalance: 0,
-      devices: [],
-      exchangeVolume: 0, // USD или BTC?
-      buyingVolume: 0, // USD или BTC?
-      stakingVolume: 0, // USD или BTC?
-      airdropsReferrals: []
+
+    const user = users.find((u: any) => u.username === this.name)
+    if (!user) {
+      throw Error('User not found')
     }
-    if (!data) {
-      throw Error('Verification failed, please Login again.')
-    }
-    const { roles, ...rest } = data
-    // roles must be a non-empty array
-    if (!roles || roles.length <= 0) {
-      throw Error('GetUserInfo: roles must be a non-null array!')
-    }
-    this.SET_ROLES(['admin'])
-    this.SET_INFO(rest)
+
+    this.SET_ROLES([ user.role ])
   }
 
   @Action
