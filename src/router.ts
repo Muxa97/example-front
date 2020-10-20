@@ -4,16 +4,6 @@ import Layout from '@/layout/index.vue'
 
 Vue.use(Router)
 
-/*
-  redirect:                      if set to 'noredirect', no redirect action will be trigger when clicking the breadcrumb
-  meta: {
-    title: 'title'               the name showed in subMenu and breadcrumb (recommend set)
-    icon: 'svg-name'             the icon showed in the sidebar
-    breadcrumb: false            if false, the item will be hidden in breadcrumb (default is true)
-    hidden: true                 if true, this route will not show in the sidebar (default is false)
-  }
-*/
-
 export const constantRoutes: RouteConfig[] = [
   {
     path: '/login',
@@ -27,11 +17,18 @@ export const constantRoutes: RouteConfig[] = [
   },
   {
     path: '/',
-    component: Layout,
     redirect: '/dashboard',
+    meta: {
+      breadcrumb: false,
+      hidden: true
+    }
+  },
+  {
+    path: '/dashboard',
+    component: Layout,
     children: [
       {
-        path: 'dashboard',
+        path: '',
         component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/index.vue'),
         meta: {
           title: 'Dashboard',
@@ -57,8 +54,8 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Exchange',
           icon: 'list',
-          // TODO: remove editor role after changing mocking backend to real backend
-          roles: ['user', 'admin', 'editor']
+          roles: ['user', 'admin'],
+          breadcrumb: false
         }
       },
       {
@@ -67,7 +64,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Daily Exchange Stats',
           icon: 'daily',
-          roles: ['admin', 'user', 'editor']
+          roles: ['admin', 'user']
         }
       },
       {
@@ -77,7 +74,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Waiting Exchanges',
           icon: 'clock',
-          roles: ['admin', 'user', 'editor']
+          roles: ['admin', 'user']
         }
       },
       {
@@ -86,7 +83,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Coins Stats',
           icon: 'bitcoin',
-          roles: ['admin', 'user', 'editor']
+          roles: ['admin', 'user']
         }
       },
       {
@@ -96,7 +93,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Pairs Stats',
           icon: 'pair',
-          roles: ['admin', 'user', 'editor']
+          roles: ['admin', 'user']
         }
       }
     ]
@@ -106,8 +103,7 @@ export const asyncRoutes: RouteConfig[] = [
     component: Layout,
     meta: {
       title: 'Staking',
-      icon: 'education',
-      breadcrumb: false
+      icon: 'education'
     },
     children: [
       {
@@ -116,7 +112,8 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Staking',
           icon: 'table',
-          roles: ['admin', 'user', 'editor']
+          roles: ['admin', 'user'],
+          breadcrumb: false
         }
       },
       {
@@ -125,7 +122,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Staking Stats',
           icon: 'chart',
-          roles: ['admin', 'user', 'editor']
+          roles: ['admin', 'user']
         }
       }
     ]
@@ -136,7 +133,7 @@ export const asyncRoutes: RouteConfig[] = [
     meta: {
       title: 'Buy',
       icon: 'cryptocurrency',
-      roles: ['admin', 'user', 'editor']
+      roles: ['admin', 'user']
     },
     children: [
       {
@@ -145,7 +142,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Buy',
           icon: 'list',
-          roles: ['admin', 'user', 'editor'],
+          roles: ['admin', 'user'],
           breadcrumb: false
         }
       },
@@ -155,7 +152,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Coins Stats',
           icon: 'bitcoin',
-          roles: ['admin', 'user', 'editor']
+          roles: ['admin', 'user']
         }
       },
       {
@@ -164,7 +161,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Fiat Stats',
           icon: 'dollar',
-          roles: ['admin', 'user', 'editor']
+          roles: ['admin', 'user']
         }
       },
       {
@@ -174,7 +171,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Pairs Stats',
           icon: 'pair',
-          roles: ['admin', 'user', 'editor']
+          roles: ['admin', 'user']
         }
       }
     ]
@@ -189,7 +186,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Users',
           icon: 'user',
-          roles: ['admin', 'user', 'editor']
+          roles: ['admin', 'user']
         }
       }
     ]
@@ -197,14 +194,17 @@ export const asyncRoutes: RouteConfig[] = [
   {
     path: '/audience',
     component: Layout,
+    meta: {
+      roles: ['admin', 'user']
+    },
     children: [
       {
         path: '',
-        component: () => import('@/views/audience/index.vue'),
+        component: () => import(/* webpackChunkName: "audience" */'@/views/audience/index.vue'),
         meta: {
           title: 'Audience',
           icon: 'audience',
-          roles: ['admin', 'user', 'editor']
+          roles: ['admin', 'user']
         }
       }
     ]
@@ -212,6 +212,9 @@ export const asyncRoutes: RouteConfig[] = [
   {
     path: '/errors',
     component: Layout,
+    meta: {
+      roles: ['admin', 'user']
+    },
     children: [
       {
         path: '',
@@ -219,7 +222,7 @@ export const asyncRoutes: RouteConfig[] = [
         meta: {
           title: 'Errors',
           icon: 'bug',
-          roles: ['admin', 'user', 'editor']
+          roles: ['admin', 'user']
         }
       }
     ]

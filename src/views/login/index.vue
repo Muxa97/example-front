@@ -63,12 +63,12 @@
         <div class="tips">
           <span> username: admin </span>
           <span> role: admin </span>
-          <span> password: any </span>
+          <span> password: 123456 </span>
         </div>
         <div class="tips">
-          <span> username: editor </span>
-          <span> role: editor </span>
-          <span> password: any </span>
+          <span> username: user </span>
+          <span> role: user </span>
+          <span> password: 123456 </span>
         </div>
       </div>
     </el-form>
@@ -103,7 +103,7 @@ export default class extends Vue {
   }
   private loginForm = {
     username: 'admin',
-    password: '111111'
+    password: '123456'
   }
   private loginRules = {
     username: [{ validator: this.validateUsername, trigger: 'blur' }],
@@ -149,15 +149,20 @@ export default class extends Vue {
     (this.$refs.loginForm as ElForm).validate(async(valid: boolean) => {
       if (valid) {
         this.loading = true
-        await UserModule.Login(this.loginForm)
-        this.$router.push({
-          path: this.redirect || '/',
-          query: this.otherQuery
-        })
-        // Just to simulate the time of the request
-        setTimeout(() => {
+        try {
+          UserModule.Login(this.loginForm)
+          this.$router.push({
+            path: this.redirect || '/',
+            query: this.otherQuery
+          }).catch(() => {})
+          // Just to simulate the time of the request
+          setTimeout(() => {
+            this.loading = false
+          }, 0.5 * 1000)
+        } catch (err) {
           this.loading = false
-        }, 0.5 * 1000)
+          console.error(err)
+        }
       } else {
         return false
       }
@@ -238,9 +243,7 @@ export default class extends Vue {
     margin-bottom: 10px;
 
     span {
-      &:first-of-type {
-        margin-right: 16px;
-      }
+      margin-right: 16px;
     }
   }
 
