@@ -229,13 +229,6 @@ export default class extends Vue {
       this.currentInterval = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`
       this.getSimplexByCoins().catch(err => console.error(err))
     }
-    private handleFilter(el: any) {
-      console.log(el)
-    }
-    private handleLocalFilter(el: any) {
-      console.log(el)
-      console.log(this.searchString)
-    }
 
     private async getSimplexByCoins() {
       NProgress.start()

@@ -1,10 +1,5 @@
 <template>
   <div class="app-container">
-    <DraggableDialog
-      ref="dialogVisible"
-      @search="refreshTableSearch"
-    />
-
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -83,7 +78,7 @@
     />
     <el-dialog
       :title="detailsTx.title"
-      :visible.sync="detailsTx"
+      :visible.sync="dialogIsOpen"
       width="90%"
     >
       <SimplexDetails
@@ -121,7 +116,7 @@ export default class extends Vue {
     private total = 0
     private listLoading = true
 
-    private dialogTableVisible = false
+    private dialogIsOpen = false
 
     private sort = ''
 
@@ -132,16 +127,13 @@ export default class extends Vue {
     }
     private page = 1
     private detailsTx:any = false
-    private tableByTerms = ''
 
     created() {
       this.getList(false)
     }
-    private showDialog() {
-      (this.$refs.dialogVisible as any).showDialog()
-    }
     private showDetails(row:any) {
       this.detailsTx = { ...row }
+      this.dialogIsOpen = true
     }
     private handleLocalFilter() {
       this.list = this.list.filter((item:any) => {
@@ -220,9 +212,6 @@ export default class extends Vue {
   .search-container{
     display: block;
     float: right;
-    /*position: absolute;*/
-    /*top: 99px;*/
-    /*right: 22px;*/
   }
   .filter-item {
     margin: 5px 5px;

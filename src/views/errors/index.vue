@@ -185,7 +185,7 @@
       :title="`${errorDetails.date && errorDetails.date.split(',')[0]}. ${errorDetails.errorType ?
         'Error: ' + errorDetails.errorType :
         'Unknown error'}`"
-      :visible.sync="errorDetails"
+      :visible.sync="dialogIsOpen"
     >
       <ErrorDetails
         v-if="errorDetails"
@@ -259,6 +259,7 @@ export default class extends Vue {
     private pages = 0
 
     private errorDetails: any = false
+    private dialogIsOpen = false
 
     created() {
       if (this.$route.query.userId) {
@@ -269,6 +270,7 @@ export default class extends Vue {
 
     private showDetails(row:any) {
       this.errorDetails = { ...row }
+      this.dialogIsOpen = true
     }
 
     private handleFilter() {

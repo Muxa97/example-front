@@ -196,7 +196,6 @@ export default class extends Vue {
     private searchTimestampFrom: Date = moment().subtract(1, 'week').toDate();
     private searchTimestampTo: Date = new Date();
     private currentInterval: any = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`;
-    private searchString: string = '';
 
     private pickerOpts = pickerOptions
     constructor() {
@@ -205,19 +204,11 @@ export default class extends Vue {
     }
 
     async created(): Promise<any> {
-      NProgress.start()
       this.getBuysByCoins().then(() => NProgress.done())
     }
     private onIntervalChange() {
       this.currentInterval = `${moment(this.searchTimestampTo).diff(moment(this.searchTimestampFrom), 'days')} Days`
       this.getBuysByCoins().catch(err => console.error(err))
-    }
-    private handleFilter(el: any) {
-      console.log(el)
-    }
-    private handleLocalFilter(el: any) {
-      console.log(el)
-      console.log(this.searchString)
     }
 
     private async getBuysByCoins() {

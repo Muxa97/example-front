@@ -55,7 +55,7 @@
 
       <el-table-column
         :label="$t('table.devices')"
-        min-width="150px"
+        min-width="230px"
       >
         <template slot-scope="scope">
           <el-table
@@ -66,9 +66,11 @@
             highlight-current-row
             stripe
             style="width: 100%;"
+            max-height="200px"
           >
             <el-table-column
               :label="$t('table.os')"
+              width="200px"
             >
               <template slot-scope="scope1">
                 <span>{{ scope1.row.platform }}</span>

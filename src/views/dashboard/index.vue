@@ -177,7 +177,7 @@
                 </el-table-column>
                 <el-table-column :label="$t('table.version')">
                   <template slot-scope="scope">
-                    <span>{{ scope.row.appVersion }}</span>
+                    <span>{{ scope.row.wallet_version }}</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -265,8 +265,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { UserModule } from '@/store/modules/user'
-import { getUserInfo } from '@/api/users'
+import { getDevicesByAtomicId, getUserInfo } from '@/api/users'
 
 @Component({
   name: 'Dashboard',
@@ -280,33 +279,27 @@ export default class extends Vue {
   created() {
     const uid = this.$route.query.userId
 
+    this.currentUser = {
+      atomicId: '',
+      status: '',
+      awcBalance: 0,
+      devices: [],
+      exchangeVolume: 0,
+      buyVolume: 0,
+      stakingVolume: 0,
+      airdropsReferrals: []
+    }
+
     if (uid) {
       getUserInfo({ atomicId: uid })
-        .then((data) => {
+        .then(async(data) => {
           this.currentUser = data
-          console.log(this.currentUser, data)
-          this.devices = this.currentUser.devices
+          return getDevicesByAtomicId({ atomicId: data.atomicId })
         })
-    } else {
-      this.currentUser = {
-        atomicId: '',
-        status: '',
-        awcBalance: 0,
-        devices: [],
-        exchangeVolume: 0,
-        buyVolume: 0,
-        stakingVolume: 0,
-        airdropsReferrals: []
-      }
+        .then((res: any) => {
+          this.devices = res.data
+        })
     }
-  }
-
-  get name() {
-    return UserModule.name
-  }
-
-  get roles() {
-    return UserModule.roles
   }
 }
 </script>

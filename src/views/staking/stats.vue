@@ -186,35 +186,50 @@ export default class extends Vue {
     private async getList(params:any) {
       this.listLoading = true
 
-      const stakings = (await getStakings({ createdAtStart: this.searchTimestampFrom, createdAtEnd: this.searchTimestampTo })).data
-      let total = 0
-      const agregated = stakings.reduce((acc: any, stake: any) => {
-        const coin = stake.currency
-        if (!acc[coin]) {
-          acc[coin] = {}
-          acc[coin].coin = coin
-          acc[coin].amount = 0
-          acc[coin].stakedUsd = 0
-        }
+      try {
+        const stakings = (await getStakings({
+          createdAtStart: this.searchTimestampFrom,
+          createdAtEnd: this.searchTimestampTo
+        })).data
+        let total = 0
+        const agregated = stakings.reduce((acc: any, stake: any) => {
+          const coin = stake.currency
+          if (!acc[coin]) {
+            acc[coin] = {}
+            acc[coin].coin = coin
+            acc[coin].amount = 0
+            acc[coin].stakedUsd = 0
+          }
 
-        acc[coin].amount += +stake.amount
-        total++
-        return acc
-      }, {})
-      const response = await fetch(`https://owl.atomicwallet.io/assetData?fiat=USD&tickers=${Object.keys(agregated).join(',')}`)
-      const prices = await response.json()
+          acc[coin].amount += +stake.amount
+          total++
+          return acc
+        }, {})
+        const response = await fetch(`https://owl.atomicwallet.io/assetData?fiat=USD&tickers=${Object.keys(agregated).join(',')}`)
+        const prices = await response.json()
 
-      this.list = Object.values(agregated).map((row: any) => {
-        row.stakedUsd = (row.amount * prices[row.coin].PRICE).toFixed(2)
-        return row
-      }).sort((a: any, b: any) => +b.stakedUsd - +a.stakedUsd)
+        this.list = Object.values(agregated).map((row: any) => {
+          row.stakedUsd = (row.amount * prices[row.coin].PRICE).toFixed(2)
+          return row
+        }).sort((a: any, b: any) => +b.stakedUsd - +a.stakedUsd)
 
-      this.totalStakes = total
-      this.totalUsd = this.list.reduce((acc: number, row: any) => {
-        // TODO: remove next line after fix TRX stakings
-        if (row.coin === 'TRX') return acc
-        return acc + +row.stakedUsd
-      }, 0)
+        this.totalStakes = total
+        this.totalUsd = this.list.reduce((acc: number, row: any) => {
+          // TODO: remove next line after fix TRX stakings
+          if (row.coin === 'TRX') return acc
+          return acc + +row.stakedUsd
+        }, 0)
+      } catch (error) {
+        this.$notify({
+          title: 'error',
+          message: error.toString(),
+          type: 'error',
+          duration: 2000
+        })
+        this.totalStakes = 0
+        this.totalUsd = 0
+        this.list = []
+      }
       this.listLoading = false
     }
 }
